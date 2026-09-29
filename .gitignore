@@ -14,3 +14,6 @@ __pycache__/
 *.tmp
 *.log
 .DS_Store
+
+# La llave PÚBLICA del formulario sí va (solo cifra). La privada vive en ~/.prismaos y nunca se sube.
+!config/datos_admin_publica.pem
