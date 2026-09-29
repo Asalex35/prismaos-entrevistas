@@ -245,12 +245,13 @@ function pintar() {
         el('a', { class: 'boton', href: '/tarjetas?pin=' + encodeURIComponent(PIN), target: '_blank' }, 'Todas (74)')))));
 
   // datos para administración (solo qué falta; los datos nunca se guardan aquí)
-  const pendientesDatos = P.filter(p => !p.datos_admin || p.datos_admin.faltan.length);
+  const pendientesDatos = P.filter(p => !p.datos_formulario);
   secciones.push(el('h2', {}, 'Datos para Administración'));
   secciones.push(el('div', { class: 'bloque' },
     el('p', { style: 'margin:0 0 6px' }, `${datosOk.length} personas ya entregaron todos sus datos · ${datosResp.length - datosOk.length} tienen faltantes · ${P.length - datosResp.length} aún no contestan esa pregunta.`),
+    el('p', { style: 'margin:0 0 6px' }, el('b', {}, `Formulario cifrado: ${P.filter(p => p.datos_formulario).length} de ${P.length} ya enviaron sus datos.`), ' Se descifran solo en la Mac de Administración.'),
     el('p', { class: 'num', style: 'margin:0 0 10px' }, 'Esta app solo registra QUÉ entregó cada quien (RFC, CURP, NSS, fecha de nacimiento, banco/CLABE, domicilio, contacto de emergencia), nunca los datos. Los datos se capturan en el sistema de Prismaticoos o se entregan a Administración. Si alguien intenta escribir un RFC, CURP, NSS o CLABE en una respuesta, se bloquea.'),
-    el('div', { class: 'linea' }, el('button', { class: 'primario', onclick: () => copiar(`📋 Pendientes de datos de nómina (entrevistas PrismaOS):\n${pendientesDatos.map(p => `• ${p.nombre} (${p.cargo}) — ${p.datos_admin ? 'falta: ' + p.datos_admin.faltan.join(', ') : 'aún no responde'}`).join('\n')}`, 'Lista copiada: mándala a Administración') }, 'Copiar pendientes para Administración'))));
+    el('div', { class: 'linea' }, el('button', { class: 'primario', onclick: () => copiar(`📋 Faltan de llenar el formulario de datos para Administración:\n${pendientesDatos.map(p => `• ${p.nombre} (${p.cargo})`).join('\n')}\n\nCada quien lo llena desde su link personal: botón «Capturar mis datos».`, 'Lista copiada: mándala a Administración') }, 'Copiar pendientes para Administración'))));
 
   // áreas
   secciones.push(el('h2', {}, 'Avance por área'));
@@ -292,7 +293,8 @@ function pintarTabla() {
     el('td', {}, el('div', { class: 'nombre', onclick: () => abrir(p.id) }, p.reclamado ? '🔒 ' : '', p.nombre, p.externo ? ' (ext.)' : ''), el('div', { class: 'cargo' }, p.cargo)),
     el('td', {}, p.area_nombre, p.equipo ? el('div', { class: 'cargo' }, p.equipo) : null),
     el('td', {}, el('span', { class: 'pill' }, el('i', { class: 'dot e-' + p.estado }), ESTADOS[p.estado]), p.cerrada ? el('div', { class: 'cargo' }, '🔒 Registrada y cerrada') : null, p.rondas_pendientes ? el('div', { class: 'cargo' }, `${p.rondas_pendientes} nuevas sin contestar`) : null,
-      p.datos_admin && p.datos_admin.faltan.length ? el('div', { class: 'cargo' }, `Datos: faltan ${p.datos_admin.faltan.length}`) : p.datos_admin ? el('div', { class: 'cargo ok' }, 'Datos completos') : null),
+      p.datos_admin && p.datos_admin.faltan.length ? el('div', { class: 'cargo' }, `Datos: faltan ${p.datos_admin.faltan.length}`) : p.datos_admin ? el('div', { class: 'cargo ok' }, 'Datos completos') : null,
+      p.datos_formulario ? el('div', { class: 'cargo ok' }, '🔒 Formulario enviado') : el('div', { class: 'cargo' }, 'Formulario pendiente')),
     el('td', {}, el('span', { class: 'mini-barra' }, el('i', { style: `width:${p.progreso}%` })), el('span', { class: 'num' }, `${p.base_hechas}/${p.base_total}`)),
     el('td', { class: 'num' }, p.enviado ? el('span', { class: 'ok' }, '✓ ' + hace(p.enviado)) : '—', p.telefono ? el('div', { class: 'cargo' }, '📱') : null),
     el('td', { class: 'num' }, hace(p.actualizado)),

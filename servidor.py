@@ -278,6 +278,45 @@ def estado(p, e):
     }
 
 
+# ------------------------------------------------ datos para Administración (cifrados)
+# El celular cifra los datos con la llave PÚBLICA (config/datos_admin_publica.pem) antes de enviarlos.
+# Aquí solo se guarda el sobre cifrado; se descifra en la Mac de Administración con la llave privada
+# (herramientas/descifrar_datos_admin.py). Cada envío se agrega; nunca se borra uno anterior.
+DAD = os.path.join(DAT, 'datos_admin')
+
+
+def llave_publica_datos():
+    try:
+        with open(os.path.join(CFG, 'datos_admin_publica.pem'), encoding='ascii') as f:
+            return f.read()
+    except FileNotFoundError:
+        return None
+
+
+def envios_datos(pid):
+    return leer(os.path.join(DAD, f'{pid}.json'), []) or []
+
+
+def datos_entregados(pid):
+    env = envios_datos(pid)
+    return env[-1]['fecha'] if env else None
+
+
+def guardar_datos_cifrados(pid, sobre):
+    b64 = re.compile(r'[A-Za-z0-9+/=]+')
+    partes = {k: sobre.get(k) for k in ('clave', 'iv', 'datos')}
+    if sobre.get('v') != 1 or not all(isinstance(v, str) and b64.fullmatch(v) for v in partes.values()):
+        return False
+    if len(partes['clave']) > 1000 or len(partes['iv']) > 40 or len(partes['datos']) > 20000:
+        return False
+    with LOCK:
+        os.makedirs(DAD, exist_ok=True)
+        env = envios_datos(pid)
+        env.append({'v': 1, **partes, 'fecha': ahora()})
+        escribir(os.path.join(DAD, f'{pid}.json'), env)
+    return True
+
+
 def vista_sesion(pid):
     p = persona(pid)
     e = expediente(pid)
@@ -292,6 +331,8 @@ def vista_sesion(pid):
                        'opciones': (r.get('seleccion', []) + r.get('faltan', [])) if r.get('formato') == 'checklist' else []}
                       for i, r in enumerate(e['respuestas'])][-60:],
         'link_datos': ajustes()['link_datos_personales'],
+        'formulario_datos': bool(llave_publica_datos()),
+        'datos_entregados': datos_entregados(pid),
         'cerrada': e.get('cerrada'),
         'ia': bool(IA['ok']) and ajustes()['ia_repreguntas_en_vivo'],
     }
@@ -881,6 +922,7 @@ def estado_admin():
                       'actualizado': e.get('actualizado'), 'tiene_resumen': bool(e.get('resumen')),
                       'enviado': env.get(p['id'], {}).get('ultimo'), 'envios': env.get(p['id'], {}).get('veces', 0),
                       'telefono': tels.get(p['id'], ''), 'reclamado': recl.get(p['id'], {}).get('fecha'), 'cerrada': e.get('cerrada'),
+                      'datos_formulario': datos_entregados(p['id']),
                       'datos_admin': next(({'faltan': r.get('faltan', []), 'entregados': r.get('seleccion', [])}
                                            for r in e['respuestas'] if r.get('formato') == 'checklist'), None)})
     tunel = URL_PUBLICA
@@ -983,6 +1025,11 @@ class Manejador(BaseHTTPRequestHandler):
             return self._archivo('admin.html')
         if ruta == '/tarjetas':
             return self._archivo('tarjetas.html')
+        if ruta == '/datos':
+            return self._archivo('datos.html')
+        if ruta == '/api/datos_llave':
+            llave = llave_publica_datos()
+            return self._enviar(200, {'pem': llave}) if llave else self._enviar(404, {'error': 'Formulario no disponible'})
         if ruta == '/logo.svg':
             return self._archivo('logo.svg')
         if ruta == '/salud':
@@ -1021,6 +1068,14 @@ class Manejador(BaseHTTPRequestHandler):
                 with open(os.path.join(DAT, 'DOCUMENTO_PRISMATICOOS_para_chat.md'), 'rb') as f:
                     return self._enviar(200, f.read(), 'text/markdown; charset=utf-8',
                                         {'Content-Disposition': 'attachment; filename="PRISMATICOOS-documento-para-chat.md"'})
+            if ruta == '/api/admin/datos_cifrados':
+                # Solo sobres cifrados: sin la llave privada (que vive en la Mac) no se pueden leer.
+                todo = {}
+                for p in personas():
+                    env = envios_datos(p['id'])
+                    if env:
+                        todo[p['id']] = {'nombre': p['nombre'], 'cargo': p['cargo'], 'envios': env}
+                return self._enviar(200, todo)
             if ruta == '/api/admin/exportar.json':
                 exportar()
                 with open(os.path.join(DAT, 'EXPORT_entrevistas.json'), 'rb') as f:
@@ -1086,6 +1141,15 @@ class Manejador(BaseHTTPRequestHandler):
                     return self._enviar(404, {'error': 'Escribe también tu apellido.'})
                 return self._enviar(404, {'error': 'No encontramos ese nombre. Escríbelo con tu nombre y apellido, como aparece en tu contrato. Si eres nuevo, regístrate abajo.'})
             return self._enviar(200, {'ok': True})
+        if ruta == '/api/datos_admin':
+            pid = pid_por_token(str(b.get('t', '')))
+            if not pid:
+                return self._enviar(404, {'error': 'Este link no es válido. Abre el formulario desde tu link personal.'})
+            if demasiados_intentos('datos:' + pid, limite=20):
+                return self._enviar(429, {'error': 'Demasiados envíos seguidos. Espera unos minutos.'})
+            if not guardar_datos_cifrados(pid, b.get('sobre') or {}):
+                return self._enviar(400, {'error': 'No se pudo leer el envío. Recarga la página e intenta de nuevo.'})
+            return self._enviar(200, {'ok': True, 'fecha': datos_entregados(pid)})
         if ruta == '/api/editar':
             pid = pid_por_token(b.get('t', ''))
             if not pid:

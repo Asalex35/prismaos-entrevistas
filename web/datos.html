@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141417">
+<meta name="referrer" content="no-referrer">
+<title>Datos para Administración · PrismaOS</title>
+<link rel="icon" href="/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --fondo: #1C1C21; --barra: #141417; --tarjeta: #24242B; --borde: #33333B;
+    --texto: #F2F2F0; --texto2: #9CA0AA; --acento: #FFC704; --acento-t: #1C1C21; --verde: #3FBF7F;
+    --radio: 14px;
+    --fuente: "Archivo", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--fondo); color: var(--texto); font-family: var(--fuente); margin: 0; }
+  body { min-height: 100vh; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .envoltura { max-width: 680px; margin: 0 auto; padding: 0 16px 48px; }
+  header.barra { position: sticky; top: 0; z-index: 5; background: var(--barra); border-bottom: 1px solid var(--borde); }
+  header .fila { max-width: 680px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  header img { width: 44px; height: auto; }
+  .marca { font-stretch: 75%; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 15px; }
+  .marca small { display: block; color: var(--texto2); font-weight: 500; letter-spacing: .04em; font-size: 12px; text-transform: none; font-stretch: 100%; }
+  h1 { font-stretch: 80%; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(26px, 7vw, 34px); line-height: 1.1; margin: 28px 0 8px; text-wrap: balance; }
+  h2 { font-size: 15px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--acento); margin: 4px 0 0; }
+  .sub { color: var(--texto2); margin: 0 0 20px; }
+  .tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); padding: 20px; display: grid; gap: 14px; margin-bottom: 16px; }
+  .candado { background: #16261d; border: 1px solid #245a3b; color: #bfeccf; border-radius: 10px; padding: 12px 14px; font-size: 14px; }
+  label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
+  label small { color: var(--texto2); font-weight: 400; font-size: 13px; }
+  input, select { width: 100%; background: var(--barra); color: var(--texto); border: 1px solid var(--borde); border-radius: 10px; padding: 13px 14px; font: inherit; font-size: 16px; font-weight: 400; }
+  input:focus, select:focus { outline: 2px solid var(--acento); outline-offset: 1px; border-color: transparent; }
+  input[aria-invalid="true"] { border-color: #ff8a7a; }
+  .err { color: #ff8a7a; font-size: 13px; font-weight: 400; min-height: 0; }
+  .doble { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 520px) { .doble { grid-template-columns: 1fr; } }
+  button { font: inherit; font-weight: 700; border-radius: 10px; padding: 14px 18px; border: 1px solid var(--acento); background: var(--acento); color: var(--acento-t); cursor: pointer; width: 100%; font-size: 17px; }
+  button[disabled] { opacity: .6; cursor: wait; }
+  button:focus-visible { outline: 2px solid var(--texto); outline-offset: 2px; }
+  a.volver { color: var(--acento); font-weight: 700; text-decoration: none; }
+  .nota { font-size: 13px; color: var(--texto2); margin: 0; }
+  .estado { font-size: 15px; min-height: 1.2em; margin: 10px 0 0; }
+  .estado.mal { color: #ff8a7a; }
+  .hecho { background: #16261d; border: 1px solid #245a3b; border-radius: var(--radio); padding: 20px; }
+</style>
+</head>
+<body>
+<header class="barra">
+  <div class="fila">
+    <img src="/logo.svg" alt="Prismaticoos">
+    <div class="marca">PrismaOS · Administración<small id="quien">Datos para nómina y expediente</small></div>
+  </div>
+</header>
+<main class="envoltura" id="app" aria-live="polite"></main>
+
+<script>
+Element.prototype.poner = function (...h) { this.replaceChildren(...h.flat(Infinity).filter(x => x != null && x !== false)); };
+const $app = document.getElementById('app');
+function el(tag, attrs = {}, ...hijos) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') n.className = v; else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) n.setAttribute(k, v === true ? '' : v);
+  }
+  for (const h of hijos.flat()) if (h != null) n.append(h.nodeType ? h : document.createTextNode(String(h)));
+  return n;
+}
+async function api(ruta, datos) {
+  const r = await fetch(ruta, datos ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) } : {});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'No se pudo conectar. Revisa tu internet e intenta de nuevo.');
+  return j;
+}
+
+// El link personal llega en el #fragmento (no viaja al servidor ni queda en registros) o se toma del celular.
+function leerToken() {
+  const h = new URLSearchParams(location.hash.slice(1)).get('t');
+  if (h && /^[A-Za-z0-9_-]{8,64}$/.test(h)) return h;
+  try { return localStorage.getItem('prisma_token'); } catch (e) { return null; }
+}
+const token = leerToken();
+
+// ---------- validaciones ----------
+const soloDig = v => v.replace(/\D/g, '');
+function clabeValida(c) {
+  if (!/^\d{18}$/.test(c)) return false;
+  const pesos = [3, 7, 1];
+  let s = 0;
+  for (let i = 0; i < 17; i++) s += (Number(c[i]) * pesos[i % 3]) % 10;
+  return (10 - (s % 10)) % 10 === Number(c[17]);
+}
+const CAMPOS = [
+  { sec: 'Identificación' },
+  { id: 'nombre_completo', et: 'Nombre completo', ayuda: 'Como aparece en tu INE.', req: true, max: 120 },
+  { id: 'rfc', et: 'RFC con homoclave', ayuda: '13 caracteres. Ej. GODE561231GR8', req: true, may: true, max: 13,
+    ok: v => /^[A-ZÑ&]{4}\d{6}[A-Z0-9]{3}$/.test(v), msj: 'Revisa tu RFC: 4 letras, 6 números y 3 caracteres de homoclave.' },
+  { id: 'curp', et: 'CURP', ayuda: '18 caracteres.', req: true, may: true, max: 18,
+    ok: v => /^[A-Z]{4}\d{6}[HMX][A-Z]{5}[A-Z0-9]\d$/.test(v), msj: 'Revisa tu CURP: son 18 caracteres.' },
+  { id: 'nss', et: 'NSS (Número de Seguro Social, IMSS)', ayuda: '11 números.', req: true, num: true, max: 11,
+    ok: v => /^\d{11}$/.test(v), msj: 'El NSS tiene 11 números.' },
+  { id: 'fecha_nacimiento', et: 'Fecha de nacimiento', tipo: 'date', req: true },
+  { sec: 'Datos bancarios (para tu pago)' },
+  { id: 'banco', et: 'Banco', req: true, max: 60 },
+  { id: 'cuenta', et: 'Número de cuenta', ayuda: 'Opcional si ya pones tu CLABE.', num: true, max: 20,
+    ok: v => !v || /^\d{8,20}$/.test(v), msj: 'Solo números (8 a 20).' },
+  { id: 'clabe', et: 'CLABE interbancaria', ayuda: '18 números. Viene en tu app del banco o estado de cuenta.', req: true, num: true, max: 18,
+    ok: clabeValida, msj: 'Esa CLABE no es válida: revisa los 18 números.' },
+  { sec: 'Domicilio' },
+  { id: 'calle_numero', et: 'Calle y número', req: true, max: 120 },
+  { fila: [{ id: 'colonia', et: 'Colonia', req: true, max: 80 },
+           { id: 'cp', et: 'Código postal', req: true, num: true, max: 5, ok: v => /^\d{5}$/.test(v), msj: 'Son 5 números.' }] },
+  { fila: [{ id: 'municipio', et: 'Municipio o alcaldía', req: true, max: 80 },
+           { id: 'estado', et: 'Estado', req: true, max: 60 }] },
+  { sec: 'Contacto de emergencia' },
+  { id: 'emergencia_nombre', et: 'Nombre', req: true, max: 120 },
+  { fila: [{ id: 'emergencia_parentesco', et: 'Parentesco', ayuda: 'Ej. mamá, pareja', req: true, max: 40 },
+           { id: 'emergencia_telefono', et: 'Teléfono', ayuda: '10 números', req: true, num: true, max: 10, tipo: 'tel',
+             ok: v => /^\d{10}$/.test(v), msj: 'Son 10 números.' }] },
+];
+const planos = CAMPOS.flatMap(c => c.fila || (c.id ? [c] : []));
+
+function campo(c) {
+  const inp = el('input', { id: c.id, name: c.id, type: c.tipo || 'text', maxlength: c.max, autocomplete: 'off', spellcheck: 'false',
+    inputmode: c.num ? 'numeric' : null, autocapitalize: c.may ? 'characters' : null, required: c.req,
+    oninput: e => { if (c.may) e.target.value = e.target.value.toUpperCase(); if (c.num) e.target.value = soloDig(e.target.value); marcar(c, ''); } });
+  return el('label', { for: c.id }, c.et + (c.req ? '' : ' (opcional)'), c.ayuda ? el('small', {}, c.ayuda) : null, inp,
+    el('span', { class: 'err', id: 'err_' + c.id }));
+}
+function marcar(c, msj) {
+  document.getElementById(c.id).setAttribute('aria-invalid', msj ? 'true' : 'false');
+  document.getElementById('err_' + c.id).textContent = msj;
+}
+function valores() {
+  const d = {};
+  for (const c of planos) d[c.id] = document.getElementById(c.id).value.trim();
+  return d;
+}
+function validar(d) {
+  let primero = null;
+  for (const c of planos) {
+    const v = d[c.id];
+    const msj = c.req && !v ? 'Falta este dato.' : (v && c.ok && !c.ok(v)) ? c.msj : '';
+    marcar(c, msj);
+    if (msj && !primero) primero = c.id;
+  }
+  if (primero) document.getElementById(primero).focus();
+  return !primero;
+}
+
+// ---------- cifrado en el celular (RSA-OAEP 3072 + AES-GCM 256) ----------
+const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+async function cifrar(pem, datos) {
+  const der = Uint8Array.from(atob(pem.replace(/-----[^-]+-----|\s/g, '')), ch => ch.charCodeAt(0));
+  const publica = await crypto.subtle.importKey('spki', der, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);
+  const aes = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt']);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const texto = new TextEncoder().encode(JSON.stringify(datos));
+  const cifrado = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aes, texto);
+  const clave = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, publica, await crypto.subtle.exportKey('raw', aes));
+  return { v: 1, clave: b64(clave), iv: b64(iv), datos: b64(cifrado) };
+}
+
+async function enviar(ev) {
+  ev.preventDefault();
+  const d = valores();
+  if (!validar(d)) return;
+  const b = document.getElementById('enviar'), st = document.getElementById('estado');
+  b.disabled = true; b.textContent = 'Cifrando y enviando…'; st.className = 'estado'; st.textContent = '';
+  try {
+    const { pem } = await api('/api/datos_llave');
+    const sobre = await cifrar(pem, { ...d, enviado: new Date().toISOString() });
+    const r = await api('/api/datos_admin', { t: token, sobre });
+    document.getElementById('formulario').reset();
+    pintarHecho(r.fecha, true);
+  } catch (e) {
+    st.className = 'estado mal'; st.textContent = e.message;
+    b.disabled = false; b.textContent = 'Enviar mis datos cifrados';
+  }
+}
+
+function volver() { return el('a', { class: 'volver', href: token ? '/p/' + token : '/' }, '← Volver a mi entrevista'); }
+function pintarHecho(fecha, recien) {
+  $app.poner(
+    el('h1', {}, recien ? '¡Listo! Tus datos se enviaron' : 'Ya enviaste tus datos'),
+    el('div', { class: 'hecho' },
+      el('p', { style: 'margin:0 0 8px' }, '🔒 Tus datos llegaron cifrados. Solo Administración puede abrirlos.'),
+      fecha ? el('p', { class: 'nota' }, 'Registrado: ' + new Date(fecha).toLocaleString('es-MX', { dateStyle: 'long', timeStyle: 'short' })) : null),
+    el('p', {}, volver()),
+    recien ? null : el('p', { class: 'nota' }, 'Si algo cambió (por ejemplo, tu cuenta de banco), puedes volver a enviarlos:'),
+    recien ? null : el('button', { onclick: pintarFormulario, style: 'margin-top:8px' }, 'Actualizar mis datos'));
+}
+
+function pintarFormulario() {
+  const bloques = [];
+  let actual = null;
+  for (const c of CAMPOS) {
+    if (c.sec) { actual = el('div', { class: 'tarjeta' }, el('h2', {}, c.sec)); bloques.push(actual); }
+    else actual.append(c.fila ? el('div', { class: 'doble' }, c.fila.map(campo)) : campo(c));
+  }
+  $app.poner(
+    el('h1', {}, 'Datos para Administración'),
+    el('p', { class: 'sub' }, 'Llena todo para completar tu expediente y tu alta en nómina. Te toma unos 3 minutos.'),
+    el('p', { class: 'candado' }, '🔒 Tus datos se cifran aquí mismo, en tu celular, antes de enviarse. El servidor solo guarda un archivo que no se puede leer; únicamente Administración (Esnebith Sánchez) puede abrirlo. No se guardan en tu celular.'),
+    el('form', { id: 'formulario', novalidate: true, onsubmit: enviar, autocomplete: 'off' },
+      bloques,
+      el('button', { id: 'enviar', type: 'submit' }, 'Enviar mis datos cifrados'),
+      el('p', { class: 'estado', id: 'estado', role: 'status' })),
+    el('p', { style: 'margin-top:16px' }, volver()));
+}
+
+async function arrancar() {
+  if (!token) {
+    return $app.poner(el('h1', {}, 'Abre tu link personal'),
+      el('p', { class: 'sub' }, 'Entra primero a tu entrevista con tu link personal y desde ahí toca «Capturar mis datos».'));
+  }
+  if (!window.crypto || !crypto.subtle) {
+    return $app.poner(el('h1', {}, 'Abre esta página en Safari o Chrome'),
+      el('p', { class: 'sub' }, 'Tu navegador no permite cifrar los datos. Abre tu link en Safari o Chrome actualizados.'));
+  }
+  try {
+    const s = await api('/api/sesion?t=' + encodeURIComponent(token));
+    document.getElementById('quien').textContent = `${s.persona.nombre} · ${s.persona.cargo}`;
+    if (!s.formulario_datos) throw new Error('El formulario todavía no está disponible.');
+    s.datos_entregados ? pintarHecho(s.datos_entregados, false) : pintarFormulario();
+  } catch (e) {
+    $app.poner(el('h1', {}, 'No pudimos abrir el formulario'), el('p', { class: 'sub' }, e.message), el('p', {}, volver()));
+  }
+}
+arrancar();
+</script>
+</body>
+</html>

@@ -73,6 +73,10 @@
   a.boton-link { display: inline-block; text-decoration: none; color: var(--acento-t); background: var(--acento); font-weight: 700; border-radius: 10px; padding: 12px 16px; margin-top: 8px; }
   .leyenda { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; font-weight: 600; color: var(--acento); margin: 12px 0 0; }
   .qa .editar { margin-top: 6px; padding: 6px 10px; font-size: 13px; }
+  .pendiente-datos { background: #2a2414; border: 1px solid #5a4a1a; border-radius: var(--radio); padding: 16px 18px; margin: 0 0 16px; }
+  .pendiente-datos b { display: block; color: #f5dc8a; margin-bottom: 4px; }
+  .pendiente-datos p { margin: 0 0 4px; color: #e8dcb8; font-size: 14px; }
+  .datos-ok { color: var(--verde); font-size: 14px; margin: 0 0 16px; }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -262,6 +266,15 @@ async function arrancar(t) {
   catch (e) { ls.del('prisma_token'); history.replaceState(null, '', '/'); api('/api/publico').then(c => c.link_general ? cargarLista('') : pantallaSoloLink(e.message)).catch(() => pantallaSoloLink(e.message)); }
 }
 function linkPersonal() { return location.origin + '/p/' + token; }
+// Datos para Administración: formulario aparte y cifrado (no cambia el avance de la entrevista).
+function avisoDatos(s) {
+  if (!s.formulario_datos) return null;
+  if (s.datos_entregados) return el('p', { class: 'datos-ok' }, '✓ Ya enviaste tus datos para Administración (cifrados). ', el('a', { href: '/datos#t=' + token, style: 'color:inherit' }, 'Actualizar'));
+  return el('div', { class: 'pendiente-datos' },
+    el('b', {}, '📋 Pendiente: tus datos para Administración'),
+    el('p', {}, 'RFC, CURP, NSS, fecha de nacimiento, banco y CLABE, domicilio y contacto de emergencia. Se cifran en tu celular; solo Administración puede verlos.'),
+    el('a', { class: 'boton-link', href: '/datos#t=' + token }, 'Capturar mis datos →'));
+}
 
 function pintar() {
   const s = sesion, p = s.persona;
@@ -287,12 +300,14 @@ function pintar() {
       ? el('h1', {}, `Tienes ${s.rondas_pendientes} pregunta${s.rondas_pendientes === 1 ? '' : 's'} nueva${s.rondas_pendientes === 1 ? '' : 's'}`)
       : el('h1', {}, `Hola, ${p.nombre.split(' ')[0].replace(/"/g, '')}`),
     el('p', { class: 'sub' }, `${p.area_nombre}${p.equipo ? ' · ' + p.equipo : ''} — ${s.progreso}% completado. Tu avance se guarda solo.`),
+    avisoDatos(s),
     el('div', { class: 'tarjeta' }, etiqueta,
       el('p', { class: 'pregunta' }, q.texto),
-      esLista ? el('p', { class: 'aviso-datos' }, '🔒 No escribas aquí tu RFC, CURP, NSS ni datos bancarios. Solo marca lo que ya entregaste; lo que falte, entrégalo a Administración' + (s.link_datos ? ' o captúralo en el sistema.' : '.')) : null,
+      esLista ? el('p', { class: 'aviso-datos' }, '🔒 No escribas aquí tu RFC, CURP, NSS ni datos bancarios. Solo marca lo que ya entregaste; lo que falte, entrégalo a Administración' + (s.formulario_datos ? ' o captúralo en el formulario cifrado.' : s.link_datos ? ' o captúralo en el sistema.' : '.')) : null,
       q.ayuda ? el('p', { class: 'ayuda' }, q.ayuda) : null,
       area,
-      esLista && s.link_datos ? el('a', { class: 'boton-link', href: s.link_datos, target: '_blank', rel: 'noopener' }, 'Capturar mis datos en el sistema →') : null,
+      esLista && s.formulario_datos ? el('a', { class: 'boton-link', href: '/datos#t=' + token }, 'Capturar mis datos (cifrado) →')
+        : esLista && s.link_datos ? el('a', { class: 'boton-link', href: s.link_datos, target: '_blank', rel: 'noopener' }, 'Capturar mis datos en el sistema →') : null,
       el('p', { class: 'leyenda' }, '⚠️ ', LEYENDA + ' Puedes corregirla en «Tus respuestas» hasta que termines la entrevista.'),
       el('div', { class: 'acciones' }, btnEnviar, btnSaltar),
       el('p', { class: 'nota', id: 'estadoEnvio' }, s.ia ? 'Si hace falta, te haremos una pregunta de seguimiento.' : '')),
@@ -352,6 +367,7 @@ function pintarFin() {
   $app.poner(
     el('h1', {}, '¡Gracias! Tu entrevista quedó registrada'),
     el('p', { class: 'sub' }, 'Tus respuestas ya quedaron guardadas para PrismaOS.'),
+    avisoDatos(sesion),
     el('div', { class: 'tarjeta pila' },
       el('p', { class: 'leyenda', style: 'margin:0' }, '🔒 ', 'Esta respuesta se registró una única vez y el acceso a tu nombre quedó cerrado.'),
       el('p', { style: 'margin:0' }, 'Si más adelante necesitamos preguntarte algo, te abriremos el acceso y te avisaremos para que entres con este mismo link.')),
