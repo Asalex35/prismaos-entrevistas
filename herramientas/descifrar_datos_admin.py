@@ -59,19 +59,26 @@ def main():
     todo = json.load(open(a.archivo, encoding='utf-8')) if a.archivo else bajar_sobres()
     filas, errores = [], []
     for pid, info in sorted(todo.items(), key=lambda x: x[1]['nombre']):
-        ultimo = info['envios'][-1]  # el envío más reciente de cada persona
-        try:
-            d = abrir(privada, ultimo)
-        except Exception:
+        # Se juntan todos los envíos en orden: un dato lleno nunca se pierde porque un envío posterior venga vacío.
+        d, ok = {}, 0
+        for sobre in info['envios']:
+            try:
+                parte = abrir(privada, sobre)
+            except Exception:
+                continue
+            ok += 1
+            d.update({k: v for k, v in parte.items() if k in dict(COLUMNAS) and str(v).strip()})
+        if not ok:
             errores.append(info['nombre'])
             continue
-        filas.append([info['nombre'], info.get('cargo', ''), ultimo['fecha'], len(info['envios'])]
-                     + [d.get(k, '') for k, _ in COLUMNAS])
+        faltan = [t for k, t in COLUMNAS if k != 'cuenta' and not d.get(k)]
+        filas.append([info['nombre'], info.get('cargo', ''), 'Sí' if not faltan else 'No', ', '.join(faltan),
+                      info['envios'][-1]['fecha'], len(info['envios'])] + [d.get(k, '') for k, _ in COLUMNAS])
     viejo = os.umask(0o077)
     try:
         with open(a.salida, 'w', encoding='utf-8-sig', newline='') as f:
             w = csv.writer(f)
-            w.writerow(['Persona (app)', 'Puesto', 'Enviado', 'Envíos'] + [t for _, t in COLUMNAS])
+            w.writerow(['Persona (app)', 'Puesto', 'Completo', 'Le falta', 'Último envío', 'Envíos'] + [t for _, t in COLUMNAS])
             w.writerows(filas)
     finally:
         os.umask(viejo)

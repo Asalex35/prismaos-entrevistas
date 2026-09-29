@@ -47,6 +47,10 @@
   .estado { font-size: 15px; min-height: 1.2em; margin: 10px 0 0; }
   .estado.mal { color: #ff8a7a; }
   .hecho { background: #16261d; border: 1px solid #245a3b; border-radius: var(--radio); padding: 20px; }
+  button.secundario { background: transparent; color: var(--texto); border-color: var(--borde); margin-top: 10px; }
+  .pendiente { background: #2a2414; border: 1px solid #5a4a1a; color: #f5dc8a; border-radius: var(--radio); padding: 16px 18px; margin: 0 0 16px; }
+  .pendiente .nota { color: #e8dcb8; }
+  ul.faltan { margin: 0; padding-left: 20px; color: var(--texto); }
 </style>
 </head>
 <body>
@@ -140,22 +144,28 @@ function valores() {
   for (const c of planos) d[c.id] = document.getElementById(c.id).value.trim();
   return d;
 }
-function validar(d) {
+const ETIQUETA = Object.fromEntries(planos.map(c => [c.id, c.id.startsWith('emergencia_') ? 'Contacto de emergencia: ' + c.et.toLowerCase() : c.et]));
+const REQUERIDOS = planos.filter(c => c.req);
+let EST = null;  // estado en el servidor: null | { fecha, faltan: [...], completo }
+
+function validar(d, parcial) {
   let primero = null;
   for (const c of planos) {
     const v = d[c.id];
-    const msj = c.req && !v ? 'Falta este dato.' : (v && c.ok && !c.ok(v)) ? c.msj : '';
+    const msj = !parcial && c.req && !v ? 'Falta este dato.' : (v && c.ok && !c.ok(v)) ? c.msj : '';
     marcar(c, msj);
     if (msj && !primero) primero = c.id;
   }
   if (primero) document.getElementById(primero).focus();
   return !primero;
 }
+const faltantes = d => REQUERIDOS.filter(c => !d[c.id]).map(c => c.id);
 
-// ---------- cifrado en el celular (RSA-OAEP 3072 + AES-GCM 256) ----------
+// ---------- cifrado para Administración (RSA-OAEP 3072 + AES-GCM 256) ----------
 const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const deB64 = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
 async function cifrar(pem, datos) {
-  const der = Uint8Array.from(atob(pem.replace(/-----[^-]+-----|\s/g, '')), ch => ch.charCodeAt(0));
+  const der = deB64(pem.replace(/-----[^-]+-----|\s/g, ''));
   const publica = await crypto.subtle.importKey('spki', der, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['encrypt']);
   const aes = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt']);
   const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -165,52 +175,118 @@ async function cifrar(pem, datos) {
   return { v: 1, clave: b64(clave), iv: b64(iv), datos: b64(cifrado) };
 }
 
-async function enviar(ev) {
-  ev.preventDefault();
+// ---------- borrador cifrado en ESTE celular (para no volver a escribir) ----------
+// La llave vive en IndexedDB como NO exportable: el borrador solo se abre desde esta página, en este celular.
+const BORRADOR = 'prisma_datos_borrador_';
+function idb() {
+  return new Promise((ok, mal) => {
+    const r = indexedDB.open('prisma_datos', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('llaves');
+    r.onsuccess = () => ok(r.result); r.onerror = () => mal(r.error);
+  });
+}
+async function llaveLocal(crear) {
+  const db = await idb();
+  let k = await new Promise((ok, mal) => { const q = db.transaction('llaves').objectStore('llaves').get('borrador'); q.onsuccess = () => ok(q.result); q.onerror = () => mal(q.error); });
+  if (!k && crear) {
+    k = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+    await new Promise((ok, mal) => { const t = db.transaction('llaves', 'readwrite'); t.objectStore('llaves').put(k, 'borrador'); t.oncomplete = ok; t.onerror = () => mal(t.error); });
+  }
+  return k;
+}
+async function guardarBorrador(d) {
+  const k = await llaveLocal(true);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const c = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, k, new TextEncoder().encode(JSON.stringify(d)));
+  localStorage.setItem(BORRADOR + token, JSON.stringify({ iv: b64(iv), datos: b64(c) }));
+}
+async function leerBorrador() {
+  try {
+    const g = JSON.parse(localStorage.getItem(BORRADOR + token) || 'null');
+    const k = g && await llaveLocal(false);
+    if (!k) return null;
+    return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: deB64(g.iv) }, k, deB64(g.datos))));
+  } catch (e) { return null; }
+}
+function borrarBorrador() { try { localStorage.removeItem(BORRADOR + token); } catch (e) {} }
+
+function mensaje(t, mal) { const st = document.getElementById('estado'); st.className = 'estado' + (mal ? ' mal' : ''); st.textContent = t; }
+async function enviar(parcial) {
   const d = valores();
-  if (!validar(d)) return;
-  const b = document.getElementById('enviar'), st = document.getElementById('estado');
-  b.disabled = true; b.textContent = 'Cifrando y enviando…'; st.className = 'estado'; st.textContent = '';
+  if (!validar(d, parcial)) return;
+  const faltan = faltantes(d);
+  if (parcial && faltan.length === REQUERIDOS.length && !d.cuenta) return mensaje('Llena al menos un dato para poder guardar.', true);
+  const botones = [...document.querySelectorAll('#formulario button')];
+  botones.forEach(b => { b.disabled = true; });
+  mensaje(parcial ? 'Cifrando y guardando…' : 'Cifrando y enviando…');
   try {
     const { pem } = await api('/api/datos_llave');
-    const sobre = await cifrar(pem, { ...d, enviado: new Date().toISOString() });
-    const r = await api('/api/datos_admin', { t: token, sobre });
-    document.getElementById('formulario').reset();
-    pintarHecho(r.fecha, true);
+    const sobre = await cifrar(pem, { ...d, enviado: new Date().toISOString(), completo: !faltan.length });
+    const r = await api('/api/datos_admin', { t: token, sobre, faltan });
+    EST = r.estado;
+    let local = true;
+    if (EST.completo) borrarBorrador();
+    else { try { await guardarBorrador(d); } catch (e) { local = false; } }
+    pintarHecho(true, local);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (e) {
-    st.className = 'estado mal'; st.textContent = e.message;
-    b.disabled = false; b.textContent = 'Enviar mis datos cifrados';
+    mensaje(e.message, true);
+    botones.forEach(b => { b.disabled = false; });
   }
 }
 
 function volver() { return el('a', { class: 'volver', href: token ? '/p/' + token : '/' }, '← Volver a mi entrevista'); }
-function pintarHecho(fecha, recien) {
+function listaFaltan(ids) { return el('ul', { class: 'faltan' }, ids.map(id => el('li', {}, ETIQUETA[id] || id))); }
+function pintarHecho(recien, local) {
+  const f = EST.fecha ? el('p', { class: 'nota' }, 'Última vez: ' + new Date(EST.fecha).toLocaleString('es-MX', { dateStyle: 'long', timeStyle: 'short' })) : null;
+  if (EST.completo) {
+    return $app.poner(
+      el('h1', {}, recien ? '¡Listo! Tus datos están completos' : 'Ya enviaste tus datos completos'),
+      el('div', { class: 'hecho' }, el('p', { style: 'margin:0 0 8px' }, '🔒 Llegaron cifrados. Solo Administración puede abrirlos.'), f),
+      el('p', {}, volver()),
+      el('p', { class: 'nota' }, 'Si algo cambió (por ejemplo, tu cuenta de banco), puedes volver a enviarlos:'),
+      el('button', { class: 'secundario', onclick: () => pintarFormulario() }, 'Actualizar mis datos'));
+  }
   $app.poner(
-    el('h1', {}, recien ? '¡Listo! Tus datos se enviaron' : 'Ya enviaste tus datos'),
-    el('div', { class: 'hecho' },
-      el('p', { style: 'margin:0 0 8px' }, '🔒 Tus datos llegaron cifrados. Solo Administración puede abrirlos.'),
-      fecha ? el('p', { class: 'nota' }, 'Registrado: ' + new Date(fecha).toLocaleString('es-MX', { dateStyle: 'long', timeStyle: 'short' })) : null),
-    el('p', {}, volver()),
-    recien ? null : el('p', { class: 'nota' }, 'Si algo cambió (por ejemplo, tu cuenta de banco), puedes volver a enviarlos:'),
-    recien ? null : el('button', { onclick: pintarFormulario, style: 'margin-top:8px' }, 'Actualizar mis datos'));
+    el('h1', {}, `Guardado. Te falta${EST.faltan.length === 1 ? '' : 'n'} ${EST.faltan.length} dato${EST.faltan.length === 1 ? '' : 's'}`),
+    el('div', { class: 'pendiente' },
+      el('p', { style: 'margin:0 0 6px' }, 'Cuando los tengas, vuelve con tu mismo link y complétalos:'),
+      listaFaltan(EST.faltan),
+      el('p', { class: 'nota', style: 'margin-top:8px' }, '🔒 Lo que ya llenaste le llegó cifrado a Administración.'),
+      recien ? el('p', { class: 'nota' }, local
+        ? 'También quedó guardado (cifrado) en este celular para que no lo vuelvas a escribir.'
+        : 'Tu navegador no dejó guardar el borrador en el celular: cuando vuelvas, llena solo lo que falta.') : null,
+      f),
+    el('button', { onclick: () => pintarFormulario() }, 'Seguir llenando'),
+    el('p', { style: 'margin-top:16px' }, volver()));
 }
 
-function pintarFormulario() {
+async function pintarFormulario() {
   const bloques = [];
   let actual = null;
   for (const c of CAMPOS) {
     if (c.sec) { actual = el('div', { class: 'tarjeta' }, el('h2', {}, c.sec)); bloques.push(actual); }
     else actual.append(c.fila ? el('div', { class: 'doble' }, c.fila.map(campo)) : campo(c));
   }
+  const parcial = EST && !EST.completo;
   $app.poner(
     el('h1', {}, 'Datos para Administración'),
-    el('p', { class: 'sub' }, 'Llena todo para completar tu expediente y tu alta en nómina. Te toma unos 3 minutos.'),
-    el('p', { class: 'candado' }, '🔒 Tus datos se cifran aquí mismo, en tu celular, antes de enviarse. El servidor solo guarda un archivo que no se puede leer; únicamente Administración (Esnebith Sánchez) puede abrirlo. No se guardan en tu celular.'),
-    el('form', { id: 'formulario', novalidate: true, onsubmit: enviar, autocomplete: 'off' },
+    el('p', { class: 'sub' }, 'Para tu expediente y tu alta en nómina. Si ahorita no tienes algún dato, llena lo que tengas y toca «Guardar y seguir después».'),
+    parcial ? el('div', { class: 'pendiente' }, el('p', { style: 'margin:0 0 6px' }, 'Te falta completar:'), listaFaltan(EST.faltan)) : null,
+    el('p', { class: 'candado' }, '🔒 Tus datos se cifran aquí mismo, en tu celular, antes de enviarse. El servidor solo guarda un archivo que no se puede leer; únicamente Administración (Esnebith Sánchez) puede abrirlo.'),
+    el('form', { id: 'formulario', novalidate: true, autocomplete: 'off', onsubmit: e => { e.preventDefault(); enviar(false); } },
       bloques,
-      el('button', { id: 'enviar', type: 'submit' }, 'Enviar mis datos cifrados'),
+      el('button', { id: 'enviar', type: 'submit' }, 'Enviar mis datos completos'),
+      el('button', { type: 'button', class: 'secundario', onclick: () => enviar(true) }, 'Guardar y seguir después'),
       el('p', { class: 'estado', id: 'estado', role: 'status' })),
     el('p', { style: 'margin-top:16px' }, volver()));
+  const b = await leerBorrador();
+  if (b) {
+    for (const c of planos) if (b[c.id]) document.getElementById(c.id).value = b[c.id];
+    mensaje('Recuperamos lo que ya habías llenado en este celular.');
+  } else if (parcial) {
+    mensaje('Llena solo lo que te falta: lo que ya enviaste no se pierde.');
+  }
 }
 
 async function arrancar() {
@@ -226,7 +302,8 @@ async function arrancar() {
     const s = await api('/api/sesion?t=' + encodeURIComponent(token));
     document.getElementById('quien').textContent = `${s.persona.nombre} · ${s.persona.cargo}`;
     if (!s.formulario_datos) throw new Error('El formulario todavía no está disponible.');
-    s.datos_entregados ? pintarHecho(s.datos_entregados, false) : pintarFormulario();
+    EST = s.datos_estado;
+    EST && EST.completo ? pintarHecho(false) : pintarFormulario();
   } catch (e) {
     $app.poner(el('h1', {}, 'No pudimos abrir el formulario'), el('p', { class: 'sub' }, e.message), el('p', {}, volver()));
   }

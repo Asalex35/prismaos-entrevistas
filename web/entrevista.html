@@ -269,7 +269,12 @@ function linkPersonal() { return location.origin + '/p/' + token; }
 // Datos para Administración: formulario aparte y cifrado (no cambia el avance de la entrevista).
 function avisoDatos(s) {
   if (!s.formulario_datos) return null;
-  if (s.datos_entregados) return el('p', { class: 'datos-ok' }, '✓ Ya enviaste tus datos para Administración (cifrados). ', el('a', { href: '/datos#t=' + token, style: 'color:inherit' }, 'Actualizar'));
+  const d = s.datos_estado;
+  if (d && d.completo) return el('p', { class: 'datos-ok' }, '✓ Ya enviaste tus datos para Administración (cifrados). ', el('a', { href: '/datos#t=' + token, style: 'color:inherit' }, 'Actualizar'));
+  if (d) return el('div', { class: 'pendiente-datos' },
+    el('b', {}, `📋 Te falta${d.faltan.length === 1 ? '' : 'n'} ${d.faltan.length} dato${d.faltan.length === 1 ? '' : 's'} para Administración`),
+    el('p', {}, 'Lo que ya guardaste le llegó cifrado a Administración. Complétalo cuando tengas lo que falta.'),
+    el('a', { class: 'boton-link', href: '/datos#t=' + token }, 'Completar mis datos →'));
   return el('div', { class: 'pendiente-datos' },
     el('b', {}, '📋 Pendiente: tus datos para Administración'),
     el('p', {}, 'RFC, CURP, NSS, fecha de nacimiento, banco y CLABE, domicilio y contacto de emergencia. Se cifran en tu celular; solo Administración puede verlos.'),

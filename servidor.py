@@ -297,22 +297,38 @@ def envios_datos(pid):
     return leer(os.path.join(DAD, f'{pid}.json'), []) or []
 
 
-def datos_entregados(pid):
+# Campos obligatorios (la cuenta es opcional si ponen CLABE). Solo los NOMBRES de lo que falta viajan sin cifrar.
+CAMPOS_REQUERIDOS = ('nombre_completo', 'rfc', 'curp', 'nss', 'fecha_nacimiento', 'banco', 'clabe', 'calle_numero',
+                     'colonia', 'cp', 'municipio', 'estado', 'emergencia_nombre', 'emergencia_parentesco',
+                     'emergencia_telefono')
+
+
+def estado_datos(pid):
+    """None si no ha enviado nada; si no, fecha del último envío y qué campos siguen sin llenar.
+    Un campo cuenta como entregado si vino lleno en CUALQUIER envío (al descifrar se juntan todos)."""
     env = envios_datos(pid)
-    return env[-1]['fecha'] if env else None
+    if not env:
+        return None
+    faltan = set(CAMPOS_REQUERIDOS)
+    for e in env:
+        faltan &= set(e.get('faltan', []))  # envíos sin 'faltan' fueron completos
+    faltan = [c for c in CAMPOS_REQUERIDOS if c in faltan]
+    return {'fecha': env[-1]['fecha'], 'faltan': faltan, 'completo': not faltan}
 
 
-def guardar_datos_cifrados(pid, sobre):
+def guardar_datos_cifrados(pid, sobre, faltan):
     b64 = re.compile(r'[A-Za-z0-9+/=]+')
     partes = {k: sobre.get(k) for k in ('clave', 'iv', 'datos')}
     if sobre.get('v') != 1 or not all(isinstance(v, str) and b64.fullmatch(v) for v in partes.values()):
         return False
     if len(partes['clave']) > 1000 or len(partes['iv']) > 40 or len(partes['datos']) > 20000:
         return False
+    if not isinstance(faltan, list) or not set(faltan) <= set(CAMPOS_REQUERIDOS):
+        return False
     with LOCK:
         os.makedirs(DAD, exist_ok=True)
         env = envios_datos(pid)
-        env.append({'v': 1, **partes, 'fecha': ahora()})
+        env.append({'v': 1, **partes, 'faltan': [c for c in CAMPOS_REQUERIDOS if c in faltan], 'fecha': ahora()})
         escribir(os.path.join(DAD, f'{pid}.json'), env)
     return True
 
@@ -332,7 +348,7 @@ def vista_sesion(pid):
                       for i, r in enumerate(e['respuestas'])][-60:],
         'link_datos': ajustes()['link_datos_personales'],
         'formulario_datos': bool(llave_publica_datos()),
-        'datos_entregados': datos_entregados(pid),
+        'datos_estado': estado_datos(pid),
         'cerrada': e.get('cerrada'),
         'ia': bool(IA['ok']) and ajustes()['ia_repreguntas_en_vivo'],
     }
@@ -922,7 +938,7 @@ def estado_admin():
                       'actualizado': e.get('actualizado'), 'tiene_resumen': bool(e.get('resumen')),
                       'enviado': env.get(p['id'], {}).get('ultimo'), 'envios': env.get(p['id'], {}).get('veces', 0),
                       'telefono': tels.get(p['id'], ''), 'reclamado': recl.get(p['id'], {}).get('fecha'), 'cerrada': e.get('cerrada'),
-                      'datos_formulario': datos_entregados(p['id']),
+                      'datos_formulario': estado_datos(p['id']),
                       'datos_admin': next(({'faltan': r.get('faltan', []), 'entregados': r.get('seleccion', [])}
                                            for r in e['respuestas'] if r.get('formato') == 'checklist'), None)})
     tunel = URL_PUBLICA
@@ -1147,9 +1163,9 @@ class Manejador(BaseHTTPRequestHandler):
                 return self._enviar(404, {'error': 'Este link no es válido. Abre el formulario desde tu link personal.'})
             if demasiados_intentos('datos:' + pid, limite=20):
                 return self._enviar(429, {'error': 'Demasiados envíos seguidos. Espera unos minutos.'})
-            if not guardar_datos_cifrados(pid, b.get('sobre') or {}):
+            if not guardar_datos_cifrados(pid, b.get('sobre') or {}, b.get('faltan', [])):
                 return self._enviar(400, {'error': 'No se pudo leer el envío. Recarga la página e intenta de nuevo.'})
-            return self._enviar(200, {'ok': True, 'fecha': datos_entregados(pid)})
+            return self._enviar(200, {'ok': True, 'estado': estado_datos(pid)})
         if ruta == '/api/editar':
             pid = pid_por_token(b.get('t', ''))
             if not pid:
