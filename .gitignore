@@ -1,0 +1,16 @@
+# Datos de las personas (respuestas, teléfonos, tokens de links, PIN del tablero, exportaciones).
+# La app los crea sola en datos/ al arrancar. NUNCA se suben.
+datos/
+
+# Por si algún día se agregan
+.env
+*.env
+*.pem
+*.key
+
+# Basura del sistema / Python
+__pycache__/
+*.pyc
+*.tmp
+*.log
+.DS_Store

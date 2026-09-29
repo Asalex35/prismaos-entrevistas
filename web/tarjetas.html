@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarjetas QR PrismaOS</title>
+<link rel="icon" href="/logo.svg">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root { --tinta: #141417; --gris: #5d6068; --acento: #FFC704; --fuente: "Archivo", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #ECECEA; color: var(--tinta); font-family: var(--fuente); }
+  .barra { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 14px 20px; background: #141417; color: #F2F2F0; }
+  .barra b { font-stretch: 78%; letter-spacing: .08em; text-transform: uppercase; margin-right: auto; }
+  .barra button { font: inherit; font-weight: 700; background: var(--acento); border: 0; border-radius: 8px; padding: 9px 14px; cursor: pointer; }
+  .hoja { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; padding: 20px; }
+  .tarjeta { background: #fff; border: 1px dashed #b9bbbf; border-radius: 10px; padding: 14px; display: grid; gap: 8px; break-inside: avoid; page-break-inside: avoid; }
+  .cab { display: flex; align-items: center; gap: 8px; }
+  .cab img { width: 34px; }
+  .cab span { font-stretch: 78%; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; font-size: 12px; }
+  .nombre { font-stretch: 85%; font-weight: 800; font-size: 20px; line-height: 1.1; }
+  .cargo { color: var(--gris); font-size: 12px; }
+  .qr { justify-self: center; }
+  .pasos { margin: 0; padding-left: 18px; font-size: 11.5px; color: #33353b; }
+  .link { font-family: ui-monospace, Menlo, monospace; font-size: 9px; color: var(--gris); word-break: break-all; }
+  .vacio { padding: 40px 20px; }
+  @media print {
+    body { background: #fff; }
+    .barra { display: none; }
+    .hoja { grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0; }
+    @page { size: letter; margin: 10mm; }
+  }
+</style>
+</head>
+<body>
+<div class="barra"><b>Tarjetas QR · Entrevistas PrismaOS</b><span id="cuenta"></span><button onclick="window.print()">Imprimir</button></div>
+<main class="hoja" id="hoja"></main>
+<script>
+const qs = new URLSearchParams(location.search);
+const pin = qs.get('pin') || '';
+const solo = qs.get('solo');
+function el(tag, attrs = {}, ...hijos) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) { if (k === 'class') n.className = v; else n.setAttribute(k, v); }
+  for (const h of hijos.flat()) if (h != null) n.append(h.nodeType ? h : document.createTextNode(String(h)));
+  return n;
+}
+fetch('/api/admin/estado', { headers: { 'X-Pin': pin } }).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(d => {
+  const base = (d.red.tunel || d.red.lan).replace(/\/$/, '');
+  const lista = d.personas.filter(p => solo === 'pendientes' ? p.estado !== 'completa' : true);
+  document.getElementById('cuenta').textContent = `${lista.length} tarjetas`;
+  const hoja = document.getElementById('hoja');
+  for (const p of lista) {
+    const link = base + '/p/' + p.token;
+    const qr = el('div', { class: 'qr' });
+    hoja.append(el('div', { class: 'tarjeta' },
+      el('div', { class: 'cab' }, el('img', { src: '/logo.svg', alt: '' }), el('span', {}, 'Entrevista PrismaOS')),
+      el('div', {}, el('div', { class: 'nombre' }, p.nombre), el('div', { class: 'cargo' }, `${p.cargo} · ${p.area_nombre}${p.equipo ? ' · ' + p.equipo : ''}`)),
+      qr,
+      el('ol', { class: 'pasos' },
+        el('li', {}, 'Conéctate al Wi-Fi de la oficina.'),
+        el('li', {}, 'Escanea el código con la cámara.'),
+        el('li', {}, `Contesta (${p.base_total} preguntas, unos ${Math.max(10, Math.round(p.base_total * 1.2))} min). Se guarda solo; puedes dictar y pausar.`)),
+      el('div', { class: 'link' }, 'Es solo para ti · ' + link)));
+    try { new QRCode(qr, { text: link, width: 132, height: 132, colorDark: '#141417', colorLight: '#ffffff' }); } catch (e) { qr.textContent = link; }
+  }
+  if (!lista.length) hoja.append(el('p', { class: 'vacio' }, 'No hay personas pendientes.'));
+}).catch(() => { document.getElementById('hoja').append(el('p', { class: 'vacio' }, 'Abre esta página desde el tablero (necesita el PIN).')); });
+</script>
+</body>
+</html>

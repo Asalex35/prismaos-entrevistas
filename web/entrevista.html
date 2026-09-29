@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141417">
+<title>Entrevista PrismaOS</title>
+<link rel="icon" href="/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --fondo: #1C1C21; --barra: #141417; --tarjeta: #24242B; --borde: #33333B;
+    --texto: #F2F2F0; --texto2: #9CA0AA; --acento: #FFC704; --acento-t: #1C1C21;
+    --azul: #5B8DEF; --morado: #A07CF0; --verde: #3FBF7F;
+    --radio: 14px;
+    --fuente: "Archivo", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--fondo); color: var(--texto); font-family: var(--fuente); margin: 0; }
+  body { min-height: 100vh; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  .envoltura { max-width: 680px; margin: 0 auto; padding-inline: 16px; padding-block: 0 48px; }
+  header.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--barra); border-bottom: 1px solid var(--borde); }
+  header .fila { max-width: 680px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+  header img { width: 44px; height: auto; }
+  .marca { font-stretch: 75%; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 15px; }
+  .marca small { display: block; color: var(--texto2); font-weight: 500; letter-spacing: .04em; font-size: 12px; text-transform: none; font-stretch: 100%; }
+  .progreso { height: 4px; background: var(--borde); }
+  .progreso > i { display: block; height: 100%; background: var(--acento); width: 0; transition: width .5s ease-out; }
+  h1 { font-stretch: 80%; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; font-size: clamp(26px, 7vw, 34px); line-height: 1.1; margin: 28px 0 8px; text-wrap: balance; }
+  .sub { color: var(--texto2); margin: 0 0 20px; }
+  .tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); padding: 20px; }
+  .pila { display: grid; gap: 14px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--texto2); }
+  .chip.seg { color: var(--morado); } .chip.ronda { color: var(--azul); }
+  .pregunta { font-size: 20px; font-weight: 600; line-height: 1.35; margin: 8px 0 6px; text-wrap: pretty; }
+  .ayuda { color: var(--texto2); font-size: 14px; margin: 0 0 14px; }
+  textarea, input, select { width: 100%; background: var(--barra); color: var(--texto); border: 1px solid var(--borde); border-radius: 10px; padding: 14px; font: inherit; font-size: 16px; }
+  textarea { min-height: 150px; resize: vertical; }
+  textarea:focus, input:focus, select:focus { outline: 2px solid var(--acento); outline-offset: 1px; border-color: transparent; }
+  .acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  button { font: inherit; font-weight: 700; border-radius: 10px; padding: 13px 18px; border: 1px solid var(--borde); background: transparent; color: var(--texto); cursor: pointer; transition: transform .12s ease, background .2s; }
+  button:hover { background: #2c2c34; }
+  button:active { transform: scale(.98); }
+  button:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+  button.primario { background: var(--acento); color: var(--acento-t); border-color: var(--acento); flex: 1 1 200px; }
+  button.primario:hover { background: #ffd33d; }
+  button[disabled] { opacity: .6; cursor: wait; }
+  .nota { font-size: 13px; color: var(--texto2); }
+  .contador { font-variant-numeric: tabular-nums; }
+  .historial { display: grid; gap: 10px; margin-top: 22px; }
+  .qa { border-left: 2px solid var(--borde); padding: 2px 0 2px 12px; }
+  .qa .p { color: var(--texto2); font-size: 14px; }
+  .qa .r { white-space: pre-wrap; font-size: 15px; }
+  details summary { cursor: pointer; color: var(--texto2); font-size: 14px; padding: 8px 0; }
+  .lista-personas { max-height: 50vh; overflow: auto; display: grid; gap: 6px; margin-top: 10px; }
+  .lista-personas button { text-align: left; font-weight: 500; display: flex; flex-direction: column; align-items: flex-start; }
+  .lista-personas button span { color: var(--texto2); font-size: 13px; }
+  .error { color: #ff8a7a; font-size: 14px; min-height: 1em; }
+  .punto { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--acento); animation: pulso 1.2s infinite ease-in-out; }
+  @keyframes pulso { 50% { opacity: .25; } }
+  .link-personal { word-break: break-all; font-family: ui-monospace, Menlo, monospace; font-size: 13px; background: var(--barra); padding: 10px; border-radius: 8px; border: 1px solid var(--borde); }
+  .faq { margin-top: 18px; }
+  .faq details { border-top: 1px solid var(--borde); }
+  .faq details > summary { color: var(--texto); font-weight: 600; font-size: 15px; padding: 12px 0; }
+  .faq details p { margin: 0 0 12px; color: var(--texto2); font-size: 15px; }
+  .faq > summary { color: var(--acento); font-weight: 700; font-size: 15px; }
+  .casillas { display: grid; gap: 8px; margin: 6px 0 4px; }
+  .casillas label { display: flex; align-items: center; gap: 12px; background: var(--barra); border: 1px solid var(--borde); border-radius: 10px; padding: 12px 14px; font-size: 16px; cursor: pointer; }
+  .casillas input { width: 22px; height: 22px; accent-color: var(--acento); flex: none; }
+  .aviso-datos { background: #2a2414; border: 1px solid #5a4a1a; color: #f5dc8a; border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 0 0 12px; }
+  a.boton-link { display: inline-block; text-decoration: none; color: var(--acento-t); background: var(--acento); font-weight: 700; border-radius: 10px; padding: 12px 16px; margin-top: 8px; }
+  .leyenda { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; font-weight: 600; color: var(--acento); margin: 12px 0 0; }
+  .qa .editar { margin-top: 6px; padding: 6px 10px; font-size: 13px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<header class="barra">
+  <div class="fila">
+    <img src="/logo.svg" alt="Prismaticoos">
+    <div class="marca">PrismaOS · Entrevistas<small id="quien">Conocer cómo trabajamos, área por área</small></div>
+  </div>
+  <div class="progreso" aria-hidden="true"><i id="barra"></i></div>
+</header>
+<main class="envoltura" id="app" aria-live="polite"></main>
+
+<script>
+Element.prototype.poner = function (...h) { this.replaceChildren(...h.flat(Infinity).filter(x => x != null && x !== false)); };
+const $app = document.getElementById('app');
+const ls = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+             set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+             del(k) { try { localStorage.removeItem(k); } catch (e) {} } };
+let token = null, sesion = null, enviando = false;
+
+function el(tag, attrs = {}, ...hijos) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') n.className = v; else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) n.setAttribute(k, v === true ? '' : v);
+  }
+  for (const h of hijos.flat()) if (h != null) n.append(h.nodeType ? h : document.createTextNode(String(h)));
+  return n;
+}
+async function api(ruta, datos) {
+  const r = await fetch(ruta, datos ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) } : {});
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'No se pudo conectar. Revisa tu internet e intenta de nuevo.');
+  return j;
+}
+
+// ---------- entrada por link del grupo ----------
+function dispositivo() {
+  let d = ls.get('prisma_dispositivo');
+  if (!d) {
+    const a = new Uint8Array(18); crypto.getRandomValues(a);
+    d = btoa(String.fromCharCode(...a)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    ls.set('prisma_dispositivo', d);
+  }
+  return d;
+}
+const DISP = dispositivo();
+const LEYENDA = 'Esta respuesta se registrará una única vez.';
+const sinAcentos = t => t.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+
+function pantallaEntrar(error) {
+  $app.poner(
+    el('h1', {}, 'Ayúdanos a entender cómo trabajas'),
+    el('p', { class: 'sub' }, 'Vamos a documentar cómo funciona Prismaticoos, área por área, para que PrismaOS refleje cómo trabajamos de verdad. Tu experiencia es la base. No hay respuestas incorrectas.'),
+    el('div', { class: 'tarjeta pila' },
+      el('label', { for: 'codigo' }, 'Código del equipo'),
+      el('input', { id: 'codigo', autocomplete: 'off', placeholder: 'Viene en el mensaje del grupo', autocapitalize: 'none' }),
+      el('div', { class: 'error', id: 'err' }, error || ''),
+      el('button', { class: 'primario', onclick: () => cargarLista(document.getElementById('codigo').value.trim()) }, 'Continuar')),
+    faq(false));
+}
+async function cargarLista(codigo) {
+  try { await api('/api/entrar', { codigo }); pantallaNombre(codigo); }
+  catch (e) {
+    const err = document.getElementById('err');
+    if (err) err.textContent = e.message; else pantallaEntrar(e.message);
+  }
+}
+function pantallaNombre(codigo, error) {
+  const inp = el('input', { id: 'minombre', placeholder: 'Ej.: María López', autocomplete: 'name', autocapitalize: 'words' });
+  const err = el('div', { class: 'error' }, error || '');
+  const buscar = async (ev) => {
+    const nombre = inp.value.trim();
+    if (nombre.split(/\s+/).length < 2 && nombre.length < 3) { err.textContent = 'Escribe tu nombre y apellido.'; return; }
+    if (ev) ev.target.disabled = true;
+    try { const { persona } = await api('/api/entrar', { codigo, buscar: nombre }); confirmar(codigo, persona); }
+    catch (e) { err.textContent = e.message; }
+    finally { if (ev) ev.target.disabled = false; }
+  };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') buscar(); });
+  $app.poner(
+    el('h1', {}, '¿Quién eres?'),
+    el('p', { class: 'sub' }, 'Escribe tu nombre y apellido. Tu nombre quedará ligado a este celular para que nadie más conteste por ti.'),
+    el('div', { class: 'tarjeta pila' },
+      el('label', { for: 'minombre' }, 'Nombre y apellido'), inp, err,
+      el('button', { class: 'primario', onclick: buscar }, 'Continuar'),
+      el('details', {}, el('summary', {}, 'Soy nuevo o no me encuentra'), formularioNuevo(codigo))),
+    faq(false));
+  inp.focus();
+}
+function confirmar(codigo, p) {
+  const err = el('div', { class: 'error' });
+  $app.poner(
+    el('h1', {}, `¿Eres ${p.nombre.replace(/"/g, '')}?`),
+    el('p', { class: 'sub' }, `${p.cargo} · ${p.area_nombre}${p.equipo ? ' · ' + p.equipo : ''}`),
+    el('div', { class: 'tarjeta pila' },
+      el('p', { style: 'margin:0' }, 'Al confirmar, tu nombre queda ligado a este celular. Así nadie más puede contestar por ti y puedes volver a este mismo link cuando quieras para seguir donde te quedaste.'),
+      el('p', { class: 'leyenda' }, '⚠️ ', 'Esta entrevista se registrará una única vez: al terminarla, el acceso a tu nombre se cierra.'),
+      err,
+      el('button', { class: 'primario', onclick: async (ev) => {
+        ev.target.disabled = true;
+        try { const { token: t } = await api('/api/entrar', { codigo, persona: p.id, dispositivo: DISP }); irA(t); }
+        catch (e) { err.textContent = e.message; ev.target.disabled = false; }
+      } }, 'Sí, soy yo'),
+      el('button', { onclick: () => pantallaNombre(codigo) }, 'No soy yo')));
+}
+function formularioNuevo(codigo) {
+  const areaSel = el('select', { id: 'n_area' }, el('option', { value: '' }, 'Elige tu área'));
+  api('/api/areas').then(areas => areas.forEach(a => areaSel.append(el('option', { value: a.id }, a.nombre)))).catch(() => {});
+  return el('div', { class: 'pila' },
+    el('input', { id: 'n_nombre', placeholder: 'Nombre completo' }),
+    areaSel,
+    el('input', { id: 'n_cargo', placeholder: 'Tu puesto (ej. Editora, Asistente de producción)' }),
+    el('input', { id: 'n_equipo', placeholder: 'Equipo (opcional, ej. Equipo 2)' }),
+    el('div', { class: 'error', id: 'n_err' }),
+    el('button', { class: 'primario', onclick: async () => {
+      try {
+        const { token: t } = await api('/api/entrar', { codigo, dispositivo: DISP, nuevo: {
+          nombre: document.getElementById('n_nombre').value, area: areaSel.value,
+          cargo: document.getElementById('n_cargo').value, equipo: document.getElementById('n_equipo').value } });
+        irA(t);
+      } catch (e) { document.getElementById('n_err').textContent = e.message; }
+    } }, 'Registrarme y empezar'));
+}
+function irA(t) { ls.set('prisma_token', t); history.replaceState(null, '', '/p/' + t); arrancar(t); }
+
+// ---------- preguntas frecuentes ----------
+function minutos() { return Math.max(10, Math.round((sesion?.base_total || 25) * 1.2)); }
+function faq(abierta) {
+  const items = [
+    ['¿Qué es esto?', 'Una entrevista para documentar cómo trabaja cada área de Prismaticoos, contado por quienes lo hacen todos los días. Con tus respuestas, PrismaOS (la app interna) va a reflejar tu trabajo real, las áreas se van a coordinar mejor y nadie se quedará con dudas.'],
+    ['¿Es un examen?', 'No. No hay respuestas buenas ni malas. Queremos saber cómo trabajas de verdad, incluyendo lo que no funciona o te complica.'],
+    ['¿Cuánto tiempo toma?', `Unos ${minutos()} minutos en total. Puedes hacerlo en partes: se guarda solo y sigues después con este mismo link.`],
+    ['¿Tengo que contestar todo?', 'Contesta lo que aplique a tu puesto. Si una pregunta no aplica o no sabes, toca "No aplica / no sé" y sigue.'],
+    ['¿Qué tanto escribo?', 'Lo suficiente para que alguien nuevo entienda: pasos, nombres, formatos, tiempos y un ejemplo real. Mejor concreto que largo. Debajo de cada pregunta hay una guía de qué incluir.'],
+    ['¿Puedo dictar en lugar de escribir?', 'Sí. En iPhone toca el micrófono del teclado; en Android, el micrófono del teclado (Gboard). Revisa que se haya escrito bien antes de enviar.'],
+    ['Me equivoqué, ¿puedo corregir?', 'Sí, mientras no termines la entrevista: abre «Tus respuestas» y toca «Editar». Al terminar, tu entrevista queda registrada una única vez y ya no se puede cambiar.'],
+    ['¿Qué pasa cuando termino?', 'Tu entrevista queda registrada y el acceso a tu nombre se cierra, para que nadie más pueda contestar por ti. Si después necesitamos preguntarte algo, te abrimos el acceso y te avisamos.'],
+    ['¿Por qué me preguntan algo que ya saben?', 'A veces pedimos confirmar un dato para asegurarnos de que quede bien documentado. Si ya está bien, solo dilo.'],
+    ['¿Por qué me preguntan cosas personales?', 'Las preguntas "Para conocerte" (hobbies, música, tu serie favorita…) son opcionales y sirven para conocernos mejor como equipo. Si no quieres contestar alguna, toca "Prefiero no decir".'],
+    ['¿Quién lee mis respuestas?', 'La dirección de Prismaticoos y quienes administran PrismaOS. Se usan para documentar procesos y para el asistente de IA interno de la empresa.'],
+    ['¿Qué NO debo escribir?', 'Contraseñas, datos bancarios ni datos personales de otras personas (domicilios, teléfonos, identificaciones).'],
+    ['No me abre el link', 'Conéctate al Wi-Fi de la oficina y vuelve a abrirlo. Si sigue sin abrir, avisa a quien te lo mandó.'],
+    ['¿Me van a llegar más preguntas?', 'Puede ser. Si necesitamos entender algo mejor, verás preguntas nuevas en este mismo link.'],
+  ];
+  return el('details', { class: 'faq', open: !!abierta }, el('summary', {}, '¿Dudas? Preguntas frecuentes'),
+    items.map(([q, r]) => el('details', {}, el('summary', {}, q), el('p', {}, r))));
+}
+function historialEditable(lista, editable = true) {
+  return el('div', { class: 'historial' }, lista.slice().reverse().map(h => {
+    const caja = el('div', { class: 'qa' });
+    const textoDe = () => h.saltada ? (h.tipo === 'conocerte' ? 'Prefiero no decir' : 'No aplica / no sé') : h.respuesta;
+    const ver = () => caja.poner(el('div', { class: 'p' }, h.pregunta), el('div', { class: 'r' }, textoDe()),
+      editable ? el('button', { class: 'editar', onclick: editar }, 'Editar') : null);
+    const guardar = async (datos, msg) => {
+      try {
+        sesion = await api('/api/editar', { t: token, i: h.i, ...datos });
+        const nuevo = sesion.historial.find(x => x.i === h.i); if (nuevo) Object.assign(h, nuevo);
+        ver();
+      } catch (e) { msg.textContent = e.message; }
+    };
+    const editar = () => {
+      const msg = el('div', { class: 'nota' });
+      if (h.formato === 'checklist') {
+        const cas = el('div', { class: 'casillas' }, (h.opciones || []).map(o => el('label', {}, el('input', { type: 'checkbox', value: o, ...(h.seleccion.includes(o) ? { checked: true } : {}) }), o)));
+        caja.poner(el('div', { class: 'p' }, h.pregunta), cas, el('div', { class: 'acciones' },
+          el('button', { class: 'primario', onclick: () => guardar({ respuesta: '', seleccion: [...cas.querySelectorAll('input:checked')].map(x => x.value) }, msg) }, 'Guardar cambio'),
+          el('button', { onclick: ver }, 'Cancelar')), msg);
+        return;
+      }
+      const t = el('textarea', { style: 'min-height:110px' }); t.value = h.saltada ? '' : h.respuesta;
+      caja.poner(el('div', { class: 'p' }, h.pregunta), t, el('div', { class: 'acciones' },
+        el('button', { class: 'primario', onclick: () => guardar({ respuesta: t.value }, msg) }, 'Guardar cambio'),
+        el('button', { onclick: ver }, 'Cancelar')), msg);
+      t.focus();
+    };
+    ver();
+    return caja;
+  }));
+}
+
+// ---------- entrevista ----------
+async function arrancar(t) {
+  token = t;
+  try { sesion = await api('/api/sesion?t=' + encodeURIComponent(t)); pintar(); }
+  catch (e) { ls.del('prisma_token'); history.replaceState(null, '', '/'); api('/api/publico').then(c => c.link_general ? cargarLista('') : pantallaSoloLink(e.message)).catch(() => pantallaSoloLink(e.message)); }
+}
+function linkPersonal() { return location.origin + '/p/' + token; }
+
+function pintar() {
+  const s = sesion, p = s.persona;
+  document.getElementById('quien').textContent = `${p.nombre} · ${p.cargo}`;
+  document.getElementById('barra').style.width = s.progreso + '%';
+  if (s.estado === 'sin_empezar' && !ls.get('prisma_intro_' + p.id)) return pintarIntro();
+  if (s.cerrada || !s.pregunta) return pintarFin();
+  const q = s.pregunta;
+  const clave = 'prisma_borrador_' + q.qid;
+  const esLista = q.formato === 'checklist';
+  const area = esLista
+    ? el('div', { class: 'casillas', id: 'casillas' }, (q.opciones || []).map(o => el('label', {}, el('input', { type: 'checkbox', value: o }), o)))
+    : el('textarea', { id: 'respuesta', placeholder: 'Escribe o dicta tu respuesta con el micrófono del teclado…', oninput: (e) => ls.set(clave, e.target.value) });
+  if (!esLista) area.value = ls.get(clave) || '';
+  const etiqueta = q.tipo === 'conocerte' ? el('span', { class: 'chip', style: 'color:var(--acento)' }, '💛 Para conocerte · opcional')
+    : q.tipo === 'seguimiento' ? el('span', { class: 'chip seg' }, '● Pregunta de seguimiento')
+    : q.tipo === 'ronda' ? el('span', { class: 'chip ronda' }, '● Pregunta nueva para ti')
+    : el('span', { class: 'chip contador' + (q.tipo === 'personal' ? ' ronda' : '') }, `Pregunta ${Math.min(s.base_hechas + 1, s.base_total)} de ${s.base_total}${q.tipo === 'personal' ? ' · pensada para ti' : ''}`);
+  const btnEnviar = el('button', { class: 'primario', id: 'enviar', onclick: () => enviar(false) }, 'Enviar respuesta');
+  const btnSaltar = esLista ? null : el('button', { onclick: () => enviar(true) }, q.tipo === 'conocerte' ? 'Prefiero no decir' : 'No aplica / no sé');
+  $app.poner(
+    s.estado === 'preguntas_nuevas' && q.tipo === 'ronda' && s.base_hechas === s.base_total
+      ? el('h1', {}, `Tienes ${s.rondas_pendientes} pregunta${s.rondas_pendientes === 1 ? '' : 's'} nueva${s.rondas_pendientes === 1 ? '' : 's'}`)
+      : el('h1', {}, `Hola, ${p.nombre.split(' ')[0].replace(/"/g, '')}`),
+    el('p', { class: 'sub' }, `${p.area_nombre}${p.equipo ? ' · ' + p.equipo : ''} — ${s.progreso}% completado. Tu avance se guarda solo.`),
+    el('div', { class: 'tarjeta' }, etiqueta,
+      el('p', { class: 'pregunta' }, q.texto),
+      esLista ? el('p', { class: 'aviso-datos' }, '🔒 No escribas aquí tu RFC, CURP, NSS ni datos bancarios. Solo marca lo que ya entregaste; lo que falte, entrégalo a Administración' + (s.link_datos ? ' o captúralo en el sistema.' : '.')) : null,
+      q.ayuda ? el('p', { class: 'ayuda' }, q.ayuda) : null,
+      area,
+      esLista && s.link_datos ? el('a', { class: 'boton-link', href: s.link_datos, target: '_blank', rel: 'noopener' }, 'Capturar mis datos en el sistema →') : null,
+      el('p', { class: 'leyenda' }, '⚠️ ', LEYENDA + ' Puedes corregirla en «Tus respuestas» hasta que termines la entrevista.'),
+      el('div', { class: 'acciones' }, btnEnviar, btnSaltar),
+      el('p', { class: 'nota', id: 'estadoEnvio' }, s.ia ? 'Si hace falta, te haremos una pregunta de seguimiento.' : '')),
+    el('details', { style: 'margin-top:16px' }, el('summary', {}, 'Pausar y seguir después'),
+      el('p', { class: 'nota' }, 'Guarda este link: con él regresas justo donde te quedaste.'),
+      el('div', { class: 'link-personal' }, linkPersonal()),
+      el('div', { class: 'acciones' }, el('button', { onclick: copiarLink }, 'Copiar mi link'))),
+    s.historial.length ? el('details', {}, el('summary', {}, `Tus respuestas (${s.historial.length}) — puedes corregirlas`), historialEditable(s.historial, true)) : null,
+    faq(false));
+  if (!esLista) area.focus({ preventScroll: true });
+}
+async function copiarLink(ev) {
+  try { await navigator.clipboard.writeText(linkPersonal()); ev.target.textContent = 'Link copiado'; }
+  catch (e) { ev.target.textContent = 'Selecciona el link y cópialo'; }
+}
+async function enviar(saltar) {
+  if (enviando) return;
+  const q = sesion.pregunta;
+  const casillas = document.getElementById('casillas');
+  const seleccion = casillas ? [...casillas.querySelectorAll('input:checked')].map(x => x.value) : null;
+  const texto = casillas ? '' : document.getElementById('respuesta').value;
+  if (!casillas && !saltar && !texto.trim()) { document.getElementById('estadoEnvio').textContent = 'Escribe tu respuesta o toca "No aplica / no sé".'; return; }
+  enviando = true;
+  const b = document.getElementById('enviar');
+  b.disabled = true; b.poner(el('span', { class: 'punto' }), ' Guardando…');
+  document.getElementById('estadoEnvio').textContent = sesion.ia ? 'Guardando y revisando si hace falta una pregunta de seguimiento…' : 'Guardando…';
+  try {
+    sesion = await api('/api/responder', { t: token, qid: q.qid, respuesta: texto, saltar, ...(seleccion ? { seleccion } : {}) });
+    ls.del('prisma_borrador_' + q.qid);
+    pintar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    if (/registrada/.test(e.message)) { try { sesion = await api('/api/sesion?t=' + encodeURIComponent(token)); pintar(); return; } catch (x) {} }
+    document.getElementById('estadoEnvio').textContent = e.message;
+    b.disabled = false; b.textContent = 'Enviar respuesta';
+  } finally { enviando = false; }
+}
+function pintarIntro() {
+  const s = sesion, p = s.persona;
+  $app.poner(
+    el('h1', {}, `Hola, ${p.nombre.split(' ')[0].replace(/"/g, '')}`),
+    el('p', { class: 'sub' }, `${p.cargo} · ${p.area_nombre}${p.equipo ? ' · ' + p.equipo : ''}`),
+    el('div', { class: 'tarjeta pila' },
+      el('p', { style: 'margin:0' }, 'Estamos documentando cómo trabaja Prismaticoos, área por área, contado por quienes lo hacen todos los días. Tu experiencia es la base para que PrismaOS refleje tu trabajo real, que las áreas se coordinen mejor y que nadie se quede con dudas.'),
+      el('ul', { style: 'margin:0; padding-left: 20px; color: var(--texto2)' },
+        el('li', {}, `Son ${s.base_total} preguntas sobre tu trabajo real (unos ${minutos()} minutos). Responde con ejemplos, nombres y números aproximados.`),
+        el('li', {}, 'No es un examen: no hay respuestas buenas ni malas.'),
+        el('li', {}, 'Cada respuesta se registra una única vez. Puedes corregirla hasta que termines; al terminar, tu entrevista queda registrada y cerrada.'),
+        el('li', {}, 'Puedes dictar con el micrófono del teclado de tu celular.'),
+        el('li', {}, 'Se guarda solo. Puedes pausar y seguir después con este mismo link.'),
+        el('li', {}, 'Si algo no aplica a tu puesto, toca "No aplica / no sé".'),
+        el('li', {}, 'No escribas contraseñas ni datos bancarios.')),
+      el('button', { class: 'primario', onclick: () => { ls.set('prisma_intro_' + p.id, '1'); pintar(); } }, 'Empezar')),
+    faq(false));
+}
+function pintarFin() {
+  $app.poner(
+    el('h1', {}, '¡Gracias! Tu entrevista quedó registrada'),
+    el('p', { class: 'sub' }, 'Tus respuestas ya quedaron guardadas para PrismaOS.'),
+    el('div', { class: 'tarjeta pila' },
+      el('p', { class: 'leyenda', style: 'margin:0' }, '🔒 ', 'Esta respuesta se registró una única vez y el acceso a tu nombre quedó cerrado.'),
+      el('p', { style: 'margin:0' }, 'Si más adelante necesitamos preguntarte algo, te abriremos el acceso y te avisaremos para que entres con este mismo link.')),
+    el('details', { style: 'margin-top:16px' }, el('summary', {}, `Tus respuestas (${sesion.historial.length})`), historialEditable(sesion.historial, false)),
+    faq(false));
+}
+
+// ---------- arranque ----------
+const m = location.pathname.match(/^\/p\/([A-Za-z0-9_-]+)/);
+if (m) { ls.set('prisma_token', m[1]); arrancar(m[1]); }
+else if (ls.get('prisma_token')) { const t = ls.get('prisma_token'); history.replaceState(null, '', '/p/' + t); arrancar(t); }
+else api('/api/publico').then(c => !c.link_general ? pantallaSoloLink() : c.pedir_codigo ? pantallaEntrar() : cargarLista('')).catch(() => pantallaSoloLink());
+function pantallaSoloLink(msg) {
+  $app.poner(
+    el('h1', {}, 'Abre tu link personal'),
+    el('p', { class: 'sub' }, msg || 'Cada persona de Prismaticoos tiene su propio link para contestar su entrevista. Pídeselo a tu coordinador o revisa el mensaje que te enviaron por WhatsApp. Solo funciona conectado a la red Wi-Fi de la oficina.'));
+}
+</script>
+</body>
+</html>

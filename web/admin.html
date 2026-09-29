@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tablero de Entrevistas PrismaOS</title>
+<link rel="icon" href="/logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root {
+    color-scheme: dark;
+    --fondo: #1C1C21; --barra: #141417; --tarjeta: #24242B; --borde: #33333B; --hover: #2C2C34;
+    --texto: #F2F2F0; --texto2: #9CA0AA; --acento: #FFC704; --acento-t: #1C1C21;
+    --gris: #6B6F7A; --azul: #5B8DEF; --morado: #A07CF0; --verde: #3FBF7F; --rojo: #F06A5B;
+    --fuente: "Archivo", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { background: var(--fondo); color: var(--texto); font-family: var(--fuente); margin: 0; }
+  body { font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+  .envoltura { max-width: 1320px; margin: 0 auto; padding-inline: 20px; padding-block: 0 60px; }
+  header.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--barra); border-bottom: 1px solid var(--borde); }
+  header .fila { max-width: 1320px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  header img { width: 46px; }
+  .marca { font-stretch: 75%; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: 16px; margin-right: auto; }
+  .marca small { display: block; font-stretch: 100%; font-weight: 500; letter-spacing: .02em; text-transform: none; color: var(--texto2); font-size: 12px; }
+  h2 { font-stretch: 78%; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; margin: 34px 0 12px; color: var(--texto); }
+  button, .boton { font: inherit; font-weight: 700; border-radius: 9px; padding: 9px 14px; border: 1px solid var(--borde); background: transparent; color: var(--texto); cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  button:hover, .boton:hover { background: var(--hover); }
+  button:focus-visible, .boton:focus-visible, input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); outline-offset: 1px; }
+  button.primario { background: var(--acento); border-color: var(--acento); color: var(--acento-t); }
+  button.primario:hover { background: #ffd33d; }
+  button.mini { padding: 5px 9px; font-size: 12px; }
+  button[disabled] { opacity: .55; cursor: wait; }
+  input, select, textarea { background: var(--barra); color: var(--texto); border: 1px solid var(--borde); border-radius: 9px; padding: 9px 12px; font: inherit; }
+  textarea { width: 100%; min-height: 80px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 22px; }
+  .kpi { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 14px 16px; }
+  .kpi b { display: block; font-size: 30px; font-stretch: 80%; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .kpi span { color: var(--texto2); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .kpi.destacado b { color: var(--acento); }
+  .aviso { margin-top: 16px; border: 1px solid #5a4a1a; background: #2a2414; color: #f5dc8a; border-radius: 12px; padding: 12px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .aviso code { background: #1a1608; padding: 2px 6px; border-radius: 5px; }
+  .compartir { display: grid; grid-template-columns: 180px 1fr; gap: 20px; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 14px; padding: 18px; }
+  .compartir .qr { background: #fff; padding: 10px; border-radius: 10px; width: 180px; height: 180px; }
+  .compartir .qr img, .compartir .qr canvas { width: 160px !important; height: 160px !important; }
+  .linea { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 6px 0; }
+  .mono { font-family: ui-monospace, Menlo, monospace; font-size: 13px; background: var(--barra); border: 1px solid var(--borde); border-radius: 7px; padding: 6px 9px; word-break: break-all; }
+  .etq { color: var(--texto2); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; min-width: 120px; }
+  .areas { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+  .area { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 14px; }
+  .area .cab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .area .cab b { font-stretch: 85%; font-weight: 700; font-size: 15px; }
+  .area .cab span { color: var(--texto2); font-variant-numeric: tabular-nums; font-size: 12px; }
+  .barra-p { height: 6px; background: var(--borde); border-radius: 4px; overflow: hidden; margin: 10px 0; }
+  .barra-p i { display: block; height: 100%; background: var(--acento); border-radius: 4px; transition: width .6s ease-out; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 12px; border-radius: 999px; padding: 3px 9px 3px 7px; border: 1px solid var(--borde); background: var(--barra); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
+  .chip:hover { border-color: var(--texto2); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .e-sin_empezar { background: var(--gris); } .e-en_curso { background: var(--azul); } .e-preguntas_nuevas { background: var(--morado); } .e-completa { background: var(--verde); }
+  .leyenda { display: flex; gap: 14px; flex-wrap: wrap; color: var(--texto2); font-size: 12px; margin-bottom: 10px; }
+  .leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+  .filtros { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .tabla-wrap { overflow-x: auto; border: 1px solid var(--borde); border-radius: 12px; }
+  table { width: 100%; border-collapse: collapse; min-width: 860px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borde); vertical-align: middle; }
+  th { color: var(--texto2); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; font-weight: 600; background: var(--barra); position: sticky; top: 0; }
+  tr:hover td { background: #202026; }
+  td .nombre { font-weight: 600; cursor: pointer; }
+  td .cargo { color: var(--texto2); font-size: 12px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+  .mini-barra { width: 90px; height: 5px; background: var(--borde); border-radius: 3px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
+  .mini-barra i { display: block; height: 100%; background: var(--acento); }
+  .num { font-variant-numeric: tabular-nums; color: var(--texto2); font-size: 12px; }
+  /* cajón */
+  .velo { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 20; }
+  .cajon { position: fixed; top: 0; right: 0; bottom: 0; width: min(720px, 100%); background: var(--fondo); border-left: 1px solid var(--borde); z-index: 21; overflow-y: auto; padding: 20px 22px 60px; }
+  .cajon h3 { font-stretch: 80%; font-size: 24px; text-transform: uppercase; margin: 6px 0 2px; }
+  .cajon .sub { color: var(--texto2); margin-bottom: 14px; }
+  .bloque { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 14px; margin-top: 14px; }
+  .bloque h4 { margin: 0 0 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--texto2); }
+  .qa { border-left: 2px solid var(--borde); padding: 2px 0 2px 12px; margin: 10px 0; }
+  .qa .p { color: var(--texto2); font-size: 13px; }
+  .qa .r { white-space: pre-wrap; }
+  .qa.seg { border-color: var(--morado); } .qa.ronda { border-color: var(--azul); }
+  .res dt { color: var(--acento); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; margin-top: 10px; }
+  .res dd { margin: 4px 0 0; }
+  .res ul { margin: 4px 0; padding-left: 18px; }
+  .sug { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed var(--borde); }
+  .sug small { display: block; color: var(--texto2); }
+  .envio { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .envio .bloque { margin-top: 0; }
+  .cadena { background: var(--tarjeta); border: 1px solid var(--acento); border-radius: 14px; padding: 18px; }
+  .cadena h3 { margin: 4px 0; font-stretch: 80%; text-transform: uppercase; font-size: 22px; }
+  .ok { color: var(--verde); font-weight: 600; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--acento); color: var(--acento-t); font-weight: 700; padding: 10px 16px; border-radius: 10px; z-index: 40; }
+  .gate { max-width: 380px; margin: 12vh auto; padding-inline: 16px; }
+  .gate .tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 14px; padding: 22px; display: grid; gap: 12px; }
+  .error { color: var(--rojo); min-height: 1em; }
+  .vacio { color: var(--texto2); font-style: italic; }
+  @media (max-width: 640px) { .compartir { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="barra"><div class="fila">
+  <img src="/logo.svg" alt="Prismaticoos">
+  <div class="marca">PrismaOS · Entrevistas<small id="subtitulo">Tablero de avance por área y por persona</small></div>
+  <button id="btnDoc" class="primario" hidden>Documento para mi chat</button>
+  <button id="btnExportMd" hidden>Descargar todo (.md)</button>
+  <button id="btnExportJson" hidden>Descargar JSON</button>
+  <button id="btnNueva" hidden>+ Persona</button>
+</div></header>
+<main class="envoltura" id="app"></main>
+
+<script>
+Element.prototype.poner = function (...h) { this.replaceChildren(...h.flat(Infinity).filter(x => x != null && x !== false)); };
+const ss = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
+let PIN = ss.get('prisma_pin') || '';
+let DATOS = null, filtroArea = '', filtroEstado = '', filtroTexto = '', cajonAbierto = null;
+const ESTADOS = { sin_empezar: 'Sin empezar', en_curso: 'En curso', preguntas_nuevas: 'Preguntas nuevas', completa: 'Completa' };
+const $app = document.getElementById('app');
+
+function el(tag, attrs = {}, ...hijos) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') n.className = v; else if (k === 'style') n.style.cssText = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) n.setAttribute(k, v === true ? '' : v);
+  }
+  for (const h of hijos.flat(Infinity)) if (h != null && h !== false) n.append(h.nodeType ? h : document.createTextNode(String(h)));
+  return n;
+}
+async function api(ruta, datos) {
+  const r = await fetch(ruta, { method: datos ? 'POST' : 'GET', headers: { 'Content-Type': 'application/json', 'X-Pin': PIN }, body: datos ? JSON.stringify(datos) : undefined });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401) { PIN = ''; ss.set('prisma_pin', ''); gate('PIN incorrecto'); throw new Error('PIN'); }
+  if (!r.ok) throw new Error(j.error || 'Error de conexión');
+  return j;
+}
+function toast(m) { const t = el('div', { class: 'toast', role: 'status' }, m); document.body.append(t); setTimeout(() => t.remove(), 2200); }
+async function copiar(texto, msg = 'Copiado') { try { await navigator.clipboard.writeText(texto); toast(msg); } catch (e) { prompt('Copia:', texto); } }
+function base() { return (DATOS.red.tunel || DATOS.red.lan).replace(/\/$/, ''); }
+function linkDe(p) { return base() + '/p/' + p.token; }
+function minutosDe(p) { return Math.max(10, Math.round((p.base_total || 25) * 1.2)); }
+function waDe(p) { return 'https://wa.me/' + (p.telefono || '') + '?text=' + encodeURIComponent(mensajeDe(p)); }
+function mensajeReabrir(p) {
+  const n = p.nombre.split(' ')[0].replace(/"/g, '');
+  return `Hola ${n} 👋 Tenemos unas preguntas nuevas para ti en tu entrevista de PrismaOS. Ya te abrimos el acceso: entra con tu mismo link, conectado al Wi-Fi de la oficina.\n⚠️ Esta respuesta se registrará una única vez: al terminar, tu entrevista vuelve a quedar cerrada.\n\n👉 ${linkDe(p)}`;
+}
+function mensajeDe(p) {
+  const n = p.nombre.split(' ')[0].replace(/"/g, '');
+  return `Hola ${n} 👋\nEstamos documentando cómo trabaja cada área de Prismaticoos, contado por quienes lo hacen todos los días, para que PrismaOS refleje el trabajo real de cada quien y nos coordinemos mejor. Tu experiencia es clave.\n\n📝 Son ${p.base_total || ''} preguntas sobre tu trabajo (unos ${minutosDe(p)} min). No es examen: no hay respuestas buenas ni malas.\n🎙️ Puedes dictar con el micrófono del teclado.\n💾 Se guarda solo: puedes pausar y seguir después con el mismo link.\n📶 Ábrelo conectado al Wi-Fi de la oficina.\n🔒 El link es solo tuyo, no lo compartas.\n⚠️ Esta respuesta se registrará una única vez: al terminar, tu entrevista queda cerrada.\n\n👉 ${linkDe(p)}`;
+}
+function hace(iso) {
+  if (!iso) return '—';
+  const s = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (s < 90) return 'hace un momento'; if (s < 3600) return `hace ${Math.round(s / 60)} min`;
+  if (s < 86400) return `hace ${Math.round(s / 3600)} h`; return `hace ${Math.round(s / 86400)} d`;
+}
+
+function gate(error = '') {
+  ['btnDoc', 'btnExportMd', 'btnExportJson', 'btnNueva'].forEach(id => document.getElementById(id).hidden = true);
+  const inp = el('input', { id: 'pin', type: 'password', inputmode: 'numeric', autocomplete: 'off', placeholder: 'PIN del tablero' });
+  const entrar = async () => { PIN = inp.value.trim(); ss.set('prisma_pin', PIN); try { await cargar(); } catch (e) {} };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') entrar(); });
+  $app.poner(el('div', { class: 'gate' }, el('div', { class: 'tarjeta' },
+    el('b', {}, 'Tablero de entrevistas'), el('span', { style: 'color:var(--texto2)' }, 'El PIN está en datos/acceso.json dentro de la carpeta de la app.'),
+    inp, el('div', { class: 'error' }, error), el('button', { class: 'primario', onclick: entrar }, 'Entrar'))));
+  inp.focus();
+}
+
+async function cargar() {
+  DATOS = await api('/api/admin/estado');
+  ['btnDoc', 'btnExportMd', 'btnExportJson', 'btnNueva'].forEach(id => document.getElementById(id).hidden = false);
+  pintar();
+}
+
+function pintar() {
+  const P = DATOS.personas;
+  const cuenta = e => P.filter(p => p.estado === e).length;
+  const respuestas = P.reduce((a, p) => a + p.respuestas, 0);
+  const rondas = P.reduce((a, p) => a + p.rondas_pendientes, 0);
+  const avance = Math.round(P.reduce((a, p) => a + p.progreso, 0) / (P.length || 1));
+  const ia = DATOS.ia;
+  const secciones = [];
+
+  const datosResp = P.filter(p => p.datos_admin);
+  const datosOk = datosResp.filter(p => !p.datos_admin.faltan.length);
+  secciones.push(el('div', { class: 'kpis' },
+    kpi(`${avance}%`, 'Avance general', true), kpi(P.length, 'Personas'), kpi(cuenta('completa'), 'Completas'),
+    kpi(cuenta('en_curso'), 'En curso'), kpi(cuenta('sin_empezar'), 'Sin empezar'), kpi(respuestas, 'Respuestas'), kpi(rondas, 'Preguntas nuevas sin contestar'), kpi(`${datosOk.length}/${P.length}`, 'Datos de nómina completos')));
+
+  const aj = DATOS.ajustes || {};
+  secciones.push(el('div', { class: 'aviso' },
+    el('div', { style: 'flex:1 1 380px' },
+      el('b', {}, aj.ia_repreguntas_en_vivo ? 'La IA repregunta en vivo (gasta tokens de tu cuenta). ' : 'Las entrevistas no gastan tokens. '),
+      aj.ia_repreguntas_en_vivo ? 'Puedes apagarlo en config/ajustes.json.' : 'El equipo solo responde preguntas; la IA de tu cuenta solo se usa cuando tú aprietas "Generar preguntas de seguimiento" o "Generar resumen".',
+      el('div', { class: 'num', style: 'margin-top:4px' }, 'IA: ', ia.ok === true ? 'conectada' : ia.ok === false ? 'sin conexión — ' + (ia.mensaje || '') + ' (en Terminal: claude auth login)' : 'se prueba cuando la uses')),
+    el('button', { onclick: async (ev) => { ev.target.disabled = true; ev.target.textContent = 'Probando…'; try { DATOS.ia = await api('/api/admin/probar_ia', {}); } catch (e) {} pintar(); } }, 'Probar IA')));
+
+  // compartir
+  secciones.push(el('h2', {}, 'Compartir con el equipo'));
+  if (aj.link_general) {
+    const qr = el('div', { class: 'qr', id: 'qr', 'aria-label': 'Código QR del link del grupo' });
+    const general = base() + '/';
+    const minTot = Math.round(P.reduce((s, p) => s + p.base_total, 0) / (P.length || 1) * 1.2);
+    const msgGrupo = `📋 *Entrevistas PrismaOS* — ¡necesitamos a todo el equipo!\n\nEstamos documentando cómo trabaja cada área de Prismaticoos, contado por quienes lo hacen todos los días, para que PrismaOS refleje el trabajo real de cada quien y nos coordinemos mejor. Tu experiencia es la base.\n\n👉 Entra aquí conectado al *Wi-Fi de la oficina*:\n${general}\n${aj.pedir_codigo ? 'Código del equipo: ' + DATOS.codigo_equipo + '\n' : ''}\n1️⃣ Escribe tu nombre y apellido y confirma que eres tú (queda ligado a tu celular).\n2️⃣ Contesta las preguntas de tu puesto (unos ${minTot} min). No es examen: no hay respuestas buenas ni malas.\n3️⃣ Puedes dictar con el micrófono del teclado.\n4️⃣ Se guarda solo: si pausas, vuelve a abrir el mismo link y sigues donde te quedaste.\n\n⚠️ Esta respuesta se registrará una única vez: al terminar, tu entrevista queda cerrada y nadie más puede usar tu nombre.\n\n¿Dudas? Dentro hay una sección de preguntas frecuentes. Gracias 🙌`;
+    secciones.push(el('div', { class: 'compartir' }, qr, el('div', {},
+      el('div', { class: 'linea' }, el('span', { class: 'etq' }, 'Link del grupo'), el('span', { class: 'mono' }, general), el('button', { class: 'mini', onclick: () => copiar(general) }, 'Copiar')),
+      aj.pedir_codigo ? el('div', { class: 'linea' }, el('span', { class: 'etq' }, 'Código del equipo'), el('span', { class: 'mono' }, DATOS.codigo_equipo)) : null,
+      el('p', { class: 'num' }, 'Un solo mensaje para el grupo de WhatsApp. Nadie ve la lista del equipo: cada quien escribe su nombre y apellido y confirma "Sí, soy yo"; su nombre queda ligado a su celular y nadie más puede usarlo (si alguien cambia de celular, ábrelo en la tabla y toca "Liberar nombre"). Funciona solo con el Wi-Fi de la oficina.'),
+      el('div', { class: 'linea' },
+        el('button', { class: 'primario', onclick: () => copiar(msgGrupo, 'Mensaje copiado: pégalo en el grupo') }, 'Copiar mensaje para el grupo'),
+        el('a', { class: 'boton', href: 'https://wa.me/?text=' + encodeURIComponent(msgGrupo), target: '_blank', rel: 'noopener' }, 'Abrir en WhatsApp')),
+      el('details', {}, el('summary', { class: 'num' }, 'Ver mensaje'), el('pre', { style: 'white-space:pre-wrap;font-family:inherit' }, msgGrupo)))));
+    setTimeout(() => { try { new QRCode(qr, { text: general, width: 160, height: 160, colorDark: '#141417', colorLight: '#ffffff' }); } catch (e) {} }, 0);
+  } else {
+    secciones.push(el('div', { class: 'bloque' },
+      el('p', { style: 'margin:0 0 6px' }, el('b', {}, 'Cada persona entra solo con su link personal'), ' y solo desde la red Wi-Fi de la oficina (', el('span', { class: 'mono' }, DATOS.red.lan), '). Así nadie puede contestar por otra persona.'),
+      el('p', { class: 'num', style: 'margin:0' }, 'En la tabla de abajo usa "WhatsApp" o "Mensaje" para mandar a cada quien su link, o abre a la persona y que escanee su QR desde tu pantalla.')));
+  }
+
+  // envío rápido
+  const sinEnviar = P.filter(p => !p.enviado && p.estado !== 'completa');
+  const conTel = P.filter(p => p.telefono).length;
+  secciones.push(el('h2', {}, 'Enviar rápido'));
+  secciones.push(el('div', { class: 'envio' },
+    el('div', { class: 'bloque' }, el('h4', {}, '1 · Envío en cadena por WhatsApp'),
+      el('p', { class: 'num', style: 'margin-top:0' }, `Te muestra a una persona a la vez: tocas "Abrir WhatsApp", envías y pasas a la siguiente. Faltan ${sinEnviar.length} por enviar. ${conTel ? conTel + ' tienen teléfono (se abre su chat directo).' : 'Sin teléfonos: WhatsApp te pedirá elegir el contacto.'}`),
+      el('div', { class: 'linea' }, el('button', { class: 'primario', onclick: () => cadena(false) }, `Empezar (${sinEnviar.length})`),
+        el('button', { onclick: () => cadena(true) }, 'Recordar a quien no ha terminado'))),
+    el('div', { class: 'bloque' }, el('h4', {}, '2 · Teléfonos (opcional, más rápido)'),
+      el('p', { class: 'num', style: 'margin-top:0' }, 'Pega una lista "Nombre, teléfono" (una persona por línea, 10 dígitos). Así cada botón de WhatsApp abre directo el chat de esa persona.'),
+      (() => { const t = el('textarea', { placeholder: 'Minerva García, 33 1234 5678\nÓscar Serrano, 3312345678' }); const r = el('div', { class: 'num' });
+        return el('div', {}, t, el('div', { class: 'linea' }, el('button', { onclick: async () => {
+          const res = await api('/api/admin/telefonos_lote', { texto: t.value });
+          r.textContent = `Guardados: ${res.guardados.length}. Sin coincidencia: ${res.sin_coincidencia.length ? res.sin_coincidencia.join(' | ') : 'ninguno'}`;
+          await refrescar(); } }, 'Guardar teléfonos')), r); })()),
+    el('div', { class: 'bloque' }, el('h4', {}, '3 · Tarjetas QR impresas'),
+      el('p', { class: 'num', style: 'margin-top:0' }, 'Imprime una tarjeta por persona con su QR personal y reparte en la oficina: la escanean con la cámara y contestan.'),
+      el('div', { class: 'linea' }, el('a', { class: 'boton', href: '/tarjetas?pin=' + encodeURIComponent(PIN) + '&solo=pendientes', target: '_blank' }, 'Pendientes'),
+        el('a', { class: 'boton', href: '/tarjetas?pin=' + encodeURIComponent(PIN), target: '_blank' }, 'Todas (74)')))));
+
+  // datos para administración (solo qué falta; los datos nunca se guardan aquí)
+  const pendientesDatos = P.filter(p => !p.datos_admin || p.datos_admin.faltan.length);
+  secciones.push(el('h2', {}, 'Datos para Administración'));
+  secciones.push(el('div', { class: 'bloque' },
+    el('p', { style: 'margin:0 0 6px' }, `${datosOk.length} personas ya entregaron todos sus datos · ${datosResp.length - datosOk.length} tienen faltantes · ${P.length - datosResp.length} aún no contestan esa pregunta.`),
+    el('p', { class: 'num', style: 'margin:0 0 10px' }, 'Esta app solo registra QUÉ entregó cada quien (RFC, CURP, NSS, fecha de nacimiento, banco/CLABE, domicilio, contacto de emergencia), nunca los datos. Los datos se capturan en el sistema de Prismaticoos o se entregan a Administración. Si alguien intenta escribir un RFC, CURP, NSS o CLABE en una respuesta, se bloquea.'),
+    el('div', { class: 'linea' }, el('button', { class: 'primario', onclick: () => copiar(`📋 Pendientes de datos de nómina (entrevistas PrismaOS):\n${pendientesDatos.map(p => `• ${p.nombre} (${p.cargo}) — ${p.datos_admin ? 'falta: ' + p.datos_admin.faltan.join(', ') : 'aún no responde'}`).join('\n')}`, 'Lista copiada: mándala a Administración') }, 'Copiar pendientes para Administración'))));
+
+  // áreas
+  secciones.push(el('h2', {}, 'Avance por área'));
+  secciones.push(el('div', { class: 'leyenda' }, Object.entries(ESTADOS).map(([k, v]) => el('span', {}, el('i', { class: 'dot e-' + k }), v))));
+  secciones.push(el('div', { class: 'areas' }, DATOS.areas.map(a => {
+    const gente = P.filter(p => p.area === a.id);
+    if (!gente.length) return null;
+    const prom = Math.round(gente.reduce((s, p) => s + p.progreso, 0) / gente.length);
+    return el('div', { class: 'area' },
+      el('div', { class: 'cab' }, el('b', {}, a.nombre), el('span', {}, `${gente.filter(p => p.estado === 'completa').length}/${gente.length} completas · ${prom}%`)),
+      el('div', { class: 'barra-p' }, el('i', { style: `width:${prom}%` })),
+      gente.some(p => p.estado !== 'completa') ? el('button', { class: 'mini', style: 'margin-bottom:8px', onclick: () => {
+        const faltan = gente.filter(p => p.estado !== 'completa');
+        copiar(`Hola 👋 De ${a.nombre} faltan por terminar su entrevista de PrismaOS:\n${faltan.map(p => `• ${p.nombre} (${p.progreso}%)`).join('\n')}\n\n¿Nos ayudas a que la terminen? Cada quien tiene su link personal (se abre con el Wi-Fi de la oficina). Son unos 30-40 min y se puede hacer en partes.`, 'Recordatorio copiado: mándalo al jefe del área');
+      } }, 'Copiar recordatorio para el jefe') : null,
+      el('div', { class: 'chips' }, gente.map(p => el('span', { class: 'chip', role: 'button', tabindex: '0', title: `${p.cargo} — ${ESTADOS[p.estado]} (${p.progreso}%)`, onclick: () => abrir(p.id), onkeydown: e => { if (e.key === 'Enter') abrir(p.id); } },
+        el('i', { class: 'dot e-' + p.estado }), p.nombre))));
+  })));
+
+  // tabla
+  secciones.push(el('h2', {}, 'Personas'));
+  const selArea = el('select', { onchange: e => { filtroArea = e.target.value; pintarTabla(); } }, el('option', { value: '' }, 'Todas las áreas'), DATOS.areas.map(a => el('option', { value: a.id, selected: a.id === filtroArea }, a.nombre)));
+  const selEst = el('select', { onchange: e => { filtroEstado = e.target.value; pintarTabla(); } }, el('option', { value: '' }, 'Todos los estados'), Object.entries(ESTADOS).map(([k, v]) => el('option', { value: k, selected: k === filtroEstado }, v)));
+  const buscar = el('input', { placeholder: 'Buscar persona o puesto', value: filtroTexto, oninput: e => { filtroTexto = e.target.value; pintarTabla(); } });
+  secciones.push(el('div', { class: 'filtros' }, buscar, selArea, selEst));
+  secciones.push(el('div', { class: 'tabla-wrap' }, el('table', {}, el('thead', {}, el('tr', {}, ['Persona', 'Área', 'Estado', 'Avance', 'Enviado', 'Última actividad', ''].map(h => el('th', {}, h)))), el('tbody', { id: 'tbody' }))));
+
+  $app.poner(...secciones);
+  pintarTabla();
+  document.getElementById('subtitulo').textContent = `Actualizado ${new Date(DATOS.generado).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })} · se actualiza solo`;
+}
+function kpi(v, t, d) { return el('div', { class: 'kpi' + (d ? ' destacado' : '') }, el('b', {}, v), el('span', {}, t)); }
+
+function pintarTabla() {
+  const q = filtroTexto.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
+  const filas = DATOS.personas.filter(p => (!filtroArea || p.area === filtroArea) && (!filtroEstado || p.estado === filtroEstado)
+    && (p.nombre + ' ' + p.cargo).toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').includes(q));
+  document.getElementById('tbody').poner(...filas.map(p => el('tr', {},
+    el('td', {}, el('div', { class: 'nombre', onclick: () => abrir(p.id) }, p.reclamado ? '🔒 ' : '', p.nombre, p.externo ? ' (ext.)' : ''), el('div', { class: 'cargo' }, p.cargo)),
+    el('td', {}, p.area_nombre, p.equipo ? el('div', { class: 'cargo' }, p.equipo) : null),
+    el('td', {}, el('span', { class: 'pill' }, el('i', { class: 'dot e-' + p.estado }), ESTADOS[p.estado]), p.cerrada ? el('div', { class: 'cargo' }, '🔒 Registrada y cerrada') : null, p.rondas_pendientes ? el('div', { class: 'cargo' }, `${p.rondas_pendientes} nuevas sin contestar`) : null,
+      p.datos_admin && p.datos_admin.faltan.length ? el('div', { class: 'cargo' }, `Datos: faltan ${p.datos_admin.faltan.length}`) : p.datos_admin ? el('div', { class: 'cargo ok' }, 'Datos completos') : null),
+    el('td', {}, el('span', { class: 'mini-barra' }, el('i', { style: `width:${p.progreso}%` })), el('span', { class: 'num' }, `${p.base_hechas}/${p.base_total}`)),
+    el('td', { class: 'num' }, p.enviado ? el('span', { class: 'ok' }, '✓ ' + hace(p.enviado)) : '—', p.telefono ? el('div', { class: 'cargo' }, '📱') : null),
+    el('td', { class: 'num' }, hace(p.actualizado)),
+    el('td', {}, el('div', { style: 'display:flex;gap:6px;justify-content:flex-end' },
+      el('button', { class: 'mini', onclick: () => copiar(mensajeDe(p), 'Mensaje copiado: pégalo en WhatsApp') }, 'Mensaje'),
+      el('a', { class: 'boton mini', href: waDe(p), target: '_blank', rel: 'noopener', onclick: () => marcar(p.id) }, 'WhatsApp'),
+      el('button', { class: 'mini', onclick: () => copiar(linkDe(p), 'Link copiado') }, 'Link'),
+      el('button', { class: 'mini', onclick: () => abrir(p.id) }, 'Ver'))))));
+}
+
+// ---------- cajón de persona ----------
+async function abrir(id) {
+  cajonAbierto = id;
+  cerrarCajon(true);
+  const velo = el('div', { class: 'velo', onclick: () => cerrarCajon() });
+  const cajon = el('aside', { class: 'cajon', role: 'dialog', 'aria-label': 'Detalle de la persona' }, el('p', { class: 'num' }, 'Cargando…'));
+  document.body.append(velo, cajon);
+  document.addEventListener('keydown', escCerrar);
+  try { pintarCajon(cajon, await api('/api/admin/persona?id=' + encodeURIComponent(id))); } catch (e) { cajon.poner(el('p', { class: 'error' }, e.message)); }
+}
+function escCerrar(e) { if (e.key === 'Escape') cerrarCajon(); }
+function cerrarCajon(silencioso) {
+  document.querySelectorAll('.velo,.cajon').forEach(n => n.remove());
+  document.removeEventListener('keydown', escCerrar);
+  if (!silencioso) cajonAbierto = null;
+}
+function pintarCajon(c, d) {
+  const p = d.persona, e = d.expediente;
+  const fila = DATOS.personas.find(x => x.id === p.id) || { ...p, token: d.token };
+  const lista = (arr, f) => (arr && arr.length) ? el('ul', {}, arr.map(x => el('li', {}, f ? f(x) : (typeof x === 'string' ? x : JSON.stringify(x))))) : el('span', { class: 'vacio' }, '—');
+  const r = e.resumen;
+  const sugerencias = el('div', { id: 'sugs' });
+  const manual = el('textarea', { placeholder: 'Escribe una o varias preguntas, una por línea' });
+  c.poner(
+    el('div', { style: 'display:flex;justify-content:space-between;gap:10px;align-items:flex-start' },
+      el('div', {}, el('span', { class: 'pill' }, el('i', { class: 'dot e-' + d.estado }), ESTADOS[d.estado], ` · ${d.progreso}%`),
+        el('h3', {}, p.nombre), el('div', { class: 'sub' }, `${p.cargo} · ${p.area_nombre}${p.equipo ? ' · ' + p.equipo : ''}${p.lider ? ' · Líder' : ''}`)),
+      el('button', { onclick: () => cerrarCajon(), 'aria-label': 'Cerrar' }, 'Cerrar')),
+    el('div', { class: 'qr', id: 'qrp', style: 'background:#fff;padding:8px;border-radius:10px;width:136px;height:136px;margin:6px 0' }),
+    el('div', { class: 'linea' }, el('span', { class: 'mono' }, linkDe(fila)),
+      el('button', { class: 'mini', onclick: () => copiar(linkDe(fila), 'Link copiado') }, 'Copiar link'),
+      el('button', { class: 'mini', onclick: () => copiar(mensajeDe(fila), 'Mensaje copiado') }, 'Copiar mensaje')),
+
+    el('div', { class: 'bloque' }, el('h4', {}, 'Acceso'),
+      e.cerrada
+        ? el('div', {}, el('p', { style: 'margin:0 0 8px' }, `🔒 Entrevista registrada y cerrada ${hace(e.cerrada)}. Nadie puede entrar ni registrarse de nuevo con este nombre.`),
+            el('div', { class: 'linea' },
+              el('button', { class: 'primario', onclick: async () => { await api('/api/admin/reabrir', { id: p.id }); copiar(mensajeReabrir(fila), 'Acceso reabierto y mensaje copiado: mándaselo'); await refrescar(); abrir(p.id); } }, 'Reabrir acceso y copiar mensaje'),
+              el('a', { class: 'boton', href: 'https://wa.me/' + (fila.telefono || '') + '?text=' + encodeURIComponent(mensajeReabrir(fila)), target: '_blank', rel: 'noopener', onclick: () => api('/api/admin/reabrir', { id: p.id }).then(refrescar) }, 'Reabrir y enviar por WhatsApp')),
+            el('p', { class: 'num', style: 'margin:8px 0 0' }, 'Si le mandas preguntas nuevas (abajo), el acceso se reabre solo. Al contestarlas se vuelve a cerrar.'))
+        : el('p', { class: 'num', style: 'margin:0' }, e.reaperturas && e.reaperturas.length ? `Acceso abierto (reabierto ${hace(e.reaperturas[e.reaperturas.length - 1].reabierta)}). Se cierra solo cuando termine.` : 'Acceso abierto. Se cierra solo cuando termine la entrevista.')),
+    fila.reclamado ? el('div', { class: 'linea' }, el('span', { class: 'num' }, `🔒 Nombre ligado a un celular desde ${hace(fila.reclamado)}.`),
+      el('button', { class: 'mini', onclick: async () => { await api('/api/admin/liberar', { id: p.id }); toast('Nombre liberado: puede entrar desde otro celular'); await refrescar(); abrir(p.id); } }, 'Liberar nombre')) : null,
+    (() => { const t = el('input', { placeholder: 'Teléfono WhatsApp (10 dígitos)', value: fila.telefono || '' });
+      return el('div', { class: 'linea' }, t, el('button', { class: 'mini', onclick: async () => { const r = await api('/api/admin/telefono', { id: p.id, telefono: t.value }); toast(r.telefono ? 'Teléfono guardado' : 'Teléfono borrado'); await refrescar(); } }, 'Guardar teléfono'),
+        el('a', { class: 'boton mini', href: waDe(fila), target: '_blank', rel: 'noopener', onclick: () => marcar(p.id) }, 'Enviar por WhatsApp')); })(),
+    el('div', { class: 'bloque' }, el('h4', {}, 'Hacerle más preguntas'),
+      el('p', { class: 'num', style: 'margin-top:0' }, 'Las preguntas nuevas le aparecen la próxima vez que abra su link. Mándale el mensaje de nuevo para avisarle.'),
+      el('div', { class: 'linea' },
+        el('button', { class: 'primario', onclick: async (ev) => {
+          const b = ev.target; b.disabled = true; b.textContent = 'La IA está leyendo sus respuestas…';
+          try {
+            const { preguntas } = await api('/api/admin/seguimiento', { id: p.id });
+            sugerencias.poner(el('p', { class: 'num' }, 'Elige cuáles enviar (puedes editarlas):'),
+              ...preguntas.map((q, i) => el('label', { class: 'sug' }, el('input', { type: 'checkbox', checked: true, 'data-i': i }),
+                el('div', { style: 'flex:1' }, el('textarea', { 'data-t': i, style: 'min-height:54px' }, q.pregunta), el('small', {}, q.porque || '')))),
+              el('button', { class: 'primario', onclick: async () => {
+                const elegidas = [...sugerencias.querySelectorAll('input[type=checkbox]')].filter(x => x.checked)
+                  .map(x => ({ pregunta: sugerencias.querySelector(`textarea[data-t="${x.dataset.i}"]`).value, porque: preguntas[x.dataset.i].porque || '' }));
+                if (!elegidas.length) return;
+                await api('/api/admin/agregar', { id: p.id, preguntas: elegidas, origen: 'ia-tablero' });
+                copiar(mensajeReabrir(fila), `${elegidas.length} preguntas enviadas y acceso abierto. Mensaje copiado: mándaselo`); await refrescar(); abrir(p.id);
+              } }, 'Enviar seleccionadas'));
+          } catch (err) { sugerencias.poner(el('p', { class: 'error' }, err.message)); }
+          b.disabled = false; b.textContent = 'Generar preguntas de seguimiento con IA';
+        } }, 'Generar preguntas de seguimiento con IA')),
+      sugerencias,
+      el('div', { style: 'margin-top:12px' }, manual,
+        el('div', { class: 'linea' }, el('button', { onclick: async () => {
+          const qs = manual.value.split('\n').map(x => x.trim()).filter(Boolean);
+          if (!qs.length) return;
+          await api('/api/admin/agregar', { id: p.id, preguntas: qs, origen: 'manual' });
+          copiar(mensajeReabrir(fila), 'Preguntas agregadas y acceso abierto. Mensaje copiado: mándaselo'); await refrescar(); abrir(p.id);
+        } }, 'Agregar preguntas escritas a mano')))),
+
+    e.pendientes.length ? el('div', { class: 'bloque' }, el('h4', {}, `Preguntas nuevas enviadas (${e.pendientes.length})`),
+      el('ul', {}, e.pendientes.map(q => el('li', {}, q.texto, el('span', { class: 'num' }, ` — ${q.origen}, ${hace(q.creado)}${e.respuestas.some(r => r.qid === q.qid) ? ' · contestada' : ' · pendiente'}`))))) : null,
+
+    el('div', { class: 'bloque res' }, el('h4', {}, 'Resumen para la base de conocimiento'),
+      r ? el('dl', {},
+        el('dt', {}, 'Rol'), el('dd', {}, r.rol || '—'),
+        el('dt', {}, 'Reporta a / trabaja con'), el('dd', {}, [r.reporta_a, ...(r.trabaja_con || [])].filter(Boolean).join(' · ') || '—'),
+        el('dt', {}, 'Recibe'), el('dd', {}, lista(r.recibe)), el('dt', {}, 'Entrega'), el('dd', {}, lista(r.entrega)),
+        el('dt', {}, 'Procesos'), el('dd', {}, lista(r.procesos, x => el('span', {}, el('b', {}, x.nombre || ''), el('ol', {}, (x.pasos || []).map(s => el('li', {}, s)))))),
+        el('dt', {}, 'Herramientas'), el('dd', {}, lista(r.herramientas, x => `${x.nombre}${x.uso ? ' — ' + x.uso : ''}`)),
+        el('dt', {}, 'Tiempos y metas'), el('dd', {}, lista(r.tiempos_y_metas)),
+        el('dt', {}, 'Problemas'), el('dd', {}, lista(r.problemas, x => `${x.problema}${x.ejemplo ? ' (ej.: ' + x.ejemplo + ')' : ''}`)),
+        el('dt', {}, 'Ideas de mejora'), el('dd', {}, lista(r.ideas_de_mejora || r.ideas_automatizacion, x => `${x.idea}${x.impacto || x.ahorro_estimado ? ' — ' + (x.impacto || x.ahorro_estimado) : ''}`)),
+        el('dt', {}, 'Dudas para seguir'), el('dd', {}, lista(r.dudas_para_seguir)),
+        el('dd', { class: 'num' }, `Generado ${hace(e.resumen_fecha)}`))
+        : el('p', { class: 'vacio' }, 'Todavía no hay resumen. Se genera solo al terminar la entrevista (con la IA encendida).'),
+      el('div', { class: 'linea' }, el('button', { class: 'mini', onclick: async (ev) => {
+        ev.target.disabled = true; ev.target.textContent = 'Resumiendo… (hasta 2 min)';
+        try { await api('/api/admin/resumir', { id: p.id }); toast('Resumen listo'); abrir(p.id); } catch (err) { toast(err.message); ev.target.disabled = false; ev.target.textContent = 'Generar resumen ahora'; }
+      } }, 'Generar resumen ahora'))),
+
+    el('div', { class: 'bloque' }, el('h4', {}, `Respuestas (${e.respuestas.length} de ${d.total_preguntas_base} preguntas base)`),
+      e.respuestas.length ? e.respuestas.map(x => el('div', { class: 'qa ' + (x.tipo === 'seguimiento' ? 'seg' : x.tipo === 'ronda' ? 'ronda' : '') },
+        el('div', { class: 'p' }, (x.tipo === 'seguimiento' ? '↳ Repregunta: ' : x.tipo === 'ronda' ? '● Ronda nueva: ' : x.tipo === 'personal' ? '◆ Personal: ' : '') + x.pregunta),
+        el('div', { class: 'r' }, x.saltada ? 'No aplica / no sé' : x.respuesta))) : el('p', { class: 'vacio' }, 'Aún no responde.')));
+  try { new QRCode(document.getElementById('qrp'), { text: linkDe(fila), width: 120, height: 120, colorDark: '#141417', colorLight: '#ffffff' }); } catch (e) {}
+}
+
+async function marcar(id) { try { await api('/api/admin/marcar_envio', { id }); const f = DATOS.personas.find(x => x.id === id); if (f) { f.enviado = new Date().toISOString(); f.envios = (f.envios || 0) + 1; } } catch (e) {} }
+function cadena(recordatorio) {
+  cerrarCajon(true);
+  const lista = DATOS.personas.filter(p => recordatorio ? (p.enviado && p.estado !== 'completa') : (!p.enviado && p.estado !== 'completa'));
+  let i = 0;
+  const caja = el('aside', { class: 'cajon', role: 'dialog', 'aria-label': 'Envío en cadena' });
+  const pintarPaso = () => {
+    if (i >= lista.length) { caja.poner(el('h3', {}, '¡Listo!'), el('p', { class: 'sub' }, recordatorio ? 'Recordatorios enviados.' : 'Ya mandaste todos los links pendientes.'), el('button', { class: 'primario', onclick: () => { cerrarCajon(); refrescar().then(pintar); } }, 'Cerrar')); return; }
+    const p = lista[i];
+    const texto = recordatorio ? `Hola ${p.nombre.split(' ')[0].replace(/"/g, '')} 👋 Te recuerdo tu entrevista de PrismaOS (llevas ${p.progreso}%). Se sigue donde te quedaste, con el Wi-Fi de la oficina:\n${linkDe(p)}` : mensajeDe(p);
+    const wa = 'https://wa.me/' + (p.telefono || '') + '?text=' + encodeURIComponent(texto);
+    caja.poner(
+      el('div', { class: 'num' }, `${i + 1} de ${lista.length} · ${recordatorio ? 'recordatorios' : 'envío de links'}`),
+      el('div', { class: 'cadena', style: 'margin-top:10px' },
+        el('h3', {}, p.nombre), el('div', { class: 'sub' }, `${p.cargo} · ${p.area_nombre}${p.equipo ? ' · ' + p.equipo : ''}`),
+        el('div', { class: 'num' }, p.telefono ? '📱 Se abre su chat directo' : 'Sin teléfono: WhatsApp te pedirá elegir el contacto'),
+        el('div', { class: 'linea', style: 'margin-top:12px' },
+          el('a', { class: 'boton', style: 'background:var(--acento);color:var(--acento-t);border-color:var(--acento)', href: wa, target: '_blank', rel: 'noopener', onclick: () => marcar(p.id) }, 'Abrir WhatsApp'),
+          el('button', { onclick: () => { copiar(texto, 'Mensaje copiado'); marcar(p.id); } }, 'Copiar mensaje'))),
+      el('div', { class: 'linea', style: 'margin-top:14px' },
+        el('button', { class: 'primario', onclick: () => { i++; pintarPaso(); } }, 'Siguiente →'),
+        el('button', { onclick: () => { i++; pintarPaso(); } }, 'Saltar'),
+        el('button', { onclick: () => { cerrarCajon(); refrescar().then(pintar); } }, 'Terminar')),
+      el('details', { style: 'margin-top:14px' }, el('summary', {}, 'Ver mensaje'), el('pre', { style: 'white-space:pre-wrap' }, texto)));
+  };
+  document.body.append(el('div', { class: 'velo', onclick: () => { cerrarCajon(); refrescar().then(pintar); } }), caja);
+  pintarPaso();
+}
+
+async function refrescar() { try { DATOS = await api('/api/admin/estado'); if (!document.querySelector('.cajon')) pintar(); } catch (e) {} }
+
+document.getElementById('btnDoc').onclick = () => { location.href = '/api/admin/documento.md?pin=' + encodeURIComponent(PIN); };
+document.getElementById('btnExportMd').onclick = () => { location.href = '/api/admin/exportar.md?pin=' + encodeURIComponent(PIN); };
+document.getElementById('btnExportJson').onclick = () => { location.href = '/api/admin/exportar.json?pin=' + encodeURIComponent(PIN); };
+document.getElementById('btnNueva').onclick = () => {
+  cerrarCajon(true);
+  const f = { nombre: el('input', { placeholder: 'Nombre completo' }), cargo: el('input', { placeholder: 'Puesto' }), equipo: el('input', { placeholder: 'Equipo (opcional)' }),
+    area: el('select', {}, DATOS.areas.map(a => el('option', { value: a.id }, a.nombre))), lider: el('input', { type: 'checkbox' }) };
+  const err = el('div', { class: 'error' });
+  const c = el('aside', { class: 'cajon', role: 'dialog' }, el('h3', {}, 'Agregar persona'),
+    el('div', { style: 'display:grid;gap:10px;margin-top:14px' }, f.nombre, f.cargo, f.area, f.equipo, el('label', {}, f.lider, ' Tiene gente a cargo'), err,
+      el('div', { class: 'linea' }, el('button', { class: 'primario', onclick: async () => {
+        try { const { id } = await api('/api/admin/persona_nueva', { nombre: f.nombre.value, cargo: f.cargo.value, area: f.area.value, equipo: f.equipo.value, lider: f.lider.checked });
+          cerrarCajon(); await refrescar(); pintar(); abrir(id); } catch (e) { err.textContent = e.message; }
+      } }, 'Agregar'), el('button', { onclick: () => cerrarCajon() }, 'Cancelar'))));
+  document.body.append(el('div', { class: 'velo', onclick: () => cerrarCajon() }), c);
+};
+
+setInterval(refrescar, 20000);
+if (PIN) cargar().catch(() => {}); else gate();
+</script>
+</body>
+</html>

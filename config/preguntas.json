@@ -1,0 +1,1456 @@
+{
+ "version": 1,
+ "areas": {
+  "direccion_general": {
+   "nombre": "Dirección General",
+   "omitir": []
+  },
+  "comercial": {
+   "nombre": "Comercial y Distribución",
+   "omitir": []
+  },
+  "administracion": {
+   "nombre": "Administración y Finanzas",
+   "omitir": []
+  },
+  "operaciones": {
+   "nombre": "Operaciones",
+   "omitir": []
+  },
+  "estrategia_digital": {
+   "nombre": "Estrategia Digital",
+   "omitir": []
+  },
+  "servicios_generales": {
+   "nombre": "Servicios Generales",
+   "omitir": [
+    "C05",
+    "C06",
+    "C07",
+    "C14"
+   ]
+  },
+  "produccion": {
+   "nombre": "Producción y Locaciones",
+   "omitir": []
+  },
+  "direccion_escena": {
+   "nombre": "Dirección de escena",
+   "omitir": []
+  },
+  "guion": {
+   "nombre": "Guion",
+   "omitir": []
+  },
+  "fotografia": {
+   "nombre": "Fotografía y Cámara",
+   "omitir": []
+  },
+  "sonido_directo": {
+   "nombre": "Sonido directo",
+   "omitir": []
+  },
+  "arte_vestuario": {
+   "nombre": "Arte y Vestuario",
+   "omitir": []
+  },
+  "casting": {
+   "nombre": "Casting",
+   "omitir": []
+  },
+  "elenco": {
+   "nombre": "Elenco (actrices y actores)",
+   "omitir": [
+    "C04",
+    "C05",
+    "C07",
+    "C11",
+    "C14"
+   ]
+  },
+  "marketing": {
+   "nombre": "Marketing y Canales",
+   "omitir": []
+  },
+  "edicion": {
+   "nombre": "Edición",
+   "omitir": []
+  },
+  "postproduccion": {
+   "nombre": "Postproducción y Entregables",
+   "omitir": []
+  },
+  "color": {
+   "nombre": "Color",
+   "omitir": []
+  },
+  "audio_post": {
+   "nombre": "Audio post y Mezcla",
+   "omitir": []
+  }
+ },
+ "comunes_inicio": [
+  {
+   "id": "C01",
+   "texto": "Describe tu puesto con tus propias palabras: ¿qué haces y de qué eres responsable?",
+   "ayuda": "Incluye: nombre de tu puesto, tu área, tus 3 a 5 tareas principales y qué se atora si no las haces. Explícalo como a alguien nuevo."
+  },
+  {
+   "id": "C02",
+   "texto": "¿Quién es tu jefe directo, quién te asigna el trabajo y con qué áreas o personas trabajas más seguido?",
+   "ayuda": "Incluye: nombre y puesto de tu jefe, quién te asigna tareas, a quién le entregas y con quién coordinas. Ej.: \"Me asigna el supervisor; entrego a color\"."
+  },
+  {
+   "id": "C03",
+   "texto": "Cuéntame tu día típico de principio a fin.",
+   "ayuda": "Incluye: hora de entrada y salida, qué haces primero, qué sigue y cómo cierras el día. Si rodaje y oficina son distintos, cuéntalos por separado."
+  }
+ ],
+ "comunes_flujo": [
+  {
+   "id": "C04",
+   "texto": "Para empezar tu trabajo, ¿qué recibes, de quién, en qué formato y por dónde te llega?",
+   "ayuda": "Incluye: qué material recibes, quién te lo manda, formato (PDF, Excel, video, memorias) y medio (WhatsApp, correo, Drive, NAS). Ej.: \"Guion en PDF por correo\"."
+  },
+  {
+   "id": "C05",
+   "texto": "¿Qué entregas cuando terminas, a quién, en qué formato y con qué nombre de archivo?",
+   "ayuda": "Incluye: qué entregas, a quién, en qué formato, dónde lo dejas y un nombre de archivo real copiado tal cual. Ej.: \"Presupuesto en Excel a Administración\"."
+  },
+  {
+   "id": "C06",
+   "texto": "¿En qué proyectos o series trabajas ahora y de qué tipo son (Prisma+, HELP, Monetización, Imagen TV, Doblaje, Producción u otro)?",
+   "ayuda": "Incluye: nombre o número de cada proyecto, su tipo, qué haces tú en cada uno y cuántos llevas al mismo tiempo."
+  },
+  {
+   "id": "C07",
+   "texto": "¿Qué programas, apps, equipos, carpetas o servidores usas para tu trabajo y para qué usas cada uno?",
+   "ayuda": "Incluye: cada herramienta y para qué la usas, una por línea. Ej.: \"DaVinci para color; Drive para compartir; WhatsApp para avisos\". No escribas contraseñas."
+  },
+  {
+   "id": "C08",
+   "texto": "¿Cuánto tiempo te toma normalmente tu parte del trabajo y qué meta diaria o semanal tienes, si hay una?",
+   "ayuda": "Incluye: tiempo aproximado por unidad (episodio, escena, día o proyecto) y tu meta, si existe. Ej.: \"Un episodio de 2 min me toma unas 3 horas\"."
+  },
+  {
+   "id": "C09",
+   "texto": "¿Quién revisa y aprueba tu trabajo, cómo es ese proceso y qué correcciones te piden más seguido?",
+   "ayuda": "Incluye: quién aprueba, por dónde te llegan los comentarios, cuántas rondas suele haber y las 2 o 3 correcciones más comunes, internas o del cliente."
+  },
+  {
+   "id": "C10",
+   "texto": "¿Qué es lo que más se atora, se repite o sale mal en tu flujo? Dame un ejemplo real reciente.",
+   "ayuda": "Incluye: qué pasó, en qué paso del flujo, por qué, qué puestos intervinieron (sin nombres), cuánto tiempo se perdió y cómo se resolvió."
+  },
+  {
+   "id": "C11",
+   "texto": "¿Qué tareas de rutina o a mano haces cada semana, cuánto tiempo te lleva cada una y qué te las haría más fáciles?",
+   "ayuda": "Incluye: cada tarea, cada cuánto la haces, horas por semana y qué te ayudaría. Ej.: renombrar archivos, copiar datos, llenar formatos o avisar a gente."
+  }
+ ],
+ "lideres": [
+  {
+   "id": "L01",
+   "texto": "¿Cuántas personas tienes a cargo y cómo repartes el trabajo entre ellas?",
+   "ayuda": "Incluye: cuántas personas y sus puestos, con qué criterio asignas (carga, especialidad, urgencia), por dónde y cada cuánto. Ej.: \"Cada lunes por WhatsApp, según carga\"."
+  },
+  {
+   "id": "L02",
+   "texto": "¿Cómo sabes si tu equipo va bien? ¿Qué metas o indicadores revisas y cada cuánto?",
+   "ayuda": "Incluye: qué mides (entregas a tiempo, errores, correcciones, productividad), dónde lo consultas, cada cuánto lo revisas y qué número consideras bueno."
+  },
+  {
+   "id": "L03",
+   "texto": "¿Qué decisiones necesitan tu aprobación y cuáles puede tomar tu equipo solo?",
+   "ayuda": "Incluye: 2 o 3 ejemplos de cada lado y qué pasa si se decide sin ti. Ej.: \"Cambio de locación: apruebo yo; orden de escenas: el equipo\"."
+  },
+  {
+   "id": "L04",
+   "texto": "¿Qué necesitarías ver todos los días en PrismaOS para tener tu área bajo control?",
+   "ayuda": "Incluye: alertas, reportes o vistas que quieres, qué dato mostraría cada una y qué pregunta por WhatsApp ya no tendrías que hacer. Ej.: \"Episodios atrasados por editor\"."
+  }
+ ],
+ "comunes_cierre": [
+  {
+   "id": "C12",
+   "texto": "Si mañana entra alguien nuevo a tu puesto, ¿qué es lo más importante que debe saber? Reglas, trucos y errores que debe evitar.",
+   "ayuda": "Incluye: 3 a 5 reglas que no se rompen, trucos que ahorran tiempo y errores comunes con lo que provocan. Ej.: \"Nunca formatees una memoria sin respaldo\"."
+  },
+  {
+   "id": "C13",
+   "texto": "¿Qué preguntas te hacen tus compañeros una y otra vez? Escribe cada pregunta con su respuesta.",
+   "ayuda": "Incluye: 3 a 5 preguntas con su respuesta completa. Ej.: \"¿Dónde dejo las memorias? En…\". Así tus compañeros tendrán las respuestas a la mano en PrismaOS."
+  },
+  {
+   "id": "C14",
+   "texto": "¿Qué palabras, siglas o términos se usan en tu área que alguien de fuera no entendería? Explícalos.",
+   "ayuda": "Incluye: cada término con su significado, uno por línea. Ej.: \"Desglose: lista de actores, props y locaciones que pide cada escena\"."
+  },
+  {
+   "id": "C15",
+   "texto": "¿Qué información o documento te hace falta tener a la mano para trabajar mejor? ¿Hay algo más que quieras que sepamos?",
+   "ayuda": "Incluye: qué te falta, para qué lo usarías y quién lo tiene hoy. Luego, cualquier idea o comentario extra; si no hay, escribe \"nada\"."
+  }
+ ],
+ "por_area": {
+  "direccion_general": [
+   {
+    "id": "DG01",
+    "texto": "¿Cómo nació Prismaticoos? Cuéntanos su historia y qué significa el nombre.",
+    "ayuda": "Incluye: año y cómo empezó, quiénes la fundaron, primeros proyectos, momentos clave y de dónde viene el nombre."
+   },
+   {
+    "id": "DG02",
+    "texto": "¿Cuál es la misión de Prisma y qué metas concretas tienen para dentro de 1, 3 y 5 años?",
+    "ayuda": "Incluye: la misión en una o dos frases y una meta medible para cada plazo. Ej.: \"En 1 año, duplicar las series al mes\"."
+   },
+   {
+    "id": "DG03",
+    "texto": "¿Cuáles son las líneas de negocio (Prisma+, HELP, Monetización, Imagen TV, Doblaje, Producción u otras) y cómo genera dinero cada una?",
+    "ayuda": "Incluye: por cada línea, qué es, quién paga, cómo se cobra y qué parte de los ingresos aporta. Aproximado; es información interna."
+   },
+   {
+    "id": "DG04",
+    "texto": "¿Quiénes son los clientes, socios y plataformas más importantes hoy?",
+    "ayuda": "Incluye: nombre de cada uno, qué trabajo hacen con Prisma, desde cuándo, qué tan importante es y quién de Prisma lleva la relación."
+   },
+   {
+    "id": "DG05",
+    "texto": "¿Qué hace diferente a Prisma de otras productoras y qué estándares de calidad nunca se negocian?",
+    "ayuda": "Incluye: 3 a 5 diferencias concretas frente a otras productoras y cada regla de calidad fija. Ej.: \"Nada se entrega sin revisión de audio\"."
+   },
+   {
+    "id": "DG06",
+    "texto": "¿Qué valores o reglas de la casa debe seguir todo el equipo?",
+    "ayuda": "Incluye: cada regla en una frase (puntualidad, trato, confidencialidad, redes sociales), por qué importa y qué pasa si no se cumple."
+   },
+   {
+    "id": "DG07",
+    "texto": "¿Qué procesos quieren que PrismaOS controle o automatice primero y por qué?",
+    "ayuda": "Incluye: los 3 procesos más urgentes en orden, qué falla hoy en cada uno y qué resultado esperan. Ej.: \"Aprobación de presupuestos\"."
+   },
+   {
+    "id": "DG08",
+    "texto": "¿Qué información NUNCA debe decir o compartir el asistente de IA de Prisma?",
+    "ayuda": "Incluye: cada tipo de información prohibida (sueldos, montos, contratos, datos de clientes o actores) y, si alguien sí puede verla, quién."
+   }
+  ],
+  "comercial": [
+   {
+    "id": "CO01",
+    "texto": "¿Qué vende Prisma (series, doblaje, producción u otros) y a quién: qué plataformas, clientes y países?",
+    "ayuda": "Incluye: cada producto o servicio, sus compradores principales, en qué países o regiones y cuál es el que más se vende."
+   },
+   {
+    "id": "CO02",
+    "texto": "¿Cómo es el proceso de venta o distribución de una serie, paso a paso?",
+    "ayuda": "Incluye: cada paso desde el primer contacto hasta la entrega y el cobro, quién lo hace, qué documento se usa y cuánto tarda."
+   },
+   {
+    "id": "CO03",
+    "texto": "¿Qué modelos de negocio manejan (licencia, reparto de ingresos, monetización, producción por encargo, doblaje) y cómo funciona cada uno?",
+    "ayuda": "Incluye: por cada modelo, con qué clientes aplica, cómo y cada cuánto se cobra y el porcentaje o rango típico. Aproximado; es información interna."
+   },
+   {
+    "id": "CO04",
+    "texto": "¿Qué requisitos técnicos y de entrega piden los clientes y plataformas?",
+    "ayuda": "Incluye: por plataforma o cliente, formato, resolución, horizontal o vertical, duración, subtítulos, audio, nombre de archivo y plazo. Si hay ficha técnica, di dónde está."
+   },
+   {
+    "id": "CO05",
+    "texto": "¿Cómo se manejan los contratos de distribución y los derechos de las series?",
+    "ayuda": "Incluye: quién negocia y firma, duración, territorios, exclusividad, quién se queda con los derechos y dónde se guardan los contratos."
+   },
+   {
+    "id": "CO06",
+    "texto": "¿Qué métricas comerciales revisas y cada cuánto?",
+    "ayuda": "Incluye: cada métrica (por ejemplo, ingresos por plataforma), de dónde sale el dato, cada cuánto la revisas y qué decides con ella. Aproximado; es información interna."
+   }
+  ],
+  "administracion": [
+   {
+    "id": "AF01",
+    "texto": "¿Cómo es el flujo de dinero de cada producción, desde el presupuesto y la entrega de dinero hasta la comprobación de gastos y el cierre?",
+    "ayuda": "Incluye: cada paso, quién lo hace, qué documentos pides (tickets, contratos, recibos), en qué momento, por dónde llegan y el plazo para comprobar. Aproximado; es información interna."
+   },
+   {
+    "id": "AF02",
+    "texto": "¿Cómo funcionan la nómina y los pagos a externos, actores y locaciones, y qué tabuladores usan, si los hay?",
+    "ayuda": "Incluye: fechas y forma de pago, documentos que pides (factura, recibo) y rangos de tabulador por rol. Sin datos bancarios. Aproximado; es información interna."
+   },
+   {
+    "id": "AF03",
+    "texto": "¿Cómo se piden y aprueban vacaciones, permisos, altas y bajas?",
+    "ayuda": "Incluye: por cada trámite, a quién se pide, por dónde, con cuánta anticipación, quién aprueba y qué formato o documento se usa."
+   },
+   {
+    "id": "AF04",
+    "texto": "¿Qué contratos y documentos administras (actores, locaciones, cesiones de derechos, proveedores) y dónde se guarda cada uno?",
+    "ayuda": "Incluye: por cada tipo, quién lo prepara y firma, en qué momento, si hay plantilla y en qué carpeta o sistema se guarda."
+   },
+   {
+    "id": "AF05",
+    "texto": "¿Qué políticas administrativas debe conocer todo el equipo?",
+    "ayuda": "Incluye: cada política en una frase (comprobación de gastos, caja chica, reembolsos, horarios), con sus plazos y qué pasa si no se cumple."
+   },
+   {
+    "id": "AF06",
+    "texto": "¿Qué reportes financieros se revisan y cada cuánto?",
+    "ayuda": "Incluye: nombre de cada reporte, quién lo hace y quién lo revisa, cada cuánto, de qué sistema sale y qué se decide. Aproximado; es información interna."
+   }
+  ],
+  "operaciones": [
+   {
+    "id": "OP01",
+    "texto": "¿Qué áreas dependen de ti y cómo se coordinan entre ellas?",
+    "ayuda": "Incluye: cada área con su líder, cómo se pasan el trabajo, juntas fijas (día y quiénes van) y por dónde se comunican."
+   },
+   {
+    "id": "OP02",
+    "texto": "¿Cómo se asignan los recursos (equipo de cámara, unidades móviles, gente) entre producciones?",
+    "ayuda": "Incluye: quién asigna, con cuánta anticipación, con qué herramienta (calendario, Excel), qué pasa si dos producciones piden lo mismo y un ejemplo reciente."
+   },
+   {
+    "id": "OP03",
+    "texto": "¿Cuáles son hoy los principales cuellos de botella de la operación?",
+    "ayuda": "Incluye: los 3 más graves, en qué paso ocurren, cada cuánto pasan, cuánto retraso causan y un ejemplo real reciente."
+   },
+   {
+    "id": "OP04",
+    "texto": "¿Qué indicadores operativos revisas?",
+    "ayuda": "Incluye: cada indicador, de dónde sale el dato, cada cuánto lo revisas y qué número te preocupa. Ej.: \"Episodios entregados a tiempo por semana\"."
+   },
+   {
+    "id": "OP05",
+    "texto": "¿Qué debe controlar PrismaOS para que la operación funcione sin estar persiguiendo a la gente?",
+    "ayuda": "Incluye: qué fechas, estatus y alertas debe vigilar, a quién avisar y cuándo. Ej.: \"Avisar si no se entregaron memorias el día de rodaje\"."
+   }
+  ],
+  "estrategia_digital": [
+   {
+    "id": "ED01",
+    "texto": "¿Cuál es la estrategia digital de Prisma hoy (canales, monetización, crecimiento)?",
+    "ayuda": "Incluye: canales activos y el papel de cada uno, cómo se monetiza cada canal y metas de crecimiento con cifras. Aproximado; es información interna."
+   },
+   {
+    "id": "ED02",
+    "texto": "¿Qué datos analizas, de dónde salen y cada cuánto los revisas?",
+    "ayuda": "Incluye: cada métrica (vistas, retención, seguidores), su fuente (YouTube Studio, Meta Business, PRISMA+), cada cuánto la revisas y dónde la guardas."
+   },
+   {
+    "id": "ED03",
+    "texto": "¿Cómo se decide con datos qué series producir, continuar o reforzar?",
+    "ayuda": "Incluye: qué métricas pesan más, qué umbral o regla usan, quién decide, cada cuánto y un ejemplo real de serie continuada o detenida."
+   },
+   {
+    "id": "ED04",
+    "texto": "¿Qué hace que un episodio o video funcione, según los patrones que han encontrado?",
+    "ayuda": "Incluye: gancho inicial, duración, título, miniatura, horario, tema y final de episodio, con un ejemplo real y la métrica que lo demostró."
+   },
+   {
+    "id": "ED05",
+    "texto": "¿Qué reportes entregas, a quién y en qué formato?",
+    "ayuda": "Incluye: nombre de cada reporte, qué datos trae, a quién va, cada cuánto, formato (Excel, PDF, presentación) y por dónde lo envías."
+   }
+  ],
+  "servicios_generales": [
+   {
+    "id": "SG01",
+    "texto": "¿Cómo te enteras de cuántas personas comen cada día de rodaje y a dónde hay que llevar la comida?",
+    "ayuda": "Incluye: quién te avisa, por dónde, con cuánta anticipación, qué datos te dan (personas, horario, dirección) y qué haces si cambia de último momento."
+   },
+   {
+    "id": "SG02",
+    "texto": "¿Qué tareas haces en la oficina y cuáles en rodaje?",
+    "ayuda": "Incluye: dos listas, oficina y rodaje; cada tarea con su horario o frecuencia y quién te la pide. Ej.: \"Surtir la cocina, cada lunes\"."
+   },
+   {
+    "id": "SG03",
+    "texto": "¿Cómo se piden, se compran y se comprueban las cosas de tu área (comida, insumos, material)?",
+    "ayuda": "Incluye: quién aprueba, cómo recibes el dinero, dónde compras, qué comprobante entregas (ticket, factura), a quién y en qué plazo. Aproximado; es información interna."
+   },
+   {
+    "id": "SG04",
+    "texto": "¿Qué es lo que más se te complica en tu día y qué te ayudaría a resolverlo?",
+    "ayuda": "Incluye: el problema, cada cuánto pasa, cuánto tiempo te quita, un ejemplo reciente y qué solución imaginas (aviso, lista, app, apoyo)."
+   }
+  ],
+  "produccion": [
+   {
+    "id": "PR01",
+    "texto": "¿Cómo se arma el calendario mensual de producciones: quién decide qué se graba, cuándo y con qué equipo?",
+    "ayuda": "Incluye: quién lo arma y quién lo aprueba, en qué fecha del mes, formato, por dónde se comparte y cómo se asignan crew, unidad móvil y cámara."
+   },
+   {
+    "id": "PR02",
+    "texto": "¿Cómo haces el desglose del guion y el plan de rodaje, y en qué plantilla o formato?",
+    "ayuda": "Incluye: pasos en orden, quién participa, cuánto tardas y herramienta (Excel, Sheets, papel). Ej.: \"Excel con escena, locación, personajes, props y horario\"."
+   },
+   {
+    "id": "PR03",
+    "texto": "¿Cómo buscan, eligen y contratan una locación, y cuánto cuesta normalmente?",
+    "ayuda": "Incluye: quién busca y por dónde, con cuánta anticipación, costo típico por día, permisos, contrato o recibo y si hay lista de locaciones. Aproximado; es información interna."
+   },
+   {
+    "id": "PR04",
+    "texto": "¿Cómo se consiguen y confirman los actores de cada producción, y cómo se coordinan con casting?",
+    "ayuda": "Incluye: qué hace producción y qué hace casting, quién confirma, por dónde (WhatsApp, llamada), con cuántos días de anticipación y qué pasa si alguien cancela."
+   },
+   {
+    "id": "PR05",
+    "texto": "¿Cómo se arma el presupuesto de una producción, qué rubros lleva y cuánto cuesta en promedio un día de rodaje?",
+    "ayuda": "Incluye: quién lo arma y aprueba, formato (Excel, Sheets), rubros (alimentación, locación, actores, props, transporte) y costo de un día. Aproximado; es información interna."
+   },
+   {
+    "id": "PR06",
+    "texto": "¿Cómo se hacen los llamados (call sheets) y por dónde se comunican con el crew y el elenco?",
+    "ayuda": "Incluye: quién los hace, formato (PDF, imagen, mensaje), qué datos llevan, cuándo se mandan y por dónde. Ej.: \"PDF al grupo de WhatsApp la noche anterior\"."
+   },
+   {
+    "id": "PR07",
+    "texto": "¿Qué pasa en un día de rodaje, desde que llegan a la oficina hasta que entregan equipo y memorias?",
+    "ayuda": "Incluye: horarios aproximados, quién hace qué, cómo se recoge el equipo, cómo se recibe y usa el presupuesto del día, comidas y regreso. Cuéntalo en orden."
+   },
+   {
+    "id": "PR08",
+    "texto": "¿Cómo se entregan las memorias a postproducción: quién respalda, quién recibe y cómo se nombran los archivos o carpetas?",
+    "ayuda": "Incluye: quién entrega y quién recibe, si se respalda en set, en qué disco o carpeta, a qué hora y un nombre real de carpeta como ejemplo."
+   },
+   {
+    "id": "PR09",
+    "texto": "¿Cómo se hace la comprobación de gastos y el cierre de la producción con administración?",
+    "ayuda": "Incluye: qué comprobantes se juntan (tickets, recibos, contratos), a quién se entregan, en cuántos días y qué se rechaza seguido. Aproximado; es información interna."
+   },
+   {
+    "id": "PR10",
+    "texto": "¿Qué incidencias son más comunes en rodaje y cómo se resuelven?",
+    "ayuda": "Incluye: las 3 más frecuentes, un caso real reciente, cómo se resolvió, cuánto tiempo se perdió y qué ayudaría a evitarlo."
+   }
+  ],
+  "direccion_escena": [
+   {
+    "id": "DI01",
+    "texto": "¿Cuándo recibes el guion y cómo preparas el rodaje (desglose, planos, ensayos)?",
+    "ayuda": "Incluye: cuántos días antes te llega y por dónde, qué preparas (desglose, shotlist, storyboard, ensayos), en qué formato y cuánto tiempo te toma."
+   },
+   {
+    "id": "DI02",
+    "texto": "¿Cómo te coordinas antes de grabar con el productor, el director de fotografía (DP), arte y casting?",
+    "ayuda": "Incluye: qué juntas o mensajes hay y cuándo, qué decides con cada uno y qué necesitas que te entreguen a tiempo para no atorarte."
+   },
+   {
+    "id": "DI03",
+    "texto": "¿Cuántas escenas o páginas graban por día y cómo decides cuántos planos y tomas hacer por escena (cobertura)?",
+    "ayuda": "Incluye: promedio por día, planos por escena, qué cambia en escenas largas o de acción y quién pone la meta. Ej.: \"Plano master más dos close-ups\"."
+   },
+   {
+    "id": "DI04",
+    "texto": "¿Graban en vertical, en horizontal o en ambos, y qué reglas de encuadre siguen para cada formato?",
+    "ayuda": "Incluye: formato según el tipo de proyecto (Prisma+, HELP, otros), cómo cuidan el encuadre para el otro formato, zonas seguras para textos y un error común."
+   },
+   {
+    "id": "DI05",
+    "texto": "¿Cómo diriges al elenco en set y qué problemas se repiten con las actuaciones?",
+    "ayuda": "Incluye: si hay lectura o ensayo, cómo das indicaciones, el tono que busca Prisma y problemas típicos (texto no aprendido, sobreactuación) con un ejemplo real."
+   },
+   {
+    "id": "DI06",
+    "texto": "¿Qué indicaciones o notas dejas para edición (tomas buenas, notas de script)?",
+    "ayuda": "Incluye: quién anota (tú, script, asistente), en qué formato (hoja, app, mensaje), cómo marcas la toma buena y cómo llegan las notas a edición."
+   },
+   {
+    "id": "DI07",
+    "texto": "¿Qué es lo que más retrasa un día de rodaje?",
+    "ayuda": "Incluye: las 3 causas más comunes, un ejemplo real reciente, cuánto tiempo se perdió y qué ayudaría a evitarlo."
+   }
+  ],
+  "guion": [
+   {
+    "id": "GU01",
+    "texto": "¿Cómo te llega un encargo de guion: quién lo pide, qué información recibes y cuánto tiempo te dan para entregarlo?",
+    "ayuda": "Incluye: quién lo pide, por dónde (WhatsApp, correo, junta), qué trae el brief (tema, plataforma, episodios, personajes) y el plazo típico."
+   },
+   {
+    "id": "GU02",
+    "texto": "¿Cómo son tus guiones: cuántos episodios tiene una serie, cuánto dura y cuántas páginas tiene cada episodio, cómo lo estructuras y en qué programa escribes?",
+    "ayuda": "Incluye: números aproximados, si cambian según el proyecto, programa (Word, Google Docs, Final Draft) y cómo divides cada episodio (gancho, desarrollo, cliffhanger)."
+   },
+   {
+    "id": "GU03",
+    "texto": "¿Cómo construyes el gancho, los giros y el cliffhanger de cada episodio, y qué reglas de la casa sigues para eso?",
+    "ayuda": "Incluye: en qué momento entra el gancho, cada cuánto hay un giro, cómo cierras el episodio, si las reglas están escritas y un ejemplo real tuyo."
+   },
+   {
+    "id": "GU04",
+    "texto": "¿Cómo funciona la sala de guion y quién aprueba cada paso (idea, sinopsis, escaleta, guion y correcciones)?",
+    "ayuda": "Incluye: quién participa, cada cuánto se reúnen, qué se entrega en cada paso, quién lo aprueba (nombre o puesto), cuánto tarda y por dónde se manda."
+   },
+   {
+    "id": "GU05",
+    "texto": "¿Cuántas rondas de corrección hay normalmente y qué es lo que más te piden cambiar?",
+    "ayuda": "Incluye: número típico de rondas, quién pide los cambios, cuánto tiempo te dan para corregir y los 3 cambios más comunes, con un ejemplo real."
+   },
+   {
+    "id": "GU06",
+    "texto": "¿Qué cambia al escribir para Prisma+, HELP, Monetización u otros proyectos?",
+    "ayuda": "Incluye: diferencias en duración, número de episodios, tono, temas, formato vertical u horizontal y quién aprueba en cada tipo. Solo los que te toquen."
+   },
+   {
+    "id": "GU07",
+    "texto": "¿Qué está prohibido o hay que evitar en los guiones: temas, lenguaje o groserías, lo que no permiten las plataformas y escenas caras de producir?",
+    "ayuda": "Incluye: la lista de lo que se evita, si está escrito y dónde, quién lo definió y un ejemplo real de algo que se quitó."
+   },
+   {
+    "id": "GU08",
+    "texto": "¿Cómo tomas en cuenta el presupuesto al escribir (locaciones, número de personajes, días de rodaje)?",
+    "ayuda": "Incluye: límites que te dan (locaciones, personajes, escenas por día), quién los pone y un ejemplo de algo que cambiaste por costo. Aproximado; es información interna."
+   },
+   {
+    "id": "GU09",
+    "texto": "¿Cómo entregas el guion a producción y cómo nombras las versiones?",
+    "ayuda": "Incluye: a quién lo mandas, por dónde (correo, WhatsApp, Drive), en qué formato (PDF, Word), cómo marcas la versión final y un nombre de archivo real."
+   },
+   {
+    "id": "GU10",
+    "texto": "¿Cómo se manejan los derechos de tus guiones: firmas algún contrato o carta de cesión, cuándo y con quién?",
+    "ayuda": "Incluye: si firmas algo, en qué momento (antes o después de entregar), quién lo gestiona y qué dudas tienes. Si no sabes cómo funciona, dilo tal cual."
+   }
+  ],
+  "fotografia": [
+   {
+    "id": "FO01",
+    "texto": "¿Qué cámaras, lentes y luces usan, y ese paquete es fijo por equipo o cambia según la producción?",
+    "ayuda": "Incluye: modelos de cámara, lentes, luces y accesorios; si es propio o rentado; quién lo asigna y si cambia por equipo o proyecto."
+   },
+   {
+    "id": "FO02",
+    "texto": "¿Con qué configuración graban: formato o códec, resolución, cuadros por segundo y perfil de color (log, LUT de monitoreo)?",
+    "ayuda": "Incluye: códec, resolución, cuadros por segundo, perfil de color y LUT, y si cambia por proyecto o plataforma. Ej.: \"XAVC, 4K, 23.98, log, LUT a Rec.709\"."
+   },
+   {
+    "id": "FO03",
+    "texto": "¿Graban en vertical, en horizontal o en ambos, y cómo lo resuelven en set (encuadre, guías en monitor, cámaras)?",
+    "ayuda": "Incluye: qué formato pide cada tipo de proyecto, cómo encuadran para ambos, guías en monitor, si recortan en post y qué problemas ha causado."
+   },
+   {
+    "id": "FO04",
+    "texto": "¿Cómo manejan las memorias desde que se graban hasta que se entregan a postproducción, incluyendo el respaldo en set?",
+    "ayuda": "Incluye: quién respalda, con qué programa y disco, cuántas copias, nombre de carpetas, a quién entregan y cuándo se formatean. Ej.: \"2 copias, carpeta Dia01_CamA\"."
+   },
+   {
+    "id": "FO05",
+    "texto": "¿Qué look o estilo de iluminación busca Prisma y qué referencias usan para lograrlo?",
+    "ayuda": "Incluye: cómo describes el look, si cambia por tipo de serie (melodrama, microdrama), quién lo define o aprueba y referencias concretas por nombre."
+   },
+   {
+    "id": "FO06",
+    "texto": "¿Qué problemas técnicos se repiten (ruido, exposición, foco, balance de blancos) y cómo los evitan?",
+    "ayuda": "Incluye: el problema, cada cuánto pasa, qué lo causa, cómo lo detectan y qué hacen para evitarlo, con un caso real reciente."
+   }
+  ],
+  "sonido_directo": [
+   {
+    "id": "SD01",
+    "texto": "¿Qué equipo usas (grabadora, micrófonos, lavaliers, boom)?",
+    "ayuda": "Incluye: marca y modelo de grabadora, micrófonos, lavaliers y boom; cuántos canales; si es tuyo o de la empresa y qué te hace falta."
+   },
+   {
+    "id": "SD02",
+    "texto": "¿Con qué configuración grabas (formato, bits, frecuencia de muestreo) y cómo sincronizas el audio con la cámara (timecode, claqueta, audio de referencia)?",
+    "ayuda": "Incluye: formato, bits y frecuencia; si usas timecode, claqueta o sincronía por forma de onda, y si mandas audio a cámara. Ej.: \"WAV, 24 bits, 48 kHz\"."
+   },
+   {
+    "id": "SD03",
+    "texto": "¿Cómo nombras y entregas los archivos de audio a postproducción?",
+    "ayuda": "Incluye: nomenclatura con un ejemplo, estructura de carpetas, en qué medio entregas, a quién, cuándo y si va con reporte. Ej.: \"Esc12_T3_Boom.wav\"."
+   },
+   {
+    "id": "SD04",
+    "texto": "¿Qué problemas de audio son más comunes en locación y cómo los evitas?",
+    "ayuda": "Incluye: ruidos típicos (tráfico, aire acondicionado, roce de lavalier), cada cuánto pasan, qué haces en set y qué ya no se puede resolver."
+   },
+   {
+    "id": "SD05",
+    "texto": "¿Qué información y material extra le das a audio post para que trabaje mejor (reportes de sonido, wild tracks, room tone)?",
+    "ayuda": "Incluye: si haces reporte y qué anotas, si grabas room tone o wild tracks y cuándo, cómo avisas de tomas con problemas y qué te piden."
+   }
+  ],
+  "arte_vestuario": [
+   {
+    "id": "AR01",
+    "texto": "¿Cómo haces el desglose de arte o vestuario de un guion?",
+    "ayuda": "Incluye: pasos, cuánto tardas, en qué formato (Excel, papel, app), qué columnas lleva, con quién lo revisas y a quién se lo entregas."
+   },
+   {
+    "id": "AR02",
+    "texto": "¿Cómo se aprueba tu presupuesto de arte o vestuario y cómo haces las compras (proveedores, tiempos, tickets)?",
+    "ayuda": "Incluye: quién aprueba, cuántos días antes compras, dónde, cómo pagas (efectivo, reembolso), cómo guardas tickets y monto típico. Aproximado; es información interna."
+   },
+   {
+    "id": "AR03",
+    "texto": "¿Dónde se guardan los props y el vestuario entre producciones y cómo controlan qué hay y quién lo tiene?",
+    "ayuda": "Incluye: si hay bodega o inventario, dónde está, cómo se registra (Excel, fotos, nada), quién lo lleva y qué se pierde o daña seguido."
+   },
+   {
+    "id": "AR04",
+    "texto": "¿Cómo cuidan la continuidad de arte y vestuario entre escenas y días de rodaje?",
+    "ayuda": "Incluye: quién la lleva, si toman fotos y dónde las guardan, cómo marcan cambios por día de historia y un error real que hayan tenido."
+   },
+   {
+    "id": "AR05",
+    "texto": "¿Qué estilo visual busca Prisma en arte y vestuario según el tipo de serie?",
+    "ayuda": "Incluye: cómo cambia por tipo (melodrama, microdrama, TV), paletas de color, qué evitar, quién aprueba el look y referencias concretas por nombre."
+   },
+   {
+    "id": "AR06",
+    "texto": "¿Cómo compruebas tus gastos al cierre de la producción?",
+    "ayuda": "Incluye: qué entregas (tickets, facturas, recibos), a quién, en qué formato, cuántos días después y qué pasa si falta un comprobante. Aproximado; es información interna."
+   }
+  ],
+  "casting": [
+   {
+    "id": "CA01",
+    "texto": "¿Cómo defines el perfil de cada personaje y quién lo aprueba?",
+    "ayuda": "Incluye: de dónde sale (guion, director, productor), qué datos lleva, en qué formato y quién da el visto bueno. Ej.: \"Mujer de 30 a 40, villana elegante\"."
+   },
+   {
+    "id": "CA02",
+    "texto": "¿De dónde salen los actores (elenco fijo, base propia, agencias, redes)?",
+    "ayuda": "Incluye: qué proporción aproximada sale de cada fuente, cómo está organizada tu base (Excel, carpeta, app), qué datos registras de cada actor y cuántos hay."
+   },
+   {
+    "id": "CA03",
+    "texto": "¿Cómo es el proceso de audición (presencial o self-tape) y cómo se elige al actor?",
+    "ayuda": "Incluye: pasos en orden, qué material pides (escena, video), por dónde llega, cuántos candidatos ves por personaje, quién decide y cuánto tarda."
+   },
+   {
+    "id": "CA04",
+    "texto": "¿Cuándo se considera cerrado el elenco de una producción (cast lock) y qué tiene que pasar para cerrarlo?",
+    "ayuda": "Incluye: pasos para cerrarlo (confirmación, contrato, fechas), quién lo aprueba, cuántos días antes del rodaje y qué pasa si alguien se baja."
+   },
+   {
+    "id": "CA05",
+    "texto": "¿Cómo se hacen los contratos, pagos y recibos de los actores, y existe un tabulador de pagos?",
+    "ayuda": "Incluye: quién hace el contrato, cuándo se firma, cómo y cada cuánto se paga, qué recibo se pide y rangos del tabulador. Aproximado; es información interna."
+   },
+   {
+    "id": "CA06",
+    "texto": "¿Cómo se manejan la exclusividad y los derechos de imagen de los actores, y qué reglas hay para repetir al mismo actor en varias series?",
+    "ayuda": "Incluye: si viene en el contrato, cuánto dura, en qué plataformas aplica, quién lo decide y un caso real de actor repetido o conflicto."
+   },
+   {
+    "id": "CA07",
+    "texto": "¿Cómo se coordinan llamados y cambios de último momento con el elenco?",
+    "ayuda": "Incluye: quién avisa, por dónde (grupo, mensaje directo, llamada), con cuánta anticipación, cómo confirman y qué haces si alguien falla o llega tarde."
+   }
+  ],
+  "elenco": [
+   {
+    "id": "EL01",
+    "texto": "¿Cómo llegaste a Prisma y cómo fue tu proceso de casting?",
+    "ayuda": "Incluye: cuándo entraste, cómo te enteraste (convocatoria, recomendación, redes), qué te pidieron (audición, self-tape) y cuánto tardaron en confirmarte."
+   },
+   {
+    "id": "EL02",
+    "texto": "¿En qué series has participado y con qué personajes?",
+    "ayuda": "Incluye: nombre de la serie, personaje, tipo de papel (protagónico, antagónico, secundario) y año aproximado. Si son muchas, las más recientes."
+   },
+   {
+    "id": "EL03",
+    "texto": "¿Cómo y con cuánta anticipación te llegan los llamados, los guiones y los cambios de último momento?",
+    "ayuda": "Incluye: quién te los manda, por dónde (WhatsApp, correo), en qué formato (PDF, foto, mensaje), cuántos días antes y si alguna vez te llegó algo tarde."
+   },
+   {
+    "id": "EL04",
+    "texto": "¿Cómo es un día de grabación para ti, desde que llegas hasta que te vas?",
+    "ayuda": "Incluye: hora de llamado, maquillaje y vestuario, tiempos de espera, cuántas escenas grabas, comidas y hora aproximada de salida. Cuéntalo en orden."
+   },
+   {
+    "id": "EL05",
+    "texto": "¿Cómo funcionan tus contratos y pagos con Prisma, y qué dudas sobre eso son comunes entre el elenco?",
+    "ayuda": "Incluye: qué firmas y cuándo, cómo y cada cuánto te pagan, qué recibo entregas y dudas frecuentes. Aproximado; es información interna. No pongas datos bancarios."
+   },
+   {
+    "id": "EL06",
+    "texto": "¿Qué te facilitaría el trabajo con Prisma?",
+    "ayuda": "Incluye: lo que hoy te cuesta más trabajo, un ejemplo real y qué cambiarías (avisos, horarios, guiones, pagos, comunicación o alguna app)."
+   }
+  ],
+  "marketing": [
+   {
+    "id": "MK01",
+    "texto": "¿Qué canales y plataformas manejas y qué se publica en cada uno (Facebook, YouTube, TikTok, app PRISMA+)?",
+    "ayuda": "Incluye: nombre de cada canal o página, qué publicas ahí (episodios, clips, promos), formato horizontal o vertical y quién lo sube."
+   },
+   {
+    "id": "MK02",
+    "texto": "¿Cómo se hacen las promos, las miniaturas o portadas y los títulos, y quién los aprueba?",
+    "ayuda": "Incluye: quién hace cada pieza, con qué programa, de dónde salen las imágenes, cuánto tarda, quién da el visto bueno y por dónde."
+   },
+   {
+    "id": "MK03",
+    "texto": "¿Cómo se arma el calendario de publicación y cuántas piezas se suben por día o por semana en cada canal?",
+    "ayuda": "Incluye: quién arma el calendario, dónde vive (Excel, Meta, otro), cuántas piezas por canal y a qué hora. Ej.: \"3 clips diarios, 8 pm\"."
+   },
+   {
+    "id": "MK04",
+    "texto": "¿Qué métricas revisas, dónde y cada cuánto, y a partir de qué números consideras exitoso un episodio o video?",
+    "ayuda": "Incluye: métricas (vistas, retención, CTR, seguidores), dónde las ves, cada cuánto y tu número de éxito. Ej.: \"Retención arriba de X%\"."
+   },
+   {
+    "id": "MK05",
+    "texto": "¿Qué patrones has visto que hacen que un video funcione (ganchos, títulos, duración, horario)?",
+    "ayuda": "Incluye: qué ganchos, títulos, duraciones, horarios o temas funcionan y cuáles no, con un video real de ejemplo y sus resultados."
+   },
+   {
+    "id": "MK06",
+    "texto": "¿Cómo genera ingresos cada canal o plataforma (anuncios, suscripciones, pagos en PRISMA+, patrocinios)?",
+    "ayuda": "Incluye: tipo de ingreso por canal, cuál deja más, quién lo revisa y cada cuánto. Aproximado; es información interna."
+   }
+  ],
+  "edicion": [
+   {
+    "id": "EDI01",
+    "texto": "¿Cómo te llega el material (memorias, NAS, Drive) y cómo organizas el proyecto y las carpetas?",
+    "ayuda": "Incluye: quién te lo entrega, por dónde, cuánto después del rodaje y tu estructura de carpetas. Ej.: \"01_Media / 02_Audio / 03_Exports\"."
+   },
+   {
+    "id": "EDI02",
+    "texto": "¿Qué software y configuración de proyecto usas (resolución, cuadros por segundo, proxies)?",
+    "ayuda": "Incluye: programa y versión, resolución, cuadros por segundo, si usas proxies y si hay plantilla de proyecto. Ej.: \"Premiere, 4K, 23.976, con proxies\"."
+   },
+   {
+    "id": "EDI03",
+    "texto": "Paso a paso, ¿en qué orden editas un episodio (sincronía, armado, ritmo, música, textos)?",
+    "ayuda": "Incluye: cada paso en orden, cuánto tiempo te lleva cada uno y quién revisa en medio. Ej.: \"1) sincronizo, 2) armo por escena…\"."
+   },
+   {
+    "id": "EDI04",
+    "texto": "¿Qué entregables sacas de cada episodio y qué duración y formato lleva cada uno (horizontal, vertical, partes, capítulos)?",
+    "ayuda": "Incluye: entregables por tipo de proyecto, duración, horizontal o vertical, resolución y en cuántas partes se corta. Ej.: \"Vertical de 1:30 en 3 partes\"."
+   },
+   {
+    "id": "EDI05",
+    "texto": "¿Qué revisas antes de exportar? Explica tu protocolo de revisión (QC) punto por punto.",
+    "ayuda": "Incluye: tu lista en orden (audio, textos, cortes, cuadros negros, nombre de archivo), si está escrita o es de memoria y quién la valida."
+   },
+   {
+    "id": "EDI06",
+    "texto": "¿Cómo te llegan las correcciones (internas o del cliente), por dónde, y cómo las registras?",
+    "ayuda": "Incluye: quién las manda, por dónde (WhatsApp, Frame.io, correo), en qué formato (minuto y nota), dónde las anotas y cuántas rondas suele haber."
+   },
+   {
+    "id": "EDI07",
+    "texto": "¿Cómo le entregas el proyecto a color y a audio (XML, AAF, EDL) y cómo te regresa el material ya trabajado?",
+    "ayuda": "Incluye: qué archivo exportas para cada área, dónde lo dejas, cómo avisas, cómo y cuándo regresa y quién hace el armado final."
+   },
+   {
+    "id": "EDI08",
+    "texto": "¿Cómo nombras y dónde guardas proyectos y exports?",
+    "ayuda": "Incluye: nombre exacto de un proyecto y de un export reales, la ruta o carpeta donde se guardan y si hay respaldo."
+   },
+   {
+    "id": "EDI09",
+    "texto": "¿Cuántos episodios o minutos terminas en un día normal y cuál es tu meta diaria o semanal?",
+    "ayuda": "Incluye: promedio real, duración de los episodios, tu meta, quién la fija y qué te impide llegar. Ej.: \"2 episodios de 2 min al día\"."
+   },
+   {
+    "id": "EDI10",
+    "texto": "¿Cómo funciona la regla de errores ligada al bono: qué errores cuentan, quién los registra y cómo afectan el bono?",
+    "ayuda": "Incluye: lista de errores que cuentan, quién los detecta, dónde se anotan y cuántos afectan el bono. Aproximado; es información interna."
+   }
+  ],
+  "postproduccion": [
+   {
+    "id": "PO01",
+    "texto": "¿Cómo es el flujo completo de postproducción, desde que llegan las memorias hasta la entrega final?",
+    "ayuda": "Incluye: cada paso en orden, quién lo hace, por dónde pasa el material, cuánto tarda y quién aprueba. Ej.: \"Memorias, respaldo, edición, color…\"."
+   },
+   {
+    "id": "PO02",
+    "texto": "¿Qué entregables lleva cada tipo de proyecto (máster H y V, partes, hack, subtítulos, stems)?",
+    "ayuda": "Incluye: por cada tipo de proyecto (Prisma+, HELP, Monetización, Imagen TV, Doblaje, Producción), la lista de archivos que se entregan y a quién."
+   },
+   {
+    "id": "PO03",
+    "texto": "¿Qué especificaciones técnicas pide cada plataforma o cliente (resolución, códec, cuadros por segundo, audio, subtítulos)?",
+    "ayuda": "Incluye: por plataforma o cliente, resolución, códec, contenedor, cuadros por segundo, loudness y subtítulos, y dónde está escrita la especificación."
+   },
+   {
+    "id": "PO04",
+    "texto": "¿Cuál es la nomenclatura oficial de archivos? Da ejemplos reales.",
+    "ayuda": "Incluye: qué significa cada parte del nombre, un ejemplo real por tipo de entregable y dónde está escrita la regla. Ej.: \"350_Máster_H_UHD\"."
+   },
+   {
+    "id": "PO05",
+    "texto": "¿Cómo das seguimiento a entregas y fechas y con qué herramienta?",
+    "ayuda": "Incluye: herramienta (Excel, Drive, WhatsApp, otra), qué datos anotas, quién la actualiza, cada cuánto y cómo avisas un retraso."
+   },
+   {
+    "id": "PO06",
+    "texto": "¿Cómo funciona el QC final antes de entregar: quién revisa, qué se revisa y qué pasa si hay un error?",
+    "ayuda": "Incluye: la lista de puntos que se revisan, quién lo hace, cuánto tarda, dónde se anota y quién corrige si algo falla."
+   },
+   {
+    "id": "PO07",
+    "texto": "¿Dónde se archivan los másters y los proyectos?",
+    "ayuda": "Incluye: servidor, disco o nube, ruta de carpeta, quién archiva y cuándo, si hay respaldo doble y cuánto tiempo se guarda."
+   },
+   {
+    "id": "PO08",
+    "texto": "¿Qué entregas fallan o se regresan más seguido y por qué?",
+    "ayuda": "Incluye: tipo de entrega, qué falla (especificación, nombre, audio, subtítulos), cada cuánto pasa y un caso real reciente con el tiempo perdido."
+   }
+  ],
+  "color": [
+   {
+    "id": "COL01",
+    "texto": "¿Cómo te llega el material para color (XML, AAF, media) y cómo armas el proyecto en DaVinci?",
+    "ayuda": "Incluye: quién te lo manda, por dónde, qué archivo recibes, cómo haces el conform y cómo organizas bins y timelines."
+   },
+   {
+    "id": "COL02",
+    "texto": "¿Qué gestión de color usan (espacio de trabajo, cámaras y log, salida Rec.709)?",
+    "ayuda": "Incluye: modo (DaVinci YRGB, RCM o ACES), espacio de trabajo, cómo tratas cada cámara y log, LUTs y salida. Ej.: \"S-Log3 a Rec.709\"."
+   },
+   {
+    "id": "COL03",
+    "texto": "¿Cuál es tu flujo de nodos u orden de trabajo en un episodio?",
+    "ayuda": "Incluye: tu árbol de nodos típico en orden, si usas plantilla o PowerGrade y los pasos del episodio. Ej.: \"Balance, exposición, look, piel\"."
+   },
+   {
+    "id": "COL04",
+    "texto": "¿Cada serie tiene un look propio? Si es así, ¿cómo se define y quién lo aprueba?",
+    "ayuda": "Incluye: quién propone el look, con qué referencias, cómo se guarda (LUT, PowerGrade, stills) y quién da el visto bueno y por dónde."
+   },
+   {
+    "id": "COL05",
+    "texto": "¿Cómo cuidas la piel y la continuidad entre planos y escenas?",
+    "ayuda": "Incluye: herramientas que usas (qualifiers, vectorscopio, stills de referencia), los problemas más comunes y cómo resolviste un caso real."
+   },
+   {
+    "id": "COL06",
+    "texto": "¿Cuánto tiempo te toma colorear un episodio y cuál es tu meta diaria?",
+    "ayuda": "Incluye: tiempo promedio y duración del episodio, cuántos sacas al día, quién fija la meta y qué te retrasa. Ej.: \"Episodio de 2 min en 1 hora\"."
+   },
+   {
+    "id": "COL07",
+    "texto": "¿Qué revisas antes de entregar y cómo haces el render y la entrega (formatos, nombres de archivo, carpeta)?",
+    "ayuda": "Incluye: qué revisas antes del render, códec y resolución, nombre de archivo con un ejemplo real, dónde lo dejas y a quién avisas."
+   }
+  ],
+  "audio_post": [
+   {
+    "id": "AU01",
+    "texto": "¿Cómo te llega el material de edición (AAF, OMF), por dónde, y qué software usas para trabajarlo?",
+    "ayuda": "Incluye: quién te lo manda, por dónde, formato, programa y versión (Pro Tools, Fairlight, otro) y problemas comunes al importar."
+   },
+   {
+    "id": "AU02",
+    "texto": "Paso a paso, ¿cómo trabajas el audio de un episodio (limpieza de diálogos, efectos, música y mezcla)?",
+    "ayuda": "Incluye: cada paso en orden, herramientas o plugins clave, quién hace cada parte (editor, musicalizador) y cuánto tiempo lleva por episodio."
+   },
+   {
+    "id": "AU03",
+    "texto": "¿De dónde sale la música y cómo se manejan las licencias?",
+    "ayuda": "Incluye: bibliotecas o compositores, quién elige la música, dónde se registra cada licencia y si ha habido reclamos en YouTube o Facebook."
+   },
+   {
+    "id": "AU04",
+    "texto": "¿Qué niveles de loudness y especificaciones de audio usan en cada plataforma o cliente?",
+    "ayuda": "Incluye: por plataforma, LUFS integrado, true peak, estéreo o 5.1, frecuencia de muestreo y cómo lo mides. Ej.: \"-14 LUFS, -1 dBTP\"."
+   },
+   {
+    "id": "AU05",
+    "texto": "¿Qué stems y versiones entregan (mezcla, M&E, doblaje)?",
+    "ayuda": "Incluye: lista de stems y versiones por tipo de proyecto, formato de archivo, nombre con un ejemplo real y a quién se entregan."
+   },
+   {
+    "id": "AU06",
+    "texto": "¿Qué problemas del audio grabado en set se repiten más?",
+    "ayuda": "Incluye: el problema (ruido, saturación, roce de lavalier, falta de ambientes), cada cuánto pasa, cuánto tardas en arreglarlo y qué le pedirías a sonido directo."
+   },
+   {
+    "id": "AU07",
+    "texto": "¿Cómo se hacen el doblaje y las versiones en otros idiomas: quién traduce, dónde se graba y cómo se mezcla?",
+    "ayuda": "Incluye: idiomas, quién traduce y adapta, dónde y con quién se graba, si se usa IA, cómo se mezcla sobre el M&E y cuánto tarda."
+   }
+  ]
+ },
+ "por_cargo": {
+  "gerente_produccion": [
+   {
+    "id": "RGP01",
+    "texto": "¿Con qué criterio decides qué producción le toca a cada uno de los tres equipos?",
+    "ayuda": "Incluye: criterios (tipo de proyecto, director, carga de trabajo, fechas), quién decide y cuándo, y un caso real. Ej.: \"Si un equipo ya tiene dos rodajes…\"."
+   },
+   {
+    "id": "RGP02",
+    "texto": "¿Cómo te coordinas con Kevin \"Bambú\" (planner), con los productores de línea y con Operaciones?",
+    "ayuda": "Incluye: con cada uno, qué temas ven, por dónde (WhatsApp, juntas, llamadas), cada cuánto y qué se suele atorar. Ej.: \"Junta los lunes para…\"."
+   },
+   {
+    "id": "RGP03",
+    "texto": "¿Qué revisas tú de cada producción antes, durante y después del rodaje?",
+    "ayuda": "Incluye: qué revisas en cada etapa (presupuesto, plan de rodaje, elenco, locaciones, entrega a post), cómo lo revisas y qué suele fallar."
+   },
+   {
+    "id": "RGP04",
+    "texto": "¿Cuántas producciones salen al mes normalmente y cuántas como máximo aguanta la operación?",
+    "ayuda": "Incluye: promedio de producciones al mes, el máximo que han logrado, qué lo limita (personal, cámaras, unidades, post) y un mes pesado reciente."
+   },
+   {
+    "id": "RGP05",
+    "texto": "Cuando una producción se atrasa, se cae una locación o falta un actor, ¿qué se hace y quién decide?",
+    "ayuda": "Incluye: pasos que se siguen en cada caso, quién decide, en cuánto tiempo, cómo se avisa al equipo y un ejemplo real reciente."
+   }
+  ],
+  "productor_linea": [
+   {
+    "id": "RPL01",
+    "texto": "¿Qué rubros incluye el presupuesto que le presentas a Esnebith y cómo calculas cada uno?",
+    "ayuda": "Incluye: cada rubro (elenco, locaciones, alimentación, transporte, arte, extras), cómo lo calculas, formato y tiempo de aprobación. Aproximado; es información interna."
+   },
+   {
+    "id": "RPL02",
+    "texto": "¿Cuánto dinero recibes por día de rodaje y cómo lo administras en set?",
+    "ayuda": "Incluye: monto aproximado por día, cómo y cuándo lo recibes, quién autoriza gastos en set y cómo guardas tickets. Aproximado; es información interna."
+   },
+   {
+    "id": "RPL03",
+    "texto": "¿Cómo cuentas cuántas personas habrá cada día de rodaje y cómo le avisas a alimentación?",
+    "ayuda": "Incluye: cómo cuentas (crew, elenco, extras), en qué formato, por dónde avisas a alimentación, con cuánta anticipación y qué pasa si hay cambios."
+   },
+   {
+    "id": "RPL04",
+    "texto": "¿Qué documentos juntas para la comprobación de gastos y qué es lo que más se pierde o se olvida?",
+    "ayuda": "Incluye: lista de documentos (tickets, facturas, contratos, recibos), cómo los juntas y entregas, en cuántos días y qué se pierde más. Aproximado; es información interna."
+   },
+   {
+    "id": "RPL05",
+    "texto": "¿Cómo es tu equipo (director, coordinador, DP, sonido, arte) y cómo se reparten las tareas antes del rodaje?",
+    "ayuda": "Incluye: puestos de tu equipo, qué hace cada uno antes del rodaje (desglose, locaciones, casting, arte), cómo se reparten y por dónde se coordinan."
+   }
+  ],
+  "coordinador_produccion": [
+   {
+    "id": "RCP01",
+    "texto": "¿Qué haces tú antes del rodaje y qué haces durante el rodaje?",
+    "ayuda": "Incluye: tus tareas en orden, antes y durante el día de rodaje, con quién tratas en cada una y cuánto tiempo te llevan."
+   },
+   {
+    "id": "RCP02",
+    "texto": "¿Cómo haces y mandas los llamados o call sheets (horarios, locación, elenco, vestuario)?",
+    "ayuda": "Incluye: qué datos lleva el llamado, con qué herramienta lo haces, por dónde y a quién lo mandas, con cuánta anticipación y quién lo aprueba."
+   },
+   {
+    "id": "RCP03",
+    "texto": "¿Cómo llevas el control del equipo, las memorias y los recibos durante el día de rodaje?",
+    "ayuda": "Incluye: cómo registras salida y regreso del equipo, entrega de memorias a post y recibos; en qué formato (papel, Excel, WhatsApp) y qué suele fallar."
+   },
+   {
+    "id": "RCP04",
+    "texto": "¿Qué formatos o plantillas usas (call sheet, reporte de producción, lista de personal)?",
+    "ayuda": "Incluye: nombre de cada formato, herramienta (Word, Excel, Google, papel), quién lo llena, a quién se entrega y cada cuánto."
+   },
+   {
+    "id": "RCP05",
+    "texto": "¿Qué te piden más seguido el productor y el director, y en cuál de esas tareas te gustaría tener más apoyo de PrismaOS?",
+    "ayuda": "Incluye: las 3 peticiones más frecuentes, cuánto tiempo te lleva cada una y qué apoyo te serviría. Ej.: \"Tener a la mano los datos para el llamado\"."
+   }
+  ],
+  "planner": [
+   {
+    "id": "RPN01",
+    "texto": "¿Cómo armas el calendario mensual de producciones, qué información necesitas y de quién?",
+    "ayuda": "Incluye: pasos para armarlo, qué datos necesitas (guiones listos, fechas, disponibilidad), de quién los recibes, cuándo empiezas y cuántos días te toma."
+   },
+   {
+    "id": "RPN02",
+    "texto": "¿Cómo asignas a cada director y productor su equipo humano, su unidad móvil y su paquete de cámara y luces?",
+    "ayuda": "Incluye: criterios para asignar personal, unidad móvil y paquete de cámara y luces, conflictos comunes y cómo los resuelves. Ej.: \"Dos equipos piden la misma unidad\"."
+   },
+   {
+    "id": "RPN03",
+    "texto": "¿Con qué herramienta haces el calendario y cómo lo compartes cada semana?",
+    "ayuda": "Incluye: herramienta (Excel, Google Calendar, pizarrón, WhatsApp), quién puede verlo o editarlo, qué día lo compartes y cómo avisas cambios."
+   },
+   {
+    "id": "RPN04",
+    "texto": "¿Qué cambios de último momento son más comunes y cómo los manejas?",
+    "ayuda": "Incluye: los 2 o 3 cambios más comunes, cada cuánto pasan, quién los provoca, cómo avisas al equipo y un ejemplo real reciente."
+   },
+   {
+    "id": "RPN05",
+    "texto": "¿Cuántas unidades móviles y cuántos paquetes de cámara y luces hay en total?",
+    "ayuda": "Incluye: número de unidades móviles y de paquetes de cámara y luces, qué trae cada paquete y si alcanzan para los tres equipos."
+   }
+  ],
+  "dp": [
+   {
+    "id": "RDP01",
+    "texto": "¿Cómo preparas cada producción con el director (lista de planos, luces, locación)?",
+    "ayuda": "Incluye: cuándo y cómo te juntas con el director, qué preparan (lista de planos, luces, visita a locación), en qué formato y cuánto tiempo toma."
+   },
+   {
+    "id": "RDP02",
+    "texto": "¿Qué configuración de cámara usas normalmente y en qué casos la cambias?",
+    "ayuda": "Incluye: cámara, resolución, cuadros por segundo, ISO, perfil log, balance de blancos, horizontal o vertical, y en qué situaciones lo cambias."
+   },
+   {
+    "id": "RDP03",
+    "texto": "¿Cómo organizas a tu equipo de cámara y luces en set?",
+    "ayuda": "Incluye: quién hace qué en cámara y luces, cómo das indicaciones, cuánto tardan en armar y cómo es un día normal de rodaje."
+   },
+   {
+    "id": "RDP04",
+    "texto": "¿Qué le pasas a color o a postproducción para que entiendan tu material?",
+    "ayuda": "Incluye: qué entregas (LUT, reporte de cámara, notas por escena), en qué formato, a quién y por dónde, y qué dudas te regresan de post."
+   }
+  ],
+  "camara": [
+   {
+    "id": "RCM01",
+    "texto": "¿Qué haces tú en set además de operar cámara (armado, memorias, respaldo)?",
+    "ayuda": "Incluye: tus tareas en orden en un día de rodaje (armado, operación, cambio de memorias, respaldo, desarmado) y quién te las pide."
+   },
+   {
+    "id": "RCM02",
+    "texto": "¿Cómo nombras y cuidas las memorias hasta que llegan a postproducción?",
+    "ayuda": "Incluye: cómo nombras memorias y carpetas, si haces respaldo en set, dónde las guardas y a quién las entregas. Ej.: \"Tarjeta A001, día 1\"."
+   },
+   {
+    "id": "RCM03",
+    "texto": "¿Qué errores técnicos de cámara has visto que más problemas le causan a postproducción?",
+    "ayuda": "Incluye: los errores más comunes (foco, exposición, configuración, memorias, nombres), por qué pasan y cómo evitarlos. Ej.: \"Cambiar cuadros por segundo sin avisar\"."
+   }
+  ],
+  "apoyo_camara": [
+   {
+    "id": "RAC01",
+    "texto": "¿Qué tareas haces tú en set para apoyar a cámara y luces?",
+    "ayuda": "Incluye: tus tareas en orden en un día de rodaje (carga, armado, cables, baterías, desarmado), quién te las pide y qué te quita más tiempo."
+   },
+   {
+    "id": "RAC02",
+    "texto": "¿Cómo se recoge y se carga el equipo en la oficina, cómo se revisa y cómo se regresa después del rodaje?",
+    "ayuda": "Incluye: pasos para recoger, revisar y regresar el equipo, quién lo entrega o recibe, si hay lista de revisión y qué se pierde o daña más."
+   }
+  ],
+  "director_estrategia": [
+   {
+    "id": "RDE01",
+    "texto": "¿Qué áreas o personas dependen de ti y cómo se coordina Estrategia Digital con Marketing?",
+    "ayuda": "Incluye: puestos a tu cargo y qué hace cada uno, cómo se reparte el trabajo con Marketing, juntas, cada cuánto y por qué canal."
+   },
+   {
+    "id": "RDE02",
+    "texto": "¿Qué metas digitales tienen Prismaticoos y PRISMA+ este año (suscriptores, vistas, ingresos, descargas de la app)?",
+    "ayuda": "Incluye: meta por indicador (suscriptores, vistas, ingresos, descargas), plazo, cómo van hoy y cómo se mide. Aproximado; es información interna."
+   }
+  ],
+  "analista_digital": [
+   {
+    "id": "RAD01",
+    "texto": "¿Qué reportes haces, cada cuánto y quién los usa para decidir?",
+    "ayuda": "Incluye: nombre de cada reporte, qué muestra, cada cuánto lo haces, en qué herramienta, quién lo recibe y qué decisión se tomó con él."
+   },
+   {
+    "id": "RAD02",
+    "texto": "¿De qué plataformas sacas los datos y cómo los juntas?",
+    "ayuda": "Incluye: plataformas (YouTube Studio, Meta, app PRISMA+, otras), cómo exportas los datos, dónde los juntas (Excel, Sheets) y cuánto tiempo te toma."
+   },
+   {
+    "id": "RAD03",
+    "texto": "¿Qué métricas y qué cifras te dicen que un episodio o una serie funcionó?",
+    "ayuda": "Incluye: métricas clave (vistas, retención, compartidos, suscripciones), qué cifra consideras buena, en qué plazo la mides y un ejemplo de serie."
+   },
+   {
+    "id": "RAD04",
+    "texto": "¿Qué partes de tu análisis haces a mano, cuánto tiempo te llevan y en cuál te gustaría tener apoyo primero?",
+    "ayuda": "Incluye: cada tarea paso a paso, horas por semana y en cuál te serviría más tener apoyo. Ej.: \"Copiar vistas de YouTube a Excel\"."
+   }
+  ],
+  "catering_jefe": [
+   {
+    "id": "RCJ01",
+    "texto": "¿Cómo planeas los menús y las compras de cada semana de rodaje?",
+    "ayuda": "Incluye: cómo sabes cuántos comen y dónde, quién arma el menú, dónde y cuándo compras, quién aprueba y con cuánta anticipación."
+   },
+   {
+    "id": "RCJ02",
+    "texto": "¿Cuánta gente alimentas en promedio por día y cuánto cuesta por persona?",
+    "ayuda": "Incluye: promedio de personas por día en rodaje y en oficina, costo aproximado por persona y qué comidas cubre. Aproximado; es información interna."
+   },
+   {
+    "id": "RCJ03",
+    "texto": "¿Cómo se organiza tu equipo (Sabdiel, Jesús) entre oficina y locaciones?",
+    "ayuda": "Incluye: quién hace qué (compras, cocina, traslado, servicio), quién va a locación y quién se queda en oficina, y cómo se coordinan."
+   }
+  ],
+  "catering_asistente": [
+   {
+    "id": "RCA01",
+    "texto": "¿Qué haces un día de rodaje, desde la preparación hasta que se recoge todo?",
+    "ayuda": "Incluye: tus tareas en orden con horarios aproximados: preparación, traslado, montaje, servicio, recoger y limpieza. Ej.: \"Llego a las 6, preparo…\"."
+   },
+   {
+    "id": "RCA02",
+    "texto": "¿Cómo te enteras a dónde hay que llevar la comida y a qué hora?",
+    "ayuda": "Incluye: quién te avisa, por dónde (WhatsApp, llamada, en persona), con cuánta anticipación y qué pasa si cambia la locación o el horario."
+   }
+  ],
+  "servicios_generales": [
+   {
+    "id": "RSG01",
+    "texto": "¿Qué tareas de la oficina están a tu cargo y cuáles se repiten todos los días?",
+    "ayuda": "Incluye: lista de tareas diarias y de las semanales u ocasionales, a qué hora las haces y quién te las asigna."
+   },
+   {
+    "id": "RSG02",
+    "texto": "¿A quién le avisas cuando falta algo o algo se descompone, y por qué medio?",
+    "ayuda": "Incluye: a quién avisas según el caso, por dónde (WhatsApp, en persona), cuánto tardan en resolverlo y un ejemplo reciente."
+   }
+  ],
+  "runner": [
+   {
+    "id": "RRU01",
+    "texto": "¿Qué mandados o traslados haces normalmente y quién te los pide?",
+    "ayuda": "Incluye: mandados y traslados más comunes, quién te los pide, cuántos haces al día, en qué vehículo y un ejemplo típico."
+   },
+   {
+    "id": "RRU02",
+    "texto": "¿Cómo te avisan de los pendientes del día y cómo reportas que ya quedaron?",
+    "ayuda": "Incluye: cómo te llegan los pendientes (WhatsApp, lista, en persona), a quién reportas, cómo confirmas que quedó y qué pasa si algo falla."
+   }
+  ],
+  "gaffer_runner": [
+   {
+    "id": "RGR01",
+    "texto": "¿Qué haces como gaffer en set y qué haces como runner?",
+    "ayuda": "Incluye: tus tareas como gaffer y como runner, cuánto tiempo le dedicas a cada una, quién te las pide y cómo se combinan en un día."
+   },
+   {
+    "id": "RGR02",
+    "texto": "¿Con qué equipo de iluminación trabajas y cómo se le da mantenimiento?",
+    "ayuda": "Incluye: lámparas y accesorios principales, quién los revisa y repara, cada cuánto, qué falla más y cómo lo reportas."
+   }
+  ],
+  "director_arte": [
+   {
+    "id": "RDA01",
+    "texto": "¿Cuánto presupuesto de arte suele tener una producción y en qué se va la mayor parte?",
+    "ayuda": "Incluye: rango típico por producción, en qué se va más (props, ambientación, rentas) y un caso reciente. Aproximado; es información interna."
+   },
+   {
+    "id": "RDA02",
+    "texto": "¿Dónde compras normalmente lo de arte y con cuántos días de anticipación al rodaje?",
+    "ayuda": "Incluye: tiendas, mercados o sitios en línea que más usas, quién compra y cuántos días antes. Ej.: \"Mercado y en línea, 3 días antes\"."
+   },
+   {
+    "id": "RDA03",
+    "texto": "¿Cómo te coordinas con Jibrán (vestuario) y con el director de tu equipo, antes y durante el rodaje?",
+    "ayuda": "Incluye: por dónde se comunican (junta, WhatsApp), qué deciden juntos (paleta, props, looks), quién aprueba y un ejemplo reciente de ajuste."
+   }
+  ],
+  "vestuario": [
+   {
+    "id": "RVE01",
+    "texto": "¿Cómo coordinas el vestuario de los tres equipos a la vez?",
+    "ayuda": "Incluye: cómo te enteras del calendario de cada equipo, qué haces si graban el mismo día, quién te apoya y por dónde se comunican."
+   },
+   {
+    "id": "RVE02",
+    "texto": "¿Cómo se define el vestuario de cada personaje y quién lo aprueba?",
+    "ayuda": "Incluye: de dónde partes (guion, perfil, referencias), si hay prueba o fotos de vestuario, quién aprueba y con cuántos días de anticipación."
+   },
+   {
+    "id": "RVE03",
+    "texto": "¿Cómo controlas la continuidad de vestuario entre escenas, días y temporadas?",
+    "ayuda": "Incluye: si tomas fotos por personaje y escena, dónde las guardas, cómo las nombras y un error reciente. Ej.: \"Foto de cada cambio, carpeta por serie\"."
+   },
+   {
+    "id": "RVE04",
+    "texto": "¿Hay bodega o inventario de vestuario y cómo se registra lo que entra y sale?",
+    "ayuda": "Incluye: dónde está, si se registra en Excel, libreta o nada, quién lo lleva, qué pasa con préstamos o pérdidas y si se reutiliza entre series."
+   }
+  ],
+  "coord_marketing": [
+   {
+    "id": "RCM201",
+    "texto": "¿Cómo se coordina tu equipo de gestores de canal y qué le toca a cada quien?",
+    "ayuda": "Incluye: cuántos gestores son, qué canal o tarea tiene cada uno, cómo asignas y revisas su trabajo, y por dónde y cada cuánto se juntan."
+   },
+   {
+    "id": "RCM202",
+    "texto": "Cuando se lanza una serie o campaña, ¿qué preparan y cómo es el proceso paso a paso?",
+    "ayuda": "Incluye: pasos en orden, piezas que hacen (tráiler, portadas, posts), quién aprueba, con cuánta anticipación empiezan y un lanzamiento reciente como ejemplo."
+   },
+   {
+    "id": "RCM203",
+    "texto": "¿Qué necesitas de postproducción (promos, cortes, portadas) y con cuánta anticipación?",
+    "ayuda": "Incluye: qué piezas pides, formato (vertical u horizontal, duración), a quién y por dónde lo pides, cuántos días antes y qué suele llegar tarde."
+   }
+  ],
+  "gestor_canal": [
+   {
+    "id": "RGC01",
+    "texto": "¿Qué canal o canales manejas exactamente y qué publicas en cada uno?",
+    "ayuda": "Incluye: nombre exacto de cada canal o página, plataforma (Facebook, YouTube, TikTok u otra), qué tipo de contenido subes y cuántas piezas por día."
+   },
+   {
+    "id": "RGC02",
+    "texto": "¿Cómo es tu rutina diaria: subir, titular, programar, responder comentarios, revisar métricas?",
+    "ayuda": "Incluye: horarios, orden de tareas, cuánto tiempo toma cada una y con qué herramienta. Ej.: \"9 am programo los videos del día, 30 min\"."
+   },
+   {
+    "id": "RGC03",
+    "texto": "¿De dónde tomas el material que subes y cómo sabes qué toca publicar cada día?",
+    "ayuda": "Incluye: carpeta, Drive o persona que te lo pasa, si hay calendario de publicación, quién lo arma y qué haces si falta material."
+   },
+   {
+    "id": "RGC04",
+    "texto": "¿Qué títulos, miniaturas o formatos te han funcionado mejor? Da ejemplos.",
+    "ayuda": "Incluye: 2 o 3 ejemplos reales con título, tipo de miniatura, duración y resultado aproximado (vistas, retención), y uno que no funcionó."
+   },
+   {
+    "id": "RGC05",
+    "texto": "¿Qué problemas has tenido con la plataforma (derechos, reclamos, monetización, restricciones)?",
+    "ayuda": "Incluye: qué pasó, en qué canal, cómo se resolvió e impacto (videos bajados, ingresos). Aproximado; es información interna. No compartas contraseñas ni accesos."
+   }
+  ],
+  "supervisor_edicion": [
+   {
+    "id": "RSE01",
+    "texto": "¿Cómo asignas episodios o proyectos a cada editor y cómo das seguimiento a su avance?",
+    "ayuda": "Incluye: con qué criterio asignas, por dónde (Excel, WhatsApp, pizarrón), cada cuánto revisas el avance y qué haces si alguien se atrasa."
+   },
+   {
+    "id": "RSE02",
+    "texto": "¿Qué revisas tú personalmente antes de aprobar que un episodio salga de edición?",
+    "ayuda": "Incluye: tu lista en orden (ritmo, audio, textos, versiones horizontal y vertical, nomenclatura), cuánto tardas por episodio y los errores que más encuentras."
+   },
+   {
+    "id": "RSE03",
+    "texto": "¿Cuál es la meta diaria de tu equipo, qué cuenta como error y cómo afecta eso al bono?",
+    "ayuda": "Incluye: meta por editor (episodios o minutos), qué errores cuentan, cuántos se permiten, dónde se registran y cómo se calcula el bono. Aproximado; es información interna."
+   },
+   {
+    "id": "RSE04",
+    "texto": "¿Qué perfil de editor funciona mejor para cada tipo de proyecto y por qué?",
+    "ayuda": "Incluye: por tipo de proyecto (Prisma+, HELP, Monetización, etc.), qué habilidad pesa más (ritmo, drama, rapidez, técnica) y experiencia necesaria. Describe perfiles, no nombres."
+   }
+  ],
+  "editor": [
+   {
+    "id": "RED01",
+    "texto": "¿Qué tipos de proyecto editas más seguido y en qué se diferencian al editarlos?",
+    "ayuda": "Incluye: los tipos que más te tocan (Prisma+, HELP, Monetización, etc.) y, en cada uno, cómo cambian duración, ritmo, formato, textos y música."
+   },
+   {
+    "id": "RED02",
+    "texto": "Cuando recibes un episodio nuevo, ¿qué es lo primero que revisas del material?",
+    "ayuda": "Incluye: qué revisas en orden (material completo, audio, sincronía, guion, notas de script), cuánto tardas y qué problema encuentras más seguido."
+   },
+   {
+    "id": "RED03",
+    "texto": "¿Qué correcciones te regresan más seguido en revisión y qué harías para evitarlas?",
+    "ayuda": "Incluye: las 2 o 3 más comunes, quién te las marca, por qué crees que pasan y una idea concreta. Ej.: \"Nombre de archivo mal; usar plantilla\"."
+   }
+  ],
+  "asistente_edicion": [
+   {
+    "id": "RAE01",
+    "texto": "¿Qué tareas haces para apoyar a los editores (ingesta, respaldo, sincronía, organización)?",
+    "ayuda": "Incluye: cada tarea con cuánto tiempo toma, para cuántos editores, en qué programa y quién te la pide o asigna."
+   },
+   {
+    "id": "RAE02",
+    "texto": "¿Cómo recibes y organizas las memorias que llegan de rodaje?",
+    "ayuda": "Incluye: quién te las entrega, pasos de copia y respaldo (a dónde, cuántas copias), cómo nombras carpetas y cuándo se liberan. Ej.: \"Serie_Dia1_CamA\"."
+   },
+   {
+    "id": "RAE03",
+    "texto": "¿Qué tareas de rutina haces (renombrar, organizar o copiar material), cuánto tiempo te lleva cada una y qué te las facilitaría?",
+    "ayuda": "Incluye: la tarea, cómo la haces hoy, cada cuánto y cuánto tiempo te lleva a la semana. Ej.: \"Renombrar clips a mano, 2 horas por semana\"."
+   }
+  ],
+  "supervisor_color": [
+   {
+    "id": "RSC01",
+    "texto": "¿Cómo repartes el trabajo entre coloristas y qué revisas de su color antes de entregar?",
+    "ayuda": "Incluye: criterio para asignar (serie, carga, urgencia), por dónde, tu lista de revisión (piel, continuidad, look, niveles) y cuánto tardas por episodio."
+   },
+   {
+    "id": "RSC02",
+    "texto": "¿Cómo se definen y guardan los looks de cada serie para que todos los repitan igual?",
+    "ayuda": "Incluye: quién define y aprueba el look, si usan LUT, PowerGrade o stills, dónde se guardan, cómo se nombran y cómo llegan a cada colorista."
+   },
+   {
+    "id": "RSC03",
+    "texto": "Si tuvieras una herramienta de apoyo con IA que tú diriges y revisas, ¿en qué partes del color te serviría sin bajar la calidad?",
+    "ayuda": "Incluye: qué tarea te toma más tiempo, dónde ayudaría (balance, máscaras, match entre planos), qué nunca dejarías sin revisar y cuánto tarda hoy."
+   }
+  ],
+  "colorista": [
+   {
+    "id": "RCO01",
+    "texto": "En un episodio típico, ¿cuánto tiempo le dedicas a balance, a correcciones secundarias y a look?",
+    "ayuda": "Incluye: duración del episodio, tiempo aproximado de cada etapa y total, y si cambia en vertical u horizontal. Ej.: \"Episodio de 2 min: balance 1 h\"."
+   },
+   {
+    "id": "RCO02",
+    "texto": "¿Qué hace que un plano sea difícil de corregir y cómo lo resuelves?",
+    "ayuda": "Incluye: 2 o 3 casos típicos (luz mixta, piel, sobreexposición, ruido), cómo resuelves cada uno (nodos, herramientas) y cuánto tiempo te toma."
+   }
+  ],
+  "colorista_online": [
+   {
+    "id": "RCL01",
+    "texto": "¿Qué hace el editor online en Prisma y en qué momento del flujo entra?",
+    "ayuda": "Incluye: tareas del online (conformar, títulos, créditos, versiones horizontal y vertical, partes), de quién recibe material, a quién entrega y entre qué pasos entra."
+   },
+   {
+    "id": "RCL02",
+    "texto": "¿Cómo repartes tu tiempo entre color y online?",
+    "ayuda": "Incluye: horas o porcentaje por semana para cada cosa, quién decide la prioridad y qué haces cuando las dos son urgentes."
+   },
+   {
+    "id": "RCL03",
+    "texto": "¿Qué revisas en el online antes de generar los másters?",
+    "ayuda": "Incluye: tu lista en orden (duración, textos, zonas seguras, audio, niveles, nomenclatura), qué másters generas y el error que más atrapas."
+   }
+  ],
+  "supervisor_audio": [
+   {
+    "id": "RSA01",
+    "texto": "¿Cómo repartes el trabajo entre editores de audio y cómo revisas la mezcla final antes de entregar?",
+    "ayuda": "Incluye: criterio para asignar, por dónde, qué escuchas y mides en la revisión (diálogos, música, loudness), en qué equipo o sala y cuánto tardas."
+   },
+   {
+    "id": "RSA02",
+    "texto": "¿Qué estándares de audio son obligatorios para todas las entregas?",
+    "ayuda": "Incluye: loudness (LUFS) y true peak, formato (WAV, bits, kHz), canales y stems, y si cambia por plataforma o cliente. Escribe los números exactos."
+   },
+   {
+    "id": "RSA03",
+    "texto": "¿Qué le pedirías a sonido directo para ahorrar tiempo en post?",
+    "ayuda": "Incluye: 3 peticiones concretas (room tone, lavalier bien puesto, reporte de sonido, nombres de archivo) y cuánto tiempo te ahorraría cada una por episodio."
+   }
+  ],
+  "editor_audio": [
+   {
+    "id": "REA01",
+    "texto": "¿Cuánto tiempo te toma limpiar y mezclar un episodio y qué parte te quita más tiempo?",
+    "ayuda": "Incluye: duración del episodio, tiempo de limpieza, de efectos y música y de mezcla, el total y qué parte tarda más y por qué."
+   },
+   {
+    "id": "REA02",
+    "texto": "¿Qué plugins, presets o procesos usas siempre en cada episodio y para qué?",
+    "ayuda": "Incluye: programa (Pro Tools u otro), nombre de cada plugin o preset, para qué lo usas y en qué orden va en tu cadena."
+   }
+  ],
+  "musicalizador": [
+   {
+    "id": "RMU01",
+    "texto": "¿Cómo eliges la música de cada serie y escena, y usan un estilo distinto según el tipo de serie?",
+    "ayuda": "Incluye: qué tomas en cuenta (emoción, ritmo, género), quién aprueba, cuánto tardas por episodio y, si hay, el estilo por tipo de serie o proyecto."
+   },
+   {
+    "id": "RMU02",
+    "texto": "¿De qué librerías o fuentes sale la música y qué hacen para evitar reclamos de derechos en YouTube y Facebook?",
+    "ayuda": "Incluye: nombre de cada librería o fuente, tipo de licencia, dónde guardas las licencias y qué haces si llega un reclamo. No compartas contraseñas ni accesos."
+   },
+   {
+    "id": "RMU03",
+    "texto": "¿Se compone música propia o temas para las series? Si es así, ¿quién los hace y cómo?",
+    "ayuda": "Incluye: si se compone o no, si es interno o externo, qué se ha hecho (temas, cortinillas), cuánto tarda y de quién quedan los derechos."
+   }
+  ]
+ },
+ "comunes_admin": [
+  {
+   "id": "ADM01",
+   "tipo": "checklist",
+   "texto": "Datos para Administración: marca los que YA entregaste a Administración o capturaste en el sistema de Prismaticoos.",
+   "ayuda": "NO escribas aquí tus datos: solo marca cuáles ya entregaste. Lo que te falte, entrégalo a Administración (Esnebith Sánchez) o captúralo en el sistema.",
+   "opciones": [
+    "RFC",
+    "CURP",
+    "NSS (IMSS)",
+    "Fecha de nacimiento",
+    "Banco, cuenta y CLABE",
+    "Domicilio",
+    "Contacto de emergencia"
+   ]
+  }
+ ],
+ "para_conocerte": [
+  {
+   "id": "K01",
+   "tipo": "ligera",
+   "texto": "¿Cómo te gusta que te digan en la oficina?",
+   "ayuda": "Tu nombre, tu apodo o como te conocen en set."
+  },
+  {
+   "id": "K02",
+   "tipo": "ligera",
+   "texto": "¿Qué te gusta hacer en tu tiempo libre?",
+   "ayuda": "Hobbies, deportes, planes de fin de semana… lo que más disfrutes."
+  },
+  {
+   "id": "K03",
+   "tipo": "ligera",
+   "texto": "¿Cuál es tu serie, película o novela favorita, y por qué?",
+   "ayuda": "De cualquier época o país. Si son varias, cuéntanos tu top 3."
+  },
+  {
+   "id": "K04",
+   "tipo": "ligera",
+   "texto": "¿Qué música te acompaña mientras trabajas?",
+   "ayuda": "Artista, género o playlist… o si prefieres trabajar en silencio."
+  },
+  {
+   "id": "K05",
+   "tipo": "ligera",
+   "texto": "¿Cuál ha sido tu momento o proyecto favorito en Prisma hasta hoy?",
+   "ayuda": "Una anécdota de set, un estreno, algo que te hizo reír o sentir orgullo."
+  },
+  {
+   "id": "K06",
+   "tipo": "ligera",
+   "texto": "¿Cuál es tu comida favorita o tu antojo en día de rodaje?",
+   "ayuda": "Para que catering tome nota 😉"
+  },
+  {
+   "id": "K07",
+   "tipo": "ligera",
+   "texto": "Si pudieras aprender algo nuevo este año (una habilidad, un programa, un idioma), ¿qué sería?",
+   "ayuda": "Nos ayuda a pensar en cursos y capacitaciones para el equipo."
+  },
+  {
+   "id": "K08",
+   "tipo": "ligera",
+   "texto": "¿Tienes algún talento oculto o algo que casi nadie sepa de ti?",
+   "ayuda": "Tocas un instrumento, cocinas, bailas, coleccionas algo… solo si quieres compartirlo."
+  },
+  {
+   "id": "K09",
+   "tipo": "ligera",
+   "texto": "¿Qué es lo que más disfrutas de tu trabajo?",
+   "ayuda": ""
+  },
+  {
+   "id": "K10",
+   "tipo": "ligera",
+   "texto": "¿Qué te gustaría que Prisma organizara para el equipo?",
+   "ayuda": "Convivencias, cursos, torneos, celebraciones… ideas bienvenidas."
+  },
+  {
+   "id": "K11",
+   "tipo": "ligera",
+   "texto": "¿Cuándo es tu cumpleaños? (solo día y mes)",
+   "ayuda": "Para celebrarte 🎂 Solo día y mes, sin el año."
+  }
+ ]
+}

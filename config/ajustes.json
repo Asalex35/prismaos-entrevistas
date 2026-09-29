@@ -1,0 +1,10 @@
+{
+ "ia_repreguntas_en_vivo": false,
+ "resumen_automatico": false,
+ "link_general": true,
+ "solo_red_local": true,
+ "nota": "Con ia_repreguntas_en_vivo y resumen_automatico en false, las entrevistas NO gastan tokens. link_general=true: un solo link para el grupo; cada quien elige su nombre y queda ligado a su celular (se libera desde el tablero). pedir_codigo=true obliga a escribir el código del equipo antes de ver la lista. solo_red_local=true: solo la red de la oficina.",
+ "pedir_codigo": false,
+ "link_datos_personales": "",
+ "nota_datos": "link_datos_personales: URL del formulario de datos personales de tu sistema (RFC, CURP, NSS, CLABE...). Si se llena, aparece el botón \"Capturar mis datos\" en la pregunta de Datos para Administración. Esta app NUNCA guarda esos datos."
+}

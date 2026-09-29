@@ -1,0 +1,745 @@
+{
+ "fuente": "Organigrama empresarial Prismaticoos · Personal operativo 2026 (imagen compartida el 2026-09-28)",
+ "personas": [
+  {
+   "id": "carlos-solis",
+   "nombre": "Carlos Solís",
+   "cargo": "Dirección General · Productor Ejecutivo",
+   "area": "direccion_general",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "director_general"
+  },
+  {
+   "id": "luis-solis",
+   "nombre": "Luis Solís",
+   "cargo": "Dirección General · Productor Ejecutivo",
+   "area": "direccion_general",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "director_general"
+  },
+  {
+   "id": "ricardo-vazquez",
+   "nombre": "Ricardo Vázquez",
+   "cargo": "Director Comercial y de Distribución",
+   "area": "comercial",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "director_comercial"
+  },
+  {
+   "id": "esnebith-sanchez",
+   "nombre": "Esnebith Sánchez",
+   "cargo": "Directora de Administración y Finanzas (CFO)",
+   "area": "administracion",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "directora_finanzas"
+  },
+  {
+   "id": "steve-vilchis",
+   "nombre": "Steve Vilchis",
+   "cargo": "Director de Operaciones (COO)",
+   "area": "operaciones",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "director_operaciones"
+  },
+  {
+   "id": "carlitos-solis",
+   "nombre": "Carlitos Solís",
+   "cargo": "Director de Estrategia Digital",
+   "area": "estrategia_digital",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "director_estrategia"
+  },
+  {
+   "id": "constanza-de-quevedo",
+   "nombre": "Constanza de Quevedo",
+   "cargo": "Gerente de Producción",
+   "area": "produccion",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "gerente_produccion"
+  },
+  {
+   "id": "ezio",
+   "nombre": "Ezio",
+   "cargo": "Jefe de catering",
+   "area": "servicios_generales",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "catering_jefe"
+  },
+  {
+   "id": "sabdiel",
+   "nombre": "Sabdiel",
+   "cargo": "Asistente de catering",
+   "area": "servicios_generales",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "catering_asistente"
+  },
+  {
+   "id": "jesus",
+   "nombre": "Jesús",
+   "cargo": "Asistente de catering",
+   "area": "servicios_generales",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "catering_asistente"
+  },
+  {
+   "id": "delia",
+   "nombre": "Delia",
+   "cargo": "Servicios generales",
+   "area": "servicios_generales",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "servicios_generales"
+  },
+  {
+   "id": "papa-luis",
+   "nombre": "Papá Luis",
+   "cargo": "Runner",
+   "area": "servicios_generales",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "runner"
+  },
+  {
+   "id": "pascal-duran",
+   "nombre": "Pascal Durán",
+   "cargo": "Gaffer / Runner",
+   "area": "servicios_generales",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "gaffer_runner"
+  },
+  {
+   "id": "liuva-frahans",
+   "nombre": "Liuva Frahans",
+   "cargo": "Productora de Línea",
+   "area": "produccion",
+   "equipo": "Equipo 1",
+   "lider": true,
+   "externo": false,
+   "rol": "productor_linea"
+  },
+  {
+   "id": "liliana-reyes",
+   "nombre": "Liliana Reyes",
+   "cargo": "Directora",
+   "area": "direccion_escena",
+   "equipo": "Equipo 1",
+   "lider": false,
+   "externo": false,
+   "rol": "director_escena"
+  },
+  {
+   "id": "soledad-acosta",
+   "nombre": "Soledad Acosta",
+   "cargo": "Coordinadora de Producción",
+   "area": "produccion",
+   "equipo": "Equipo 1",
+   "lider": false,
+   "externo": false,
+   "rol": "coordinador_produccion"
+  },
+  {
+   "id": "paulina-banuelos",
+   "nombre": "Paulina Bañuelos",
+   "cargo": "Guionista",
+   "area": "guion",
+   "equipo": "Equipo 1",
+   "lider": false,
+   "externo": true,
+   "rol": "guionista"
+  },
+  {
+   "id": "karla-hernandez",
+   "nombre": "Karla Hernández",
+   "cargo": "Directora de Fotografía (DP)",
+   "area": "fotografia",
+   "equipo": "Equipo 1",
+   "lider": false,
+   "externo": false,
+   "rol": "dp"
+  },
+  {
+   "id": "gerardo-lopez",
+   "nombre": "Gerardo López",
+   "cargo": "Cámara",
+   "area": "fotografia",
+   "equipo": "Equipo 1",
+   "lider": false,
+   "externo": false,
+   "rol": "camara"
+  },
+  {
+   "id": "mariana-botello",
+   "nombre": "Mariana Botello",
+   "cargo": "Sonido directo",
+   "area": "sonido_directo",
+   "equipo": "Equipo 1",
+   "lider": false,
+   "externo": false,
+   "rol": "sonidista"
+  },
+  {
+   "id": "mariana-pimentel",
+   "nombre": "Mariana Pimentel",
+   "cargo": "Directora de Arte",
+   "area": "arte_vestuario",
+   "equipo": "Equipo 1",
+   "lider": false,
+   "externo": false,
+   "rol": "director_arte"
+  },
+  {
+   "id": "carlos-lugo",
+   "nombre": "Carlos Lugo",
+   "cargo": "Productor de Línea",
+   "area": "produccion",
+   "equipo": "Equipo 2",
+   "lider": true,
+   "externo": false,
+   "rol": "productor_linea"
+  },
+  {
+   "id": "luis-angel-yayo-villa",
+   "nombre": "Luis Ángel \"Yayo\" Villa",
+   "cargo": "Director",
+   "area": "direccion_escena",
+   "equipo": "Equipo 2",
+   "lider": false,
+   "externo": false,
+   "rol": "director_escena"
+  },
+  {
+   "id": "ana-sophia-martinez",
+   "nombre": "Ana Sophia Martínez",
+   "cargo": "Coordinadora de Producción",
+   "area": "produccion",
+   "equipo": "Equipo 2",
+   "lider": false,
+   "externo": false,
+   "rol": "coordinador_produccion"
+  },
+  {
+   "id": "enrique-henry-soto",
+   "nombre": "Enrique \"Henry\" Soto",
+   "cargo": "Guionista",
+   "area": "guion",
+   "equipo": "Equipo 2",
+   "lider": false,
+   "externo": false,
+   "rol": "guionista"
+  },
+  {
+   "id": "sarah-claustro",
+   "nombre": "Sarah Claustro",
+   "cargo": "Directora de Fotografía (DP)",
+   "area": "fotografia",
+   "equipo": "Equipo 2",
+   "lider": false,
+   "externo": true,
+   "rol": "dp"
+  },
+  {
+   "id": "leo-valdez",
+   "nombre": "Leo Valdez",
+   "cargo": "Sonido directo",
+   "area": "sonido_directo",
+   "equipo": "Equipo 2",
+   "lider": false,
+   "externo": false,
+   "rol": "sonidista"
+  },
+  {
+   "id": "melannie-loza",
+   "nombre": "Melannie Loza",
+   "cargo": "Directora de Arte",
+   "area": "arte_vestuario",
+   "equipo": "Equipo 2",
+   "lider": false,
+   "externo": false,
+   "rol": "director_arte"
+  },
+  {
+   "id": "penelope-capistran",
+   "nombre": "Penélope Capistrán",
+   "cargo": "Productora de Línea",
+   "area": "produccion",
+   "equipo": "Equipo 3",
+   "lider": true,
+   "externo": false,
+   "rol": "productor_linea"
+  },
+  {
+   "id": "aldo-palacios",
+   "nombre": "Aldo Palacios",
+   "cargo": "Director",
+   "area": "direccion_escena",
+   "equipo": "Equipo 3",
+   "lider": false,
+   "externo": false,
+   "rol": "director_escena"
+  },
+  {
+   "id": "jonathan-sanchez-mathias",
+   "nombre": "Jonathan Sánchez \"Mathias\"",
+   "cargo": "Coordinador de Producción",
+   "area": "produccion",
+   "equipo": "Equipo 3",
+   "lider": false,
+   "externo": false,
+   "rol": "coordinador_produccion"
+  },
+  {
+   "id": "julia-higareda",
+   "nombre": "Julia Higareda",
+   "cargo": "Guionista",
+   "area": "guion",
+   "equipo": "Equipo 3",
+   "lider": false,
+   "externo": false,
+   "rol": "guionista"
+  },
+  {
+   "id": "juan-vega",
+   "nombre": "Juan Vega",
+   "cargo": "Director de Fotografía (DP)",
+   "area": "fotografia",
+   "equipo": "Equipo 3",
+   "lider": false,
+   "externo": false,
+   "rol": "dp"
+  },
+  {
+   "id": "alvin-cordoba",
+   "nombre": "Alvin Córdoba",
+   "cargo": "Apoyo de cámara",
+   "area": "fotografia",
+   "equipo": "Equipo 3",
+   "lider": false,
+   "externo": false,
+   "rol": "apoyo_camara"
+  },
+  {
+   "id": "derek-velez",
+   "nombre": "Derek Vélez",
+   "cargo": "Sonido directo",
+   "area": "sonido_directo",
+   "equipo": "Equipo 3",
+   "lider": false,
+   "externo": false,
+   "rol": "sonidista"
+  },
+  {
+   "id": "diego-martinez",
+   "nombre": "Diego Martínez",
+   "cargo": "Director de Arte",
+   "area": "arte_vestuario",
+   "equipo": "Equipo 3",
+   "lider": false,
+   "externo": false,
+   "rol": "director_arte"
+  },
+  {
+   "id": "kevin-bambu-araujo",
+   "nombre": "Kevin \"Bambú\" Araujo",
+   "cargo": "Planner (programación de producción)",
+   "area": "produccion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "planner"
+  },
+  {
+   "id": "jibran",
+   "nombre": "Jibrán",
+   "cargo": "Coordinador de Vestuario",
+   "area": "arte_vestuario",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "vestuario"
+  },
+  {
+   "id": "janeth-beltran",
+   "nombre": "Janeth Beltrán",
+   "cargo": "Directora de Casting",
+   "area": "casting",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "director_casting"
+  },
+  {
+   "id": "andrea-torres",
+   "nombre": "Andrea Torres",
+   "cargo": "Actriz (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "yosuani-flores",
+   "nombre": "Yosuani Flores",
+   "cargo": "Actriz (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "patricia-lupercio",
+   "nombre": "Patricia Lupercio",
+   "cargo": "Actriz (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "natalia-molina",
+   "nombre": "Natalia Molina",
+   "cargo": "Actriz (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "ximena-ley",
+   "nombre": "Ximena Ley",
+   "cargo": "Actriz (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "paola-corgon",
+   "nombre": "Paola Corgón",
+   "cargo": "Actriz (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "gustavo-villalpando",
+   "nombre": "Gustavo Villalpando",
+   "cargo": "Actor (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "josh-ramirez",
+   "nombre": "Josh Ramírez",
+   "cargo": "Actor (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "luis-gonzaga",
+   "nombre": "Luis Gonzaga",
+   "cargo": "Actor (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "alejandro-aldama",
+   "nombre": "Alejandro Aldama",
+   "cargo": "Actor (elenco)",
+   "area": "elenco",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "actor"
+  },
+  {
+   "id": "ana-pau",
+   "nombre": "Ana Pau",
+   "cargo": "Coordinadora de Marketing",
+   "area": "marketing",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "coord_marketing"
+  },
+  {
+   "id": "stacey-salas",
+   "nombre": "Stacey Salas",
+   "cargo": "Gestora de canal · Facebook",
+   "area": "marketing",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "gestor_canal"
+  },
+  {
+   "id": "javier-barajas",
+   "nombre": "Javier Barajas",
+   "cargo": "Gestor de canal · YouTube",
+   "area": "marketing",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "gestor_canal"
+  },
+  {
+   "id": "dafne-rivas",
+   "nombre": "Dafne Rivas",
+   "cargo": "Gestora de canal · YouTube",
+   "area": "marketing",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "gestor_canal"
+  },
+  {
+   "id": "roberto-manon",
+   "nombre": "Roberto Mañón",
+   "cargo": "Analista de Estrategia Digital",
+   "area": "estrategia_digital",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "analista_digital"
+  },
+  {
+   "id": "miguel-pacheco",
+   "nombre": "Miguel Pacheco",
+   "cargo": "Supervisor de Edición",
+   "area": "edicion",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "supervisor_edicion"
+  },
+  {
+   "id": "minerva-garcia",
+   "nombre": "Minerva García",
+   "cargo": "Editora",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "oscar-serrano",
+   "nombre": "Óscar Serrano",
+   "cargo": "Editor",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "cristopher-queso-avina",
+   "nombre": "Cristopher \"Queso\" Aviña",
+   "cargo": "Editor",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "brandon-ramirez",
+   "nombre": "Brandon Ramírez",
+   "cargo": "Editor",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "alejandro-lara",
+   "nombre": "Alejandro Lara",
+   "cargo": "Editor",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "rodrigo-haro",
+   "nombre": "Rodrigo Haro",
+   "cargo": "Editor",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "andre-ortiz-de-zarate",
+   "nombre": "André Ortiz de Zárate",
+   "cargo": "Editor",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "cinthia-martinez",
+   "nombre": "Cinthia Martínez",
+   "cargo": "Editora",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "roxana-silva",
+   "nombre": "Roxana Silva",
+   "cargo": "Editora",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "rafael-figueroa",
+   "nombre": "Rafael Figueroa",
+   "cargo": "Editor",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor"
+  },
+  {
+   "id": "evelyn-ortiz",
+   "nombre": "Evelyn Ortiz",
+   "cargo": "Asistente de edición",
+   "area": "edicion",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "asistente_edicion"
+  },
+  {
+   "id": "cecilia-portales",
+   "nombre": "Cecilia Portales",
+   "cargo": "Coordinadora de Postproducción y Entregables",
+   "area": "postproduccion",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "coord_post"
+  },
+  {
+   "id": "samantha-ramirez",
+   "nombre": "Samantha Ramírez",
+   "cargo": "Supervisora de Color",
+   "area": "color",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "supervisor_color"
+  },
+  {
+   "id": "sibel-bell-delgadillo",
+   "nombre": "Sibel \"Bell\" Delgadillo",
+   "cargo": "Colorista",
+   "area": "color",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "colorista"
+  },
+  {
+   "id": "galia-del-rio",
+   "nombre": "Galia del Río",
+   "cargo": "Colorista · Editora online",
+   "area": "color",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "colorista_online"
+  },
+  {
+   "id": "miguel-galan",
+   "nombre": "Miguel Galán",
+   "cargo": "Supervisor de Audio Post",
+   "area": "audio_post",
+   "equipo": "",
+   "lider": true,
+   "externo": false,
+   "rol": "supervisor_audio"
+  },
+  {
+   "id": "alexandra-rodriguez",
+   "nombre": "Alexandra Rodríguez",
+   "cargo": "Editora de audio",
+   "area": "audio_post",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor_audio"
+  },
+  {
+   "id": "kyran-cordero",
+   "nombre": "Kyran Cordero",
+   "cargo": "Editor de audio",
+   "area": "audio_post",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "editor_audio"
+  },
+  {
+   "id": "alejandro-castellanos",
+   "nombre": "Alejandro Castellanos",
+   "cargo": "Editor de audio · Musicalizador",
+   "area": "audio_post",
+   "equipo": "",
+   "lider": false,
+   "externo": false,
+   "rol": "musicalizador"
+  }
+ ]
+}
