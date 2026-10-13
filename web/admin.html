@@ -251,7 +251,8 @@ function pintar() {
     el('p', { style: 'margin:0 0 6px' }, `${datosOk.length} personas ya entregaron todos sus datos · ${datosResp.length - datosOk.length} tienen faltantes · ${P.length - datosResp.length} aún no contestan esa pregunta.`),
     el('p', { style: 'margin:0 0 6px' }, el('b', {}, `Formulario cifrado: ${P.filter(p => p.datos_formulario && p.datos_formulario.completo).length} completos · ${P.filter(p => p.datos_formulario && !p.datos_formulario.completo).length} a medias · ${P.filter(p => !p.datos_formulario).length} sin empezar.`), ' Se descifran solo en la Mac de Administración.'),
     el('p', { class: 'num', style: 'margin:0 0 10px' }, 'Esta app solo registra QUÉ entregó cada quien (RFC, CURP, NSS, fecha de nacimiento, banco/CLABE, domicilio, contacto de emergencia), nunca los datos. Los datos se capturan en el sistema de Prismaticoos o se entregan a Administración. Si alguien intenta escribir un RFC, CURP, NSS o CLABE en una respuesta, se bloquea.'),
-    el('div', { class: 'linea' }, el('button', { class: 'primario', onclick: () => copiar(`📋 Faltan de llenar el formulario de datos para Administración:\n${pendientesDatos.map(p => `• ${p.nombre} (${p.cargo})${p.datos_formulario ? ` — le faltan ${p.datos_formulario.faltan.length}` : ' — sin empezar'}`).join('\n')}\n\nCada quien lo llena desde su link personal: botón «Capturar mis datos».`, 'Lista copiada: mándala a Administración') }, 'Copiar pendientes para Administración'))));
+    el('div', { class: 'linea' }, el('button', { class: 'primario', onclick: () => copiar(`📋 Faltan de llenar el formulario de datos para Administración:\n${pendientesDatos.map(p => `• ${p.nombre} (${p.cargo})${p.datos_formulario ? ` — le faltan ${p.datos_formulario.faltan.length}` : ' — sin empezar'}`).join('\n')}\n\nCada quien lo llena desde su link personal: botón «Capturar mis datos».`, 'Lista copiada: mándala a Administración') }, 'Copiar pendientes para Administración'),
+      pendientesDatos.length ? el('button', { class: 'primario', onclick: () => cadena('datos') }, `Enviar formulario por WhatsApp (${pendientesDatos.length})`) : null)));
 
   // áreas
   secciones.push(el('h2', {}, 'Avance por área'));
@@ -409,24 +410,35 @@ function pintarCajon(c, d) {
 }
 
 async function marcar(id) { try { await api('/api/admin/marcar_envio', { id }); const f = DATOS.personas.find(x => x.id === id); if (f) { f.enviado = new Date().toISOString(); f.envios = (f.envios || 0) + 1; } } catch (e) {} }
+function linkDatosDe(p) { return base() + '/datos#t=' + p.token; }
+function mensajeDatos(p) {
+  const n = p.nombre.split(' ')[0].replace(/"/g, '');
+  const d = p.datos_formulario;
+  return `Hola ${n} 👋\nAdministración necesita tus datos para nómina y alta: RFC, CURP, NSS, fecha de nacimiento, banco y CLABE, domicilio y contacto de emergencia.\n\n` +
+    (d ? `📋 Ya enviaste una parte; te falta${d.faltan.length === 1 ? '' : 'n'} ${d.faltan.length} dato${d.faltan.length === 1 ? '' : 's'}.\n` : '') +
+    `🔒 Se cifran en tu celular: solo Administración puede verlos.\n💾 Puedes guardar y seguir después con el mismo link.\n🔑 El link es solo tuyo, no lo compartas.\n\n👉 ${linkDatosDe(p)}`;
+}
 function cadena(recordatorio) {
   cerrarCajon(true);
-  const lista = DATOS.personas.filter(p => recordatorio ? (p.enviado && p.estado !== 'completa') : (!p.enviado && p.estado !== 'completa'));
+  const datos = recordatorio === 'datos';
+  if (datos) recordatorio = false;
+  const lista = datos ? DATOS.personas.filter(p => p.token && (!p.datos_formulario || !p.datos_formulario.completo))
+    : DATOS.personas.filter(p => recordatorio ? (p.enviado && p.estado !== 'completa') : (!p.enviado && p.estado !== 'completa'));
   let i = 0;
   const caja = el('aside', { class: 'cajon', role: 'dialog', 'aria-label': 'Envío en cadena' });
   const pintarPaso = () => {
-    if (i >= lista.length) { caja.poner(el('h3', {}, '¡Listo!'), el('p', { class: 'sub' }, recordatorio ? 'Recordatorios enviados.' : 'Ya mandaste todos los links pendientes.'), el('button', { class: 'primario', onclick: () => { cerrarCajon(); refrescar().then(pintar); } }, 'Cerrar')); return; }
+    if (i >= lista.length) { caja.poner(el('h3', {}, '¡Listo!'), el('p', { class: 'sub' }, datos ? 'Ya mandaste el formulario a todos los pendientes.' : recordatorio ? 'Recordatorios enviados.' : 'Ya mandaste todos los links pendientes.'), el('button', { class: 'primario', onclick: () => { cerrarCajon(); refrescar().then(pintar); } }, 'Cerrar')); return; }
     const p = lista[i];
-    const texto = recordatorio ? `Hola ${p.nombre.split(' ')[0].replace(/"/g, '')} 👋 Te recuerdo tu entrevista de PrismaOS (llevas ${p.progreso}%). Se sigue donde te quedaste, con el Wi-Fi de la oficina:\n${linkDe(p)}` : mensajeDe(p);
+    const texto = datos ? mensajeDatos(p) : recordatorio ? `Hola ${p.nombre.split(' ')[0].replace(/"/g, '')} 👋 Te recuerdo tu entrevista de PrismaOS (llevas ${p.progreso}%). Se sigue donde te quedaste, con el Wi-Fi de la oficina:\n${linkDe(p)}` : mensajeDe(p);
     const wa = 'https://wa.me/' + (p.telefono || '') + '?text=' + encodeURIComponent(texto);
     caja.poner(
-      el('div', { class: 'num' }, `${i + 1} de ${lista.length} · ${recordatorio ? 'recordatorios' : 'envío de links'}`),
+      el('div', { class: 'num' }, `${i + 1} de ${lista.length} · ${datos ? 'formulario de datos' : recordatorio ? 'recordatorios' : 'envío de links'}`),
       el('div', { class: 'cadena', style: 'margin-top:10px' },
         el('h3', {}, p.nombre), el('div', { class: 'sub' }, `${p.cargo} · ${p.area_nombre}${p.equipo ? ' · ' + p.equipo : ''}`),
         el('div', { class: 'num' }, p.telefono ? '📱 Se abre su chat directo' : 'Sin teléfono: WhatsApp te pedirá elegir el contacto'),
         el('div', { class: 'linea', style: 'margin-top:12px' },
-          el('a', { class: 'boton', style: 'background:var(--acento);color:var(--acento-t);border-color:var(--acento)', href: wa, target: '_blank', rel: 'noopener', onclick: () => marcar(p.id) }, 'Abrir WhatsApp'),
-          el('button', { onclick: () => { copiar(texto, 'Mensaje copiado'); marcar(p.id); } }, 'Copiar mensaje'))),
+          el('a', { class: 'boton', style: 'background:var(--acento);color:var(--acento-t);border-color:var(--acento)', href: wa, target: '_blank', rel: 'noopener', onclick: () => { if (!datos) marcar(p.id); } }, 'Abrir WhatsApp'),
+          el('button', { onclick: () => { copiar(texto, 'Mensaje copiado'); if (!datos) marcar(p.id); } }, 'Copiar mensaje'))),
       el('div', { class: 'linea', style: 'margin-top:14px' },
         el('button', { class: 'primario', onclick: () => { i++; pintarPaso(); } }, 'Siguiente →'),
         el('button', { onclick: () => { i++; pintarPaso(); } }, 'Saltar'),
