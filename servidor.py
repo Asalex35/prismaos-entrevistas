@@ -93,7 +93,7 @@ def extraer_json(texto):
 def ajustes():
     a = leer(os.path.join(CFG, 'ajustes.json'), {}) or {}
     # Variables de entorno PRISMA_AJUSTE_<nombre>=0/1 ganan sobre ajustes.json (ej. solo_red_local=0 en Render).
-    for k in ('ia_repreguntas_en_vivo', 'resumen_automatico', 'link_general', 'pedir_codigo', 'solo_red_local'):
+    for k in ('ia_repreguntas_en_vivo', 'resumen_automatico', 'link_general', 'pedir_codigo', 'solo_red_local', 'solo_datos'):
         v = os.environ.get(f'PRISMA_AJUSTE_{k.upper()}')
         if v in ('0', '1'):
             a[k] = v == '1'
@@ -102,7 +102,9 @@ def ajustes():
             'link_general': bool(a.get('link_general', False)),
             'pedir_codigo': bool(a.get('pedir_codigo', False)),
             'link_datos_personales': str(a.get('link_datos_personales', '') or ''),
-            'solo_red_local': bool(a.get('solo_red_local', True))}
+            'solo_red_local': bool(a.get('solo_red_local', True)),
+            # solo_datos=true: el link personal abre directo el formulario de datos, sin entrevista.
+            'solo_datos': bool(a.get('solo_datos', False))}
 
 
 def ip_privada(ip):
@@ -349,6 +351,7 @@ def vista_sesion(pid):
         'link_datos': ajustes()['link_datos_personales'],
         'formulario_datos': bool(llave_publica_datos()),
         'datos_estado': estado_datos(pid),
+        'solo_datos': ajustes()['solo_datos'] and bool(llave_publica_datos()),
         'cerrada': e.get('cerrada'),
         'ia': bool(IA['ok']) and ajustes()['ia_repreguntas_en_vivo'],
     }
@@ -836,6 +839,23 @@ def liberar(pid):
         escribir(os.path.join(DAT, 'reclamos.json'), r)
 
 
+def liberar_todos():
+    """Suelta todos los nombres: cada quien vuelve a ligar su nombre al celular con el que entre."""
+    with LOCK:
+        n = len(reclamos())
+        escribir(os.path.join(DAT, 'reclamos.json'), {})
+    return n
+
+
+def liberar_al_activar_solo_datos():
+    """Al encender el modo "solo datos" se liberan todos los celulares UNA sola vez (marca en el disco)."""
+    marca = os.path.join(DAT, 'liberados_solo_datos.txt')
+    if ajustes()['solo_datos'] and not os.path.exists(marca):
+        n = liberar_todos()
+        escribir(marca, {'fecha': ahora(), 'liberados': n})
+        print(f'Modo solo datos: {n} celulares liberados', flush=True)
+
+
 def reabrir(pid):
     with LOCK:
         e = expediente(pid)
@@ -1121,7 +1141,7 @@ class Manejador(BaseHTTPRequestHandler):
                 tok = tokens().get(pid)
                 if not tok:
                     return self._enviar(404, {'error': 'No encontrado'})
-                if expediente(pid).get('cerrada'):
+                if expediente(pid).get('cerrada') and not aj['solo_datos']:
                     return self._enviar(409, {'error': 'La entrevista de esta persona ya quedó registrada y está cerrada. Si necesitas agregar algo, avisa a quien te mandó el link.'})
                 if not reclamar(pid, disp):
                     return self._enviar(409, {'error': 'Este nombre ya se está usando en otro celular. Si eres tú y cambiaste de celular, avisa a quien mandó el link para que lo libere.'})
@@ -1210,6 +1230,8 @@ class Manejador(BaseHTTPRequestHandler):
                     return self._enviar(404, {'error': 'No existe'})
                 liberar(pid)
                 return self._enviar(200, {'ok': True})
+            if ruta == '/api/admin/liberar_todos':
+                return self._enviar(200, {'ok': True, 'liberados': liberar_todos()})
             if ruta == '/api/admin/marcar_envio':
                 if not persona(pid):
                     return self._enviar(404, {'error': 'No existe'})
@@ -1264,6 +1286,7 @@ def main():
     acceso()
     tokens()
     exportar()
+    liberar_al_activar_solo_datos()
     srv = ThreadingHTTPServer(('0.0.0.0', PUERTO), Manejador)
     print(f'PrismaOS · Entrevistas en http://localhost:{PUERTO}/admin  (equipo: http://{ip_local()}:{PUERTO})', flush=True)
     try:

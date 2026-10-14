@@ -253,7 +253,8 @@ function pintar() {
     el('p', { class: 'num', style: 'margin:0 0 10px' }, 'Esta app solo registra QUÉ entregó cada quien (RFC, CURP, NSS, fecha de nacimiento, banco/CLABE, domicilio, contacto de emergencia), nunca los datos. Los datos se capturan en el sistema de Prismaticoos o se entregan a Administración. Si alguien intenta escribir un RFC, CURP, NSS o CLABE en una respuesta, se bloquea.'),
     el('div', { class: 'linea' }, el('button', { class: 'primario', onclick: () => copiar(`📋 Faltan de llenar el formulario de datos para Administración:\n${pendientesDatos.map(p => `• ${p.nombre} (${p.cargo})${p.datos_formulario ? ` — le faltan ${p.datos_formulario.faltan.length}` : ' — sin empezar'}`).join('\n')}\n\nCada quien lo llena desde su link personal: botón «Capturar mis datos».`, 'Lista copiada: mándala a Administración') }, 'Copiar pendientes para Administración'),
       pendientesDatos.length ? el('button', { class: 'primario', onclick: () => cadena('datos') }, `Enviar formulario a pendientes (${pendientesDatos.length})`) : null,
-      el('button', { onclick: () => cadena('datos_todos') }, `Enviar formulario a todos (${P.filter(p => p.token).length})`)),
+      el('button', { onclick: () => cadena('datos_todos') }, `Enviar formulario a todos (${P.filter(p => p.token).length})`),
+      el('button', { onclick: async () => { if (!confirm('¿Liberar todos los celulares? Cada quien volverá a ligar su nombre al celular con el que entre.')) return; const r = await api('/api/admin/liberar_todos', {}); toast(`${r.liberados} celulares liberados`); await refrescar(); } }, `Liberar todos los celulares (${P.filter(p => p.reclamado).length})`)),
     el('p', { class: 'num', style: 'margin:8px 0 0' }, 'El link abre directo el formulario de datos (RFC, CURP, NSS, banco, domicilio, emergencia): no pasa por la entrevista.')));
 
   // áreas

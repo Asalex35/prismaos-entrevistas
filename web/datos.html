@@ -236,8 +236,9 @@ async function enviar(parcial) {
 }
 
 // Solo si llegó desde su entrevista; con el link directo de WhatsApp no se le manda a la entrevista.
+let SOLO_DATOS = false;  // con el modo "solo datos" la entrevista está apagada: no se ofrece volver a ella.
 const DESDE_ENTREVISTA = (() => { try { const r = new URL(document.referrer); return r.origin === location.origin && r.pathname !== '/datos'; } catch (e) { return false; } })();
-function volver() { return DESDE_ENTREVISTA ? el('a', { class: 'volver', href: token ? '/p/' + token : '/' }, '← Volver a mi entrevista') : null; }
+function volver() { return DESDE_ENTREVISTA && !SOLO_DATOS ? el('a', { class: 'volver', href: token ? '/p/' + token : '/' }, '← Volver a mi entrevista') : null; }
 function listaFaltan(ids) { return el('ul', { class: 'faltan' }, ids.map(id => el('li', {}, ETIQUETA[id] || id))); }
 function pintarHecho(recien, local) {
   const f = EST.fecha ? el('p', { class: 'nota' }, 'Última vez: ' + new Date(EST.fecha).toLocaleString('es-MX', { dateStyle: 'long', timeStyle: 'short' })) : null;
@@ -305,6 +306,7 @@ async function arrancar() {
     document.getElementById('quien').textContent = `${s.persona.nombre} · ${s.persona.cargo}`;
     if (!s.formulario_datos) throw new Error('El formulario todavía no está disponible.');
     EST = s.datos_estado;
+    SOLO_DATOS = !!s.solo_datos;
     EST && EST.completo ? pintarHecho(false) : pintarFormulario();
   } catch (e) {
     $app.poner(el('h1', {}, 'No pudimos abrir el formulario'), el('p', { class: 'sub' }, e.message), el('p', {}, volver()));

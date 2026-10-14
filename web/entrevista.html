@@ -283,6 +283,8 @@ function avisoDatos(s) {
 
 function pintar() {
   const s = sesion, p = s.persona;
+  // Modo "solo datos": ya no se hace la entrevista, el link personal va directo al formulario cifrado.
+  if (s.solo_datos) return location.replace('/datos#t=' + token);
   document.getElementById('quien').textContent = `${p.nombre} · ${p.cargo}`;
   document.getElementById('barra').style.width = s.progreso + '%';
   if (s.estado === 'sin_empezar' && !ls.get('prisma_intro_' + p.id)) return pintarIntro();
