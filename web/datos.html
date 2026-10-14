@@ -35,7 +35,7 @@
   label small { color: var(--texto2); font-weight: 400; font-size: 13px; }
   input, select { width: 100%; background: var(--barra); color: var(--texto); border: 1px solid var(--borde); border-radius: 10px; padding: 13px 14px; font: inherit; font-size: 16px; font-weight: 400; }
   input:focus, select:focus { outline: 2px solid var(--acento); outline-offset: 1px; border-color: transparent; }
-  input[aria-invalid="true"] { border-color: #ff8a7a; }
+  input[aria-invalid="true"], select[aria-invalid="true"] { border-color: #ff8a7a; }
   .err { color: #ff8a7a; font-size: 13px; font-weight: 400; min-height: 0; }
   .doble { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
   @media (max-width: 520px) { .doble { grid-template-columns: 1fr; } }
@@ -51,6 +51,8 @@
   .pendiente { background: #2a2414; border: 1px solid #5a4a1a; color: #f5dc8a; border-radius: var(--radio); padding: 16px 18px; margin: 0 0 16px; }
   .pendiente .nota { color: #e8dcb8; }
   ul.faltan { margin: 0; padding-left: 20px; color: var(--texto); }
+  label.consent { display: flex; gap: 10px; align-items: flex-start; font-weight: 400; font-size: 14px; margin: 4px 0 14px; }
+  label.consent input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--acento); }
 </style>
 </head>
 <body>
@@ -98,38 +100,60 @@ function clabeValida(c) {
   for (let i = 0; i < 17; i++) s += (Number(c[i]) * pesos[i % 3]) % 10;
   return (10 - (s % 10)) % 10 === Number(c[17]);
 }
+const EMPRESAS = ['Prismaticoos, S.A. de C.V.', 'Servicios Integrales O&C Solutions', 'Otra / no sé'];
+const TIPOS = ['Empleado', 'Crew', 'Freelancer', 'Talento', 'Contratista extranjero', 'Empleado extranjero'];
+const REGIMENES = ['Sueldos y salarios', 'Honorarios', 'RESICO', 'Actividad empresarial', 'Otro'];
+const PERIODOS = ['Mensual', 'Quincenal', 'Semanal', 'Diario', 'Por proyecto'];
 const CAMPOS = [
-  { sec: 'Identificación' },
-  { id: 'nombre_completo', et: 'Nombre completo', ayuda: 'Como aparece en tu INE.', req: true, max: 120 },
-  { id: 'rfc', et: 'RFC con homoclave', ayuda: '13 caracteres. Ej. GODE561231GR8', req: true, may: true, max: 13,
+  { sec: '1 · Datos generales' },
+  { id: 'nombres', et: 'Nombre(s)', ayuda: 'Como aparece en tu INE.', req: true, max: 80 },
+  { fila: [{ id: 'apellido_paterno', et: 'Apellido paterno', req: true, max: 60 },
+           { id: 'apellido_materno', et: 'Apellido materno', req: true, max: 60 }] },
+  { id: 'correo', et: 'Correo electrónico', ayuda: 'El que revisas seguido.', req: true, tipo: 'email', max: 120,
+    ok: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v), msj: 'Revisa tu correo: debe ser como nombre@dominio.com' },
+  { fila: [{ id: 'telefono', et: 'Teléfono celular', ayuda: '10 números', req: true, num: true, max: 10, tipo: 'tel',
+             ok: v => /^\d{10}$/.test(v), msj: 'Son 10 números.' },
+           { id: 'fecha_nacimiento', et: 'Fecha de nacimiento', tipo: 'date', req: true }] },
+  { sec: '2 · Identificación' },
+  { id: 'rfc', et: 'RFC con homoclave', ayuda: '13 caracteres. Está en tu constancia de situación fiscal del SAT. Ej. GODE561231GR8', req: true, may: true, max: 13,
     ok: v => /^[A-ZÑ&]{4}\d{6}[A-Z0-9]{3}$/.test(v), msj: 'Revisa tu RFC: 4 letras, 6 números y 3 caracteres de homoclave.' },
-  { id: 'curp', et: 'CURP', ayuda: '18 caracteres.', req: true, may: true, max: 18,
+  { id: 'curp', et: 'CURP', ayuda: '18 caracteres. Está en tu INE o en gob.mx/curp', req: true, may: true, max: 18,
     ok: v => /^[A-Z]{4}\d{6}[HMX][A-Z]{5}[A-Z0-9]\d$/.test(v), msj: 'Revisa tu CURP: son 18 caracteres.' },
-  { id: 'nss', et: 'NSS (Número de Seguro Social, IMSS)', ayuda: '11 números.', req: true, num: true, max: 11,
+  { id: 'nss', et: 'NSS (Número de Seguro Social, IMSS)', ayuda: '11 números. Está en la app IMSS Digital o en tu hoja rosa.', req: true, num: true, max: 11,
     ok: v => /^\d{11}$/.test(v), msj: 'El NSS tiene 11 números.' },
-  { id: 'fecha_nacimiento', et: 'Fecha de nacimiento', tipo: 'date', req: true },
-  { sec: 'Datos bancarios (para tu pago)' },
+  { sec: '3 · Domicilio y contacto de emergencia' },
+  { id: 'calle_numero', et: 'Calle y número', req: true, max: 120 },
+  { fila: [{ id: 'colonia', et: 'Colonia', req: true, max: 80 },
+           { id: 'cp', et: 'Código postal', req: true, num: true, max: 5, ok: v => /^\d{5}$/.test(v), msj: 'Son 5 números.' }] },
+  { fila: [{ id: 'municipio', et: 'Municipio o ciudad', req: true, max: 80 },
+           { id: 'estado', et: 'Estado', req: true, max: 60 }] },
+  { id: 'emergencia_nombre', et: 'Contacto de emergencia: nombre', req: true, max: 120 },
+  { fila: [{ id: 'emergencia_parentesco', et: 'Parentesco', ayuda: 'Ej. mamá, pareja', req: true, max: 40 },
+           { id: 'emergencia_telefono', et: 'Teléfono de emergencia', ayuda: '10 números', req: true, num: true, max: 10, tipo: 'tel',
+             ok: v => /^\d{10}$/.test(v), msj: 'Son 10 números.' }] },
+  { sec: '4 · Banco (para tu pago)' },
   { id: 'banco', et: 'Banco', req: true, max: 60 },
   { id: 'cuenta', et: 'Número de cuenta', ayuda: 'Entre 8 y 20 números. Viene en tu app del banco o estado de cuenta.', req: true, num: true, max: 20,
     ok: v => /^\d{8,20}$/.test(v), msj: 'Solo números (8 a 20).' },
   { id: 'clabe', et: 'CLABE interbancaria', ayuda: '18 números. Viene en tu app del banco o estado de cuenta.', req: true, num: true, max: 18,
     ok: clabeValida, msj: 'Esa CLABE no es válida: revisa los 18 números.' },
-  { sec: 'Domicilio' },
-  { id: 'calle_numero', et: 'Calle y número', req: true, max: 120 },
-  { fila: [{ id: 'colonia', et: 'Colonia', req: true, max: 80 },
-           { id: 'cp', et: 'Código postal', req: true, num: true, max: 5, ok: v => /^\d{5}$/.test(v), msj: 'Son 5 números.' }] },
-  { fila: [{ id: 'municipio', et: 'Municipio o alcaldía', req: true, max: 80 },
-           { id: 'estado', et: 'Estado', req: true, max: 60 }] },
-  { sec: 'Contacto de emergencia' },
-  { id: 'emergencia_nombre', et: 'Nombre', req: true, max: 120 },
-  { fila: [{ id: 'emergencia_parentesco', et: 'Parentesco', ayuda: 'Ej. mamá, pareja', req: true, max: 40 },
-           { id: 'emergencia_telefono', et: 'Teléfono', ayuda: '10 números', req: true, num: true, max: 10, tipo: 'tel',
-             ok: v => /^\d{10}$/.test(v), msj: 'Son 10 números.' }] },
+  { sec: '5 · Datos laborales' },
+  { id: 'empresa', et: 'Empresa que te paga', ayuda: 'Si no estás seguro, elige «Otra / no sé».', req: true, ops: EMPRESAS },
+  { id: 'jefe_directo', et: 'Jefe directo', ayuda: 'Nombre o correo de la persona a la que reportas.', req: true, max: 120 },
+  { fila: [{ id: 'fecha_ingreso', et: 'Fecha de ingreso', ayuda: 'Cuándo empezaste a trabajar aquí (aproximada si no la recuerdas).', tipo: 'date', req: true },
+           { id: 'tipo_persona', et: 'Tipo de persona', req: true, ops: TIPOS }] },
+  { fila: [{ id: 'regimen', et: 'Régimen fiscal', ayuda: 'Está en tu constancia del SAT. Si no sabes, elige «Otro».', req: true, ops: REGIMENES },
+           { id: 'periodicidad', et: 'Cada cuándo te pagan', req: true, ops: PERIODOS }] },
+  { id: 'sueldo', et: 'Sueldo (pesos, por periodo de pago)', ayuda: 'Solo números, sin comas. Ej. 12500', req: true, num: true, max: 9,
+    ok: v => /^\d{1,9}$/.test(v), msj: 'Solo números.' },
 ];
 const planos = CAMPOS.flatMap(c => c.fila || (c.id ? [c] : []));
 
 function campo(c) {
-  const inp = el('input', { id: c.id, name: c.id, type: c.tipo || 'text', maxlength: c.max, autocomplete: 'off', spellcheck: 'false',
+  const inp = c.ops
+    ? el('select', { id: c.id, name: c.id, required: c.req, onchange: () => marcar(c, '') },
+        el('option', { value: '' }, 'Elige una opción…'), c.ops.map(o => el('option', { value: o }, o)))
+    : el('input', { id: c.id, name: c.id, type: c.tipo || 'text', maxlength: c.max, autocomplete: 'off', spellcheck: 'false',
     inputmode: c.num ? 'numeric' : null, autocapitalize: c.may ? 'characters' : null, required: c.req,
     oninput: e => { if (c.may) e.target.value = e.target.value.toUpperCase(); if (c.num) e.target.value = soloDig(e.target.value); marcar(c, ''); } });
   return el('label', { for: c.id }, c.et + (c.req ? '' : ' (opcional)'), c.ayuda ? el('small', {}, c.ayuda) : null, inp,
@@ -144,7 +168,7 @@ function valores() {
   for (const c of planos) d[c.id] = document.getElementById(c.id).value.trim();
   return d;
 }
-const ETIQUETA = Object.fromEntries(planos.map(c => [c.id, c.id.startsWith('emergencia_') ? 'Contacto de emergencia: ' + c.et.toLowerCase() : c.et]));
+const ETIQUETA = Object.fromEntries(planos.map(c => [c.id, c.et]));
 const REQUERIDOS = planos.filter(c => c.req);
 let EST = null;  // estado en el servidor: null | { fecha, faltan: [...], completo }
 
@@ -217,13 +241,14 @@ async function enviar() {
   if (!validar(d, false)) return mensaje('Faltan datos: revisa los campos marcados en rojo.', true);
   const faltan = faltantes(d);
   if (faltan.length) return mensaje('Faltan datos por llenar.', true);
+  if (!document.getElementById('autorizo').checked) { document.getElementById('autorizo').focus(); return mensaje('Marca la casilla de autorización para poder enviar.', true); }
   const botones = [...document.querySelectorAll('#formulario button')];
   botones.forEach(b => { b.disabled = true; });
   mensaje('Cifrando y enviando…');
   try {
     const { pem } = await api('/api/datos_llave');
-    const sobre = await cifrar(pem, { ...d, enviado: new Date().toISOString(), completo: !faltan.length });
-    const r = await api('/api/datos_admin', { t: token, sobre, faltan });
+    const sobre = await cifrar(pem, { ...d, autorizo: 'Sí', enviado: new Date().toISOString(), completo: !faltan.length });
+    const r = await api('/api/datos_admin', { t: token, sobre, faltan, campos: 2 });
     EST = r.estado;
     borrarBorrador();
     pintarHecho(true);
@@ -270,11 +295,13 @@ async function pintarFormulario() {
   const parcial = EST && !EST.completo;
   $app.poner(
     el('h1', {}, 'Datos para Administración'),
-    el('p', { class: 'sub' }, 'Para tu expediente y tu alta en nómina. Todos los campos son obligatorios: ten a la mano tu INE, tu NSS y tu app del banco.'),
+    el('p', { class: 'sub' }, 'Para tu expediente y tu alta en nómina. Son 5 pasos cortos y todos los campos son obligatorios: ten a la mano tu INE, tu constancia del SAT, tu NSS y tu app del banco.'),
     parcial ? el('div', { class: 'pendiente' }, el('p', { style: 'margin:0 0 6px' }, 'Te falta completar:'), listaFaltan(EST.faltan)) : null,
     el('p', { class: 'candado' }, '🔒 Tus datos se cifran aquí mismo, en tu celular, antes de enviarse. El servidor solo guarda un archivo que no se puede leer; únicamente Administración (Esnebith Sánchez) puede abrirlo.'),
     el('form', { id: 'formulario', novalidate: true, autocomplete: 'off', onsubmit: e => { e.preventDefault(); enviar(); } },
       bloques,
+      el('label', { class: 'consent' }, el('input', { type: 'checkbox', id: 'autorizo' }),
+        el('span', {}, 'Autorizo a Prismaticoos a usar estos datos para integrar mi expediente laboral y pagar mi nómina, conforme a su aviso de privacidad.')),
       el('button', { id: 'enviar', type: 'submit' }, 'Enviar mis datos completos'),
       el('p', { class: 'estado', id: 'estado', role: 'status' })),
     el('p', { style: 'margin-top:16px' }, volver()));

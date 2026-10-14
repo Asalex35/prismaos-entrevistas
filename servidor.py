@@ -299,10 +299,18 @@ def envios_datos(pid):
     return leer(os.path.join(DAD, f'{pid}.json'), []) or []
 
 
-# Campos obligatorios (la cuenta es opcional si ponen CLABE). Solo los NOMBRES de lo que falta viajan sin cifrar.
-CAMPOS_REQUERIDOS = ('nombre_completo', 'rfc', 'curp', 'nss', 'fecha_nacimiento', 'banco', 'clabe', 'calle_numero',
-                     'colonia', 'cp', 'municipio', 'estado', 'emergencia_nombre', 'emergencia_parentesco',
-                     'emergencia_telefono')
+# Campos obligatorios (todos). Solo los NOMBRES de lo que falta viajan sin cifrar.
+# Versión 1 del formulario (antes de los datos del importador del ERP): sirve para saber qué le falta a quien ya envió.
+CAMPOS_V1 = ('nombre_completo', 'rfc', 'curp', 'nss', 'fecha_nacimiento', 'banco', 'clabe', 'calle_numero',
+             'colonia', 'cp', 'municipio', 'estado', 'emergencia_nombre', 'emergencia_parentesco',
+             'emergencia_telefono')
+CAMPOS_REQUERIDOS = ('nombres', 'apellido_paterno', 'apellido_materno', 'correo', 'telefono', 'fecha_nacimiento',
+                     'rfc', 'curp', 'nss',
+                     'calle_numero', 'colonia', 'cp', 'municipio', 'estado',
+                     'emergencia_nombre', 'emergencia_parentesco', 'emergencia_telefono',
+                     'banco', 'cuenta', 'clabe',
+                     'empresa', 'jefe_directo', 'fecha_ingreso', 'tipo_persona', 'regimen', 'sueldo', 'periodicidad')
+VERSION_CAMPOS = 2
 
 
 def estado_datos(pid):
@@ -311,14 +319,15 @@ def estado_datos(pid):
     env = envios_datos(pid)
     if not env:
         return None
-    faltan = set(CAMPOS_REQUERIDOS)
+    entregados = set()
     for e in env:
-        faltan &= set(e.get('faltan', []))  # envíos sin 'faltan' fueron completos
-    faltan = [c for c in CAMPOS_REQUERIDOS if c in faltan]
+        conocidos = CAMPOS_REQUERIDOS if e.get('campos', 1) >= VERSION_CAMPOS else CAMPOS_V1
+        entregados |= set(conocidos) - set(e.get('faltan', []))  # envíos sin 'faltan' fueron completos (de su versión)
+    faltan = [c for c in CAMPOS_REQUERIDOS if c not in entregados]
     return {'fecha': env[-1]['fecha'], 'faltan': faltan, 'completo': not faltan}
 
 
-def guardar_datos_cifrados(pid, sobre, faltan):
+def guardar_datos_cifrados(pid, sobre, faltan, campos=1):
     b64 = re.compile(r'[A-Za-z0-9+/=]+')
     partes = {k: sobre.get(k) for k in ('clave', 'iv', 'datos')}
     if sobre.get('v') != 1 or not all(isinstance(v, str) and b64.fullmatch(v) for v in partes.values()):
@@ -330,7 +339,7 @@ def guardar_datos_cifrados(pid, sobre, faltan):
     with LOCK:
         os.makedirs(DAD, exist_ok=True)
         env = envios_datos(pid)
-        env.append({'v': 1, **partes, 'faltan': [c for c in CAMPOS_REQUERIDOS if c in faltan], 'fecha': ahora()})
+        env.append({'v': 1, **partes, 'campos': campos, 'faltan': [c for c in CAMPOS_REQUERIDOS if c in faltan], 'fecha': ahora()})
         escribir(os.path.join(DAD, f'{pid}.json'), env)
     return True
 
@@ -1183,7 +1192,8 @@ class Manejador(BaseHTTPRequestHandler):
                 return self._enviar(404, {'error': 'Este link no es válido. Abre el formulario desde tu link personal.'})
             if demasiados_intentos('datos:' + pid, limite=20):
                 return self._enviar(429, {'error': 'Demasiados envíos seguidos. Espera unos minutos.'})
-            if not guardar_datos_cifrados(pid, b.get('sobre') or {}, b.get('faltan', [])):
+            campos = b.get('campos') if isinstance(b.get('campos'), int) else 1
+            if not guardar_datos_cifrados(pid, b.get('sobre') or {}, b.get('faltan', []), campos):
                 return self._enviar(400, {'error': 'No se pudo leer el envío. Recarga la página e intenta de nuevo.'})
             return self._enviar(200, {'ok': True, 'estado': estado_datos(pid)})
         if ruta == '/api/editar':

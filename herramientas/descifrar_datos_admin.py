@@ -25,11 +25,17 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 URL = os.environ.get('PRISMA_URL_PUBLICA', 'https://prismaos-entrevistas.onrender.com').rstrip('/')
 LLAVE = os.path.expanduser('~/.prismaos/datos_admin_privada.pem')
-COLUMNAS = [('nombre_completo', 'Nombre completo'), ('rfc', 'RFC'), ('curp', 'CURP'), ('nss', 'NSS'),
-            ('fecha_nacimiento', 'Fecha de nacimiento'), ('banco', 'Banco'), ('cuenta', 'Cuenta'), ('clabe', 'CLABE'),
-            ('calle_numero', 'Calle y número'), ('colonia', 'Colonia'), ('cp', 'CP'), ('municipio', 'Municipio'),
-            ('estado', 'Estado'), ('emergencia_nombre', 'Emergencia: nombre'),
-            ('emergencia_parentesco', 'Emergencia: parentesco'), ('emergencia_telefono', 'Emergencia: teléfono')]
+COLUMNAS = [('nombres', 'Nombre(s)'), ('apellido_paterno', 'Apellido paterno'), ('apellido_materno', 'Apellido materno'),
+            ('correo', 'Correo'), ('telefono', 'Teléfono'), ('fecha_nacimiento', 'Fecha de nacimiento'),
+            ('rfc', 'RFC'), ('curp', 'CURP'), ('nss', 'NSS'),
+            ('calle_numero', 'Calle y número'), ('colonia', 'Colonia'), ('municipio', 'Municipio o ciudad'),
+            ('estado', 'Estado'), ('cp', 'Código postal'),
+            ('emergencia_nombre', 'Contacto de emergencia'), ('emergencia_parentesco', 'Parentesco'),
+            ('emergencia_telefono', 'Teléfono de emergencia'),
+            ('banco', 'Banco'), ('cuenta', 'Cuenta'), ('clabe', 'CLABE'),
+            ('empresa', 'Empresa'), ('jefe_directo', 'Jefe directo'), ('fecha_ingreso', 'Fecha de ingreso'),
+            ('tipo_persona', 'Tipo de persona'), ('regimen', 'Régimen'), ('sueldo', 'Sueldo'), ('periodicidad', 'Periodicidad'),
+            ('nombre_completo', 'Nombre completo (formulario anterior)'), ('autorizo', 'Autorizó aviso de privacidad')]
 
 
 def bajar_sobres():
@@ -71,7 +77,7 @@ def main():
         if not ok:
             errores.append(info['nombre'])
             continue
-        faltan = [t for k, t in COLUMNAS if k != 'cuenta' and not d.get(k)]
+        faltan = [t for k, t in COLUMNAS if k not in ('nombre_completo', 'autorizo') and not d.get(k)]
         filas.append([info['nombre'], info.get('cargo', ''), 'Sí' if not faltan else 'No', ', '.join(faltan),
                       info['envios'][-1]['fecha'], len(info['envios'])] + [d.get(k, '') for k, _ in COLUMNAS])
     viejo = os.umask(0o077)

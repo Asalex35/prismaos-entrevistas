@@ -255,7 +255,7 @@ function pintar() {
       pendientesDatos.length ? el('button', { class: 'primario', onclick: () => cadena('datos') }, `Enviar formulario a pendientes (${pendientesDatos.length})`) : null,
       el('button', { onclick: () => cadena('datos_todos') }, `Enviar formulario a todos (${P.filter(p => p.token).length})`),
       el('button', { onclick: async () => { if (!confirm('¿Liberar todos los celulares? Cada quien volverá a ligar su nombre al celular con el que entre.')) return; const r = await api('/api/admin/liberar_todos', {}); toast(`${r.liberados} celulares liberados`); await refrescar(); } }, `Liberar todos los celulares (${P.filter(p => p.reclamado).length})`)),
-    el('p', { class: 'num', style: 'margin:8px 0 0' }, 'El link abre directo el formulario de datos (RFC, CURP, NSS, banco, domicilio, emergencia): no pasa por la entrevista.')));
+    el('p', { class: 'num', style: 'margin:8px 0 0' }, 'El link abre directo el formulario de datos (generales, RFC/CURP/NSS, domicilio y emergencia, banco, datos laborales): no pasa por la entrevista. Los campos siguen el importador del ERP (RRHH › Personas › Importar desde Excel).')));
 
   // áreas
   secciones.push(el('h2', {}, 'Avance por área'));
@@ -417,7 +417,7 @@ function linkDatosDe(p) { return base() + '/datos#t=' + p.token; }
 function mensajeDatos(p) {
   const n = p.nombre.split(' ')[0].replace(/"/g, '');
   const d = p.datos_formulario;
-  return `Hola ${n} 👋\nAdministración necesita tus datos para nómina y alta: RFC, CURP, NSS, fecha de nacimiento, banco y CLABE, domicilio y contacto de emergencia.\n\n` +
+  return `Hola ${n} 👋\nAdministración necesita tus datos para nómina y alta: nombre, correo y teléfono; RFC, CURP y NSS; domicilio y contacto de emergencia; banco y CLABE; y tus datos laborales (empresa, jefe directo, fecha de ingreso, régimen y sueldo).\n\n` +
     (d && d.completo ? '✅ Ya tenemos tus datos. Si algo cambió (banco, domicilio…), actualízalos en el mismo link.\n'
       : d ? `📋 Ya enviaste una parte; te falta${d.faltan.length === 1 ? '' : 'n'} ${d.faltan.length} dato${d.faltan.length === 1 ? '' : 's'}.\n` : '') +
     '📝 Es solo este formulario, no la entrevista.\n' +
