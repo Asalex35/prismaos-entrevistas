@@ -421,7 +421,7 @@ function mensajeDatos(p) {
     (d && d.completo ? '✅ Ya tenemos tus datos. Si algo cambió (banco, domicilio…), actualízalos en el mismo link.\n'
       : d ? `📋 Ya enviaste una parte; te falta${d.faltan.length === 1 ? '' : 'n'} ${d.faltan.length} dato${d.faltan.length === 1 ? '' : 's'}.\n` : '') +
     '📝 Es solo este formulario, no la entrevista.\n' +
-    `🔒 Se cifran en tu celular: solo Administración puede verlos.\n💾 Puedes guardar y seguir después con el mismo link.\n🔑 El link es solo tuyo, no lo compartas.\n\n👉 ${linkDatosDe(p)}`;
+    `🔒 Se cifran en tu celular: solo Administración puede verlos.\n📌 Todos los campos son obligatorios: ten a la mano tu INE, tu NSS y tu app del banco.\n🔑 El link es solo tuyo, no lo compartas.\n\n👉 ${linkDatosDe(p)}`;
 }
 function cadena(recordatorio) {
   cerrarCajon(true);

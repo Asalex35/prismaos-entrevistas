@@ -110,8 +110,8 @@ const CAMPOS = [
   { id: 'fecha_nacimiento', et: 'Fecha de nacimiento', tipo: 'date', req: true },
   { sec: 'Datos bancarios (para tu pago)' },
   { id: 'banco', et: 'Banco', req: true, max: 60 },
-  { id: 'cuenta', et: 'Número de cuenta', ayuda: 'Opcional si ya pones tu CLABE.', num: true, max: 20,
-    ok: v => !v || /^\d{8,20}$/.test(v), msj: 'Solo números (8 a 20).' },
+  { id: 'cuenta', et: 'Número de cuenta', ayuda: 'Entre 8 y 20 números. Viene en tu app del banco o estado de cuenta.', req: true, num: true, max: 20,
+    ok: v => /^\d{8,20}$/.test(v), msj: 'Solo números (8 a 20).' },
   { id: 'clabe', et: 'CLABE interbancaria', ayuda: '18 números. Viene en tu app del banco o estado de cuenta.', req: true, num: true, max: 18,
     ok: clabeValida, msj: 'Esa CLABE no es válida: revisa los 18 números.' },
   { sec: 'Domicilio' },
@@ -211,23 +211,22 @@ async function leerBorrador() {
 function borrarBorrador() { try { localStorage.removeItem(BORRADOR + token); } catch (e) {} }
 
 function mensaje(t, mal) { const st = document.getElementById('estado'); st.className = 'estado' + (mal ? ' mal' : ''); st.textContent = t; }
-async function enviar(parcial) {
+// Todos los campos son obligatorios: solo se envía cuando está todo lleno (no hay "guardar para después").
+async function enviar() {
   const d = valores();
-  if (!validar(d, parcial)) return;
+  if (!validar(d, false)) return mensaje('Faltan datos: revisa los campos marcados en rojo.', true);
   const faltan = faltantes(d);
-  if (parcial && faltan.length === REQUERIDOS.length && !d.cuenta) return mensaje('Llena al menos un dato para poder guardar.', true);
+  if (faltan.length) return mensaje('Faltan datos por llenar.', true);
   const botones = [...document.querySelectorAll('#formulario button')];
   botones.forEach(b => { b.disabled = true; });
-  mensaje(parcial ? 'Cifrando y guardando…' : 'Cifrando y enviando…');
+  mensaje('Cifrando y enviando…');
   try {
     const { pem } = await api('/api/datos_llave');
     const sobre = await cifrar(pem, { ...d, enviado: new Date().toISOString(), completo: !faltan.length });
     const r = await api('/api/datos_admin', { t: token, sobre, faltan });
     EST = r.estado;
-    let local = true;
-    if (EST.completo) borrarBorrador();
-    else { try { await guardarBorrador(d); } catch (e) { local = false; } }
-    pintarHecho(true, local);
+    borrarBorrador();
+    pintarHecho(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (e) {
     mensaje(e.message, true);
@@ -240,7 +239,7 @@ let SOLO_DATOS = false;  // con el modo "solo datos" la entrevista está apagada
 const DESDE_ENTREVISTA = (() => { try { const r = new URL(document.referrer); return r.origin === location.origin && r.pathname !== '/datos'; } catch (e) { return false; } })();
 function volver() { return DESDE_ENTREVISTA && !SOLO_DATOS ? el('a', { class: 'volver', href: token ? '/p/' + token : '/' }, '← Volver a mi entrevista') : null; }
 function listaFaltan(ids) { return el('ul', { class: 'faltan' }, ids.map(id => el('li', {}, ETIQUETA[id] || id))); }
-function pintarHecho(recien, local) {
+function pintarHecho(recien) {
   const f = EST.fecha ? el('p', { class: 'nota' }, 'Última vez: ' + new Date(EST.fecha).toLocaleString('es-MX', { dateStyle: 'long', timeStyle: 'short' })) : null;
   if (EST.completo) {
     return $app.poner(
@@ -253,12 +252,9 @@ function pintarHecho(recien, local) {
   $app.poner(
     el('h1', {}, `Guardado. Te falta${EST.faltan.length === 1 ? '' : 'n'} ${EST.faltan.length} dato${EST.faltan.length === 1 ? '' : 's'}`),
     el('div', { class: 'pendiente' },
-      el('p', { style: 'margin:0 0 6px' }, 'Cuando los tengas, vuelve con tu mismo link y complétalos:'),
+      el('p', { style: 'margin:0 0 6px' }, 'Para que tus datos cuenten como entregados tienes que completar todo:'),
       listaFaltan(EST.faltan),
       el('p', { class: 'nota', style: 'margin-top:8px' }, '🔒 Lo que ya llenaste le llegó cifrado a Administración.'),
-      recien ? el('p', { class: 'nota' }, local
-        ? 'También quedó guardado (cifrado) en este celular para que no lo vuelvas a escribir.'
-        : 'Tu navegador no dejó guardar el borrador en el celular: cuando vuelvas, llena solo lo que falta.') : null,
       f),
     el('button', { onclick: () => pintarFormulario() }, 'Seguir llenando'),
     el('p', { style: 'margin-top:16px' }, volver()));
@@ -274,13 +270,12 @@ async function pintarFormulario() {
   const parcial = EST && !EST.completo;
   $app.poner(
     el('h1', {}, 'Datos para Administración'),
-    el('p', { class: 'sub' }, 'Para tu expediente y tu alta en nómina. Si ahorita no tienes algún dato, llena lo que tengas y toca «Guardar y seguir después».'),
+    el('p', { class: 'sub' }, 'Para tu expediente y tu alta en nómina. Todos los campos son obligatorios: ten a la mano tu INE, tu NSS y tu app del banco.'),
     parcial ? el('div', { class: 'pendiente' }, el('p', { style: 'margin:0 0 6px' }, 'Te falta completar:'), listaFaltan(EST.faltan)) : null,
     el('p', { class: 'candado' }, '🔒 Tus datos se cifran aquí mismo, en tu celular, antes de enviarse. El servidor solo guarda un archivo que no se puede leer; únicamente Administración (Esnebith Sánchez) puede abrirlo.'),
-    el('form', { id: 'formulario', novalidate: true, autocomplete: 'off', onsubmit: e => { e.preventDefault(); enviar(false); } },
+    el('form', { id: 'formulario', novalidate: true, autocomplete: 'off', onsubmit: e => { e.preventDefault(); enviar(); } },
       bloques,
       el('button', { id: 'enviar', type: 'submit' }, 'Enviar mis datos completos'),
-      el('button', { type: 'button', class: 'secundario', onclick: () => enviar(true) }, 'Guardar y seguir después'),
       el('p', { class: 'estado', id: 'estado', role: 'status' })),
     el('p', { style: 'margin-top:16px' }, volver()));
   const b = await leerBorrador();
@@ -288,7 +283,7 @@ async function pintarFormulario() {
     for (const c of planos) if (b[c.id]) document.getElementById(c.id).value = b[c.id];
     mensaje('Recuperamos lo que ya habías llenado en este celular.');
   } else if (parcial) {
-    mensaje('Llena solo lo que te falta: lo que ya enviaste no se pierde.');
+    mensaje('Llena todo el formulario y envíalo completo: lo que ya mandaste antes no se pierde.');
   }
 }
 
